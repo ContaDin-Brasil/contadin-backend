@@ -2,7 +2,7 @@ package br.com.contadin.infrastructure.persistence.repository;
 
 import br.com.contadin.application.port.out.CategoriaRepository;
 import br.com.contadin.domain.model.Categoria;
-import br.com.contadin.infrastructure.persistence.mapper.CategoriaMapper;
+import br.com.contadin.infrastructure.persistence.mapper.CategoriaPersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class CategoriaRepositoryImplementations implements CategoriaRepository {
     private final CategoriaJpaRepository jpaRepository;
-    private final CategoriaMapper mapper;
+    private final CategoriaPersistenceMapper mapper;
 
     @Override
     public Categoria save(Categoria categoria) {

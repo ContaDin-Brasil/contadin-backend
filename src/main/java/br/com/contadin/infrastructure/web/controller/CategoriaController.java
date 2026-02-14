@@ -1,7 +1,9 @@
 package br.com.contadin.infrastructure.web.controller;
 
 import br.com.contadin.application.dto.categoria.CategoriaRequest;
+import br.com.contadin.application.dto.categoria.CategoriaResponse;
 import br.com.contadin.application.port.in.categoria.CriarCategoriaInputPort;
+import br.com.contadin.domain.model.Categoria;
 import br.com.contadin.infrastructure.web.mapper.CategoriaWebMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +21,15 @@ public class CategoriaController {
     private final CategoriaWebMapper categoriaWebMapper;
 
     @PostMapping
-    public ResponseEntity<Void> criar(@RequestBody CategoriaRequest request) {
+    public ResponseEntity<CategoriaResponse> criar(
+            @RequestBody CategoriaRequest request
+    ) {
+        Categoria categoria = categoriaWebMapper.toDomain(request);
 
-        var categoria = categoriaWebMapper.toDomain(request);
-        var categoriaResponse = criarCategoriaInputPort.execute(categoria);
+        Categoria categoriaCriada = criarCategoriaInputPort.execute(categoria);
 
-        return ResponseEntity.status(201).build();
+        CategoriaResponse response = categoriaWebMapper.toResponse(categoriaCriada);
+
+        return ResponseEntity.status(201).body(response);
     }
 }
