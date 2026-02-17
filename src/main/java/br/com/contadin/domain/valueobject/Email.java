@@ -1,14 +1,16 @@
 package br.com.contadin.domain.valueobject;
 
-public class Email {
+public record Email(String valor) {
 
-    private String email;
+    public Email {
+        if (valor == null || valor.isBlank()) {
+            throw new IllegalArgumentException("Email não pode ser vazio");
+        }
 
-    public Email(String email) {
-        this.email = email;
-    }
+        valor = valor.trim().toLowerCase();
 
-    public String getEmail() {
-        return email;
+        if (!valor.contains("@")) {
+            throw new IllegalArgumentException("Email inválido");
+        }
     }
 }

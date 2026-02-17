@@ -1,6 +1,7 @@
 package br.com.contadin.application.dto.usuario;
 
-public record UsuarioPostRequest(
+public record UsuarioPostResponse(
+        Integer id,
         String nome,
         String sobrenome,
         String email,

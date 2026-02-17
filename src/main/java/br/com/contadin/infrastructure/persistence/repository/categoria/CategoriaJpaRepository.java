@@ -1,4 +1,4 @@
-package br.com.contadin.infrastructure.persistence.repository;
+package br.com.contadin.infrastructure.persistence.repository.categoria;
 
 import br.com.contadin.infrastructure.persistence.entity.CategoriaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

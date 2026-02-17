@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 @Entity
 @Table(name = "categoria")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CategoriaEntity {
