@@ -5,7 +5,9 @@ import br.com.contadin.domain.enums.TipoTransacao;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -31,7 +33,7 @@ public class TransacaoEntity {
     @Column(name = "data_transacao", nullable = false)
     private LocalDateTime dataTransacao;
 
-    private boolean parcelado;
+    private Boolean parcelado;
 
     @Enumerated(EnumType.STRING)
     private Recorrencia recorrencia;
@@ -44,5 +46,13 @@ public class TransacaoEntity {
 
     @Column(name = "fk_categoria", nullable = false)
     private Integer fkCategoria;
+
+    @CreationTimestamp
+    @Column(name = "criado_em", nullable = false, updatable = false)
+    private LocalDateTime criadoEm;
+
+    @UpdateTimestamp
+    @Column(name = "atualizado_em")
+    private LocalDateTime atualizadoEm;
 
 }
