@@ -1,5 +1,6 @@
 package br.com.contadin.domain.model;
 
+import br.com.contadin.domain.enums.TipoInstituicao;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ public final class Instituicao {
     private final String nome;
     private final String icone;
     private final String cor;
+    private final TipoInstituicao tipo;
     private final Integer fkUsuario;
     private final boolean ativo;
     private final LocalDateTime criadoEm;

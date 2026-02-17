@@ -2,6 +2,7 @@ package br.com.contadin.application.usecase.instituicao;
 
 import br.com.contadin.application.port.in.instituicao.CriarInstituicaoInputPort;
 import br.com.contadin.application.port.out.InstituicaoRepository;
+import br.com.contadin.domain.enums.TipoInstituicao;
 import br.com.contadin.domain.model.Instituicao;
 import lombok.RequiredArgsConstructor;
 
@@ -51,6 +52,14 @@ public class CriarInstituicaoUseCase implements CriarInstituicaoInputPort {
 
         if (instituicao.getIcone() == null || instituicao.getIcone().trim().isEmpty()) {
             throw new IllegalArgumentException("Ícone da instituição é obrigatório");
+        }
+
+        if (instituicao.getTipo() == null) {
+            throw new IllegalArgumentException("Tipo da instituição é obrigatório");
+        }
+
+        if (instituicao.getTipo() != TipoInstituicao.VALE && instituicao.getTipo() != TipoInstituicao.BANCO) {
+            throw new IllegalArgumentException("Tipo da instituição deve ser VALE ou BANCO");
         }
     }
 
