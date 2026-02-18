@@ -5,6 +5,7 @@ import br.com.contadin.application.dto.categoria.CategoriaResponse;
 import br.com.contadin.application.port.in.categoria.CriarCategoriaInputPort;
 import br.com.contadin.domain.model.Categoria;
 import br.com.contadin.infrastructure.web.mapper.CategoriaWebMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class CategoriaController {
 
     @PostMapping
     public ResponseEntity<CategoriaResponse> criar(
-            @RequestBody CategoriaRequest request
+            @Valid @RequestBody CategoriaRequest request
     ) {
         Categoria categoria = categoriaWebMapper.toDomain(request);
 
