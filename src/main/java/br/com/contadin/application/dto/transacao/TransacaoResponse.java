@@ -13,11 +13,11 @@ public record TransacaoResponse(
         TipoTransacao tipo,
         String descricao,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
-        LocalDateTime data_transacao,
+        LocalDateTime dataTransacao,
         Boolean parcelado,
         Recorrencia recorrencia,
         @JsonFormat(pattern = "dd/MM/yyyy")
-        Date fim_recorrencia,
+        Date fimRecorrencia,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
         LocalDateTime criadoEm,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")

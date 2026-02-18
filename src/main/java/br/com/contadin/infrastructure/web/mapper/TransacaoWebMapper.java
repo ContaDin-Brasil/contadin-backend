@@ -14,7 +14,6 @@ public interface TransacaoWebMapper {
     @Mapping(target = "atualizadoEm", ignore = true)
     Transacao toDomain(TransacaoRequest request);
 
-    @Mapping(source = "dataTransacao", target = "data_transacao")
-    @Mapping(source = "fimRecorrencia", target = "fim_recorrencia")
+
     TransacaoResponse toResponse(Transacao transacao);
 }
