@@ -21,4 +21,9 @@ public class UsuarioRepositoryImplementations implements UsuarioRepository {
 
         return mapper.toDomain(saved);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return jpaRepository.existsByEmail(email);
+    }
 }

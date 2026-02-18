@@ -1,16 +1,18 @@
 package br.com.contadin.domain.valueobject;
 
+import br.com.contadin.domain.exception.usuario.TelefoneInvalidoException;
+
 public record Telefone(String numero) {
 
     public Telefone {
         if (numero == null || numero.isBlank()) {
-            throw new IllegalArgumentException("Telefone não pode ser vazio");
+            throw new TelefoneInvalidoException("Telefone não pode ser vazio");
         }
 
         numero = removerMascara(numero);
 
         if (!telefoneValido(numero)) {
-            throw new IllegalArgumentException("Telefone inválido");
+            throw new TelefoneInvalidoException("Telefone inválido");
         }
     }
 
@@ -29,7 +31,7 @@ public record Telefone(String numero) {
 
     private static String removerMascara(String valor) {
         if (valor == null || valor.isBlank()) {
-            throw new IllegalArgumentException("Telefone não pode ser vazio");
+            throw new TelefoneInvalidoException("Telefone não pode ser vazio");
         }
         return valor.replaceAll("\\D", "");
     }
