@@ -2,19 +2,30 @@ package br.com.contadin.domain.model;
 
 import br.com.contadin.domain.enums.Recorrencia;
 import br.com.contadin.domain.enums.TipoTransacao;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transacao {
-    private String id;
+    private Integer id;
     private Double valor;
     private TipoTransacao tipo;
     private String descricao;
     private LocalDateTime dataTransacao;
-    private boolean parcelado;
+    private Boolean parcelado;
     private Recorrencia recorrencia;
     private Date fimRecorrencia;
     private Integer fkInstituicao;
     private Integer fkCategoria;
+    private LocalDateTime criadoEm;
+    private LocalDateTime atualizadoEm;
 }
