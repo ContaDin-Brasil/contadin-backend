@@ -15,7 +15,7 @@ public final class Instituicao {
     private final String cor;
     private final TipoInstituicao tipo;
     private final Integer fkUsuario;
-    private final boolean ativo;
+    private final Boolean ativo;
     private final LocalDateTime criadoEm;
     private final LocalDateTime atualizadoEm;
 }

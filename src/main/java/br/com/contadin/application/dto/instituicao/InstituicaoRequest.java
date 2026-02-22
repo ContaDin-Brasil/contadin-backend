@@ -7,6 +7,7 @@ public record InstituicaoRequest(
         String icone,
         String cor,
         TipoInstituicao tipo,
+        Boolean ativo,
         Integer fkUsuario
 ) {
 }

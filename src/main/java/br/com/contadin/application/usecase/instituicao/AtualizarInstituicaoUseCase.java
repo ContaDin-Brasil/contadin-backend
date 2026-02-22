@@ -28,7 +28,7 @@ public class AtualizarInstituicaoUseCase implements AtualizarInstituicaoInputPor
          Instituicao.InstituicaoBuilder builder = Instituicao.builder()
                  .id(id)
                  .nome(instituicao.getNome() != null ? instituicao.getNome() : existente.getNome())
-                 .ativo(existente.isAtivo())
+                 .ativo(instituicao.getAtivo() != null ? instituicao.getAtivo() : existente.getAtivo())
                  .tipo(instituicao.getTipo() != null ? instituicao.getTipo() : existente.getTipo())
                  .cor(instituicao.getCor() != null ? instituicao.getCor() : existente.getCor())
                  .icone(instituicao.getIcone() != null ? instituicao.getIcone() : existente.getIcone())

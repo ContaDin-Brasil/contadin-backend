@@ -30,7 +30,7 @@ public class InstituicaoEntity {
     @Column(name = "fk_usuario", nullable = false)
     private  Integer fkUsuario;
 
-    private  boolean ativo;
+    private  Boolean ativo;
 
     private  LocalDateTime criadoEm;
     private  LocalDateTime atualizadoEm;
