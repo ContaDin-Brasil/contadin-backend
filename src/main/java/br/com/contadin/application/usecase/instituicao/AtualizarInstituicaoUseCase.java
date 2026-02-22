@@ -15,23 +15,24 @@ public class AtualizarInstituicaoUseCase implements AtualizarInstituicaoInputPor
     private final InstituicaoRepository instituicaoRepository;
 
      @Override
-    public Instituicao execute(Instituicao instituicao) {
-         if (instituicao == null || instituicao.getId() == null) {
+    public Instituicao execute(Integer id, Instituicao instituicao) {
+         if (id == null) {
              throw new IllegalArgumentException("ID da instituição é obrigatório para atualização");
          }
 
-         Instituicao existente = instituicaoRepository.findById(instituicao.getId())
+         Instituicao existente = instituicaoRepository.findById(id)
                  .orElseThrow(() -> new IllegalArgumentException("Instituição não encontrada"));
 
          LocalDateTime now = LocalDateTime.now();
 
          Instituicao.InstituicaoBuilder builder = Instituicao.builder()
-                 .id(existente.getId())
+                 .id(id)
                  .nome(instituicao.getNome() != null ? instituicao.getNome() : existente.getNome())
                  .ativo(existente.isAtivo())
                  .tipo(instituicao.getTipo() != null ? instituicao.getTipo() : existente.getTipo())
                  .cor(instituicao.getCor() != null ? instituicao.getCor() : existente.getCor())
                  .icone(instituicao.getIcone() != null ? instituicao.getIcone() : existente.getIcone())
+                 .fkUsuario(existente.getFkUsuario())
                  .criadoEm(existente.getCriadoEm())
                  .atualizadoEm(now);
 
