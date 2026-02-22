@@ -6,6 +6,7 @@ public record InstituicaoRequest(
         String nome,
         String icone,
         String cor,
-        TipoInstituicao tipo
+        TipoInstituicao tipo,
+        Integer fkUsuario
 ) {
 }

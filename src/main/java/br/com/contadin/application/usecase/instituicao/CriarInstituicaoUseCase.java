@@ -5,10 +5,11 @@ import br.com.contadin.application.port.out.InstituicaoRepository;
 import br.com.contadin.domain.enums.TipoInstituicao;
 import br.com.contadin.domain.model.Instituicao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-
+@Service
 @RequiredArgsConstructor
 public class CriarInstituicaoUseCase implements CriarInstituicaoInputPort {
     private final InstituicaoRepository instituicaoRepository;
@@ -25,6 +26,7 @@ public class CriarInstituicaoUseCase implements CriarInstituicaoInputPort {
                 .icone(instituicao.getIcone())
                 .cor(instituicao.getCor())
                 .fkUsuario(instituicao.getFkUsuario())
+                .tipo(instituicao.getTipo())
                 .ativo(true)
                 .criadoEm(now)
                 .atualizadoEm(now);
