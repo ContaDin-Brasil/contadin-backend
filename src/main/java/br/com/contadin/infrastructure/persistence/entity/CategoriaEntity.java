@@ -1,8 +1,6 @@
 package br.com.contadin.infrastructure.persistence.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import br.com.contadin.domain.enums.TipoCategoria;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +18,13 @@ public class CategoriaEntity {
 
     private String nome;
 
-    @Column(name = "fk_usuario", nullable = false)
+    private String icone;
+
+    private String cor;
+
+    @Enumerated(EnumType.STRING)
+    private TipoCategoria tipo;
+
+    @Column(name = "fk_usuario")
     private Integer fkUsuario;
 }
