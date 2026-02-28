@@ -13,7 +13,7 @@ public interface InstituicaoRepository {
 
     List<Instituicao> findAtivasByUsuario(Integer fkUsuario);
 
-    List<Instituicao> findByNomeAndUsuario(String nome, Integer fkUsuario);
+    List<Instituicao> findByNomeAndUsuario(Integer fkUsuario, String nome);
     
 }
 

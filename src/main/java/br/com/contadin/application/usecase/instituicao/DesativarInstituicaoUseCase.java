@@ -18,7 +18,7 @@ public class DesativarInstituicaoUseCase implements DesativarInstituicaoInputPor
         public void execute(Integer id) {
 
             Instituicao existente = instituicaoRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Instituição não encontrada"));
+                    .orElseThrow(() -> new IllegalArgumentException(" Instituição não encontrada"));
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -28,6 +28,8 @@ public class DesativarInstituicaoUseCase implements DesativarInstituicaoInputPor
                     .ativo(false)
                     .cor(existente.getCor())
                     .icone(existente.getIcone())
+                    .fkUsuario(existente.getFkUsuario())
+                    .tipo(existente.getTipo())
                     .criadoEm(existente.getCriadoEm())
                     .atualizadoEm(now);
 

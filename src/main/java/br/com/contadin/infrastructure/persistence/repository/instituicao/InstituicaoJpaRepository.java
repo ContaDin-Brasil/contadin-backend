@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface InstituicaoJpaRepository extends JpaRepository<InstituicaoEntity, Integer> {
     List<InstituicaoEntity> findByFkUsuarioAndAtivoTrue(Integer fkUsuario);
-    List<InstituicaoEntity> findByNomeAndFkUsuario(String nome, Integer fkUsuario);
+    List<InstituicaoEntity> findByFkUsuarioAndNome(Integer fkUsuario, String nome);
 }

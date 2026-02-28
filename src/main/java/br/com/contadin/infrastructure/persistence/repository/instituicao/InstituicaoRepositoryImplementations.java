@@ -40,9 +40,9 @@ public class InstituicaoRepositoryImplementations implements InstituicaoReposito
     }
 
     @Override
-    public List<Instituicao> findByNomeAndUsuario(String nome, Integer fkUsuario){
+    public List<Instituicao> findByNomeAndUsuario(Integer fkUsuario, String nome){
         return jpaRepository
-                .findByNomeAndFkUsuario(nome, fkUsuario)
+                .findByFkUsuarioAndNome(fkUsuario, nome)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();

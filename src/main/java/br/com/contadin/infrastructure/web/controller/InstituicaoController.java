@@ -53,4 +53,33 @@ public class InstituicaoController {
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @PatchMapping("/{id}/desativar")
+    public ResponseEntity<Void> desativarInstituicao(@PathVariable Integer id) {
+        desativarInstituicaoInputPort.execute(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<InstituicaoResponse> buscarInstituicaoPorId(@PathVariable Integer id) {
+        Instituicao instituicao = buscarInstituicaoInputPort.executeBuscarPorId(id);
+        InstituicaoResponse response = instituicaoWebMapper.toResponse(instituicao);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> buscarInstituicoesPorUsuario(@RequestParam Integer fkUsuario) {
+        return ResponseEntity.ok(buscarInstituicaoInputPort.execute(fkUsuario)
+                .stream()
+                .map(instituicaoWebMapper::toResponse)
+                .toList());
+    }
+
+     @GetMapping("/nome")
+    public ResponseEntity<?> buscarInstituicoesPorNome(@RequestParam String nome, @RequestParam Integer fkUsuario) {
+         return ResponseEntity.ok(buscarInstituicaoInputPort.executeBuscarPorNome(fkUsuario, nome)
+                 .stream()
+                 .map(instituicaoWebMapper::toResponse)
+                 .toList());
+    }
 }

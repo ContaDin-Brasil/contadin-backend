@@ -26,8 +26,8 @@ public class BuscarInstituicaoUseCase implements BuscarInstituicaoInputPort {
     }
 
     @Override
-    public List<Instituicao> executeBuscarPorNome(String nome, Integer fkUsuario) {
-        return instituicaoRepository.findByNomeAndUsuario(nome, fkUsuario);
+    public List<Instituicao> executeBuscarPorNome(Integer fkUsuario, String nome) {
+        return instituicaoRepository.findByNomeAndUsuario(fkUsuario, nome);
     }
 
 }
