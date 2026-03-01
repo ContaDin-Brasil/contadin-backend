@@ -3,7 +3,9 @@ package br.com.contadin.application.usecase.metaGasto;
 import br.com.contadin.application.port.in.metaGasto.DeletarMetaGastoInputPort;
 import br.com.contadin.application.port.out.MetaGastoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class DeletarMetaGastoUseCase implements DeletarMetaGastoInputPort {
 

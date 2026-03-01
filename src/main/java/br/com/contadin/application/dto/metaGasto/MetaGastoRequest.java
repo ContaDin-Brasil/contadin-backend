@@ -7,6 +7,7 @@ public record MetaGastoRequest(
         String nome,
         BigDecimal valor,
         Date dataFimMeta,
-        Integer fkCategoria
+        Integer fkCategoria,
+        Integer fkUsuario
 ) {
 }
