@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -17,4 +19,6 @@ public class Categoria {
     private String cor;
     private TipoCategoria tipo;
     private Integer fkUsuario;
+    private LocalDateTime criadoEm;
+    private LocalDateTime atualizadoEm;
 }

@@ -12,4 +12,6 @@ public class TokenRecuperarSenha {
     private String token;
     private LocalDateTime dataExpiracao;
     private Integer fkUsuario;
+    private LocalDateTime criadoEm;
+    private LocalDateTime atualizadoEm;
 }
