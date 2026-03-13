@@ -4,9 +4,11 @@ import br.com.contadin.application.port.in.instituicao.DesativarInstituicaoInput
 import br.com.contadin.application.port.out.InstituicaoRepository;
 import br.com.contadin.domain.model.Instituicao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service
 @RequiredArgsConstructor
 public class DesativarInstituicaoUseCase implements DesativarInstituicaoInputPort {
 
@@ -16,7 +18,7 @@ public class DesativarInstituicaoUseCase implements DesativarInstituicaoInputPor
         public void execute(Integer id) {
 
             Instituicao existente = instituicaoRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Instituição não encontrada"));
+                    .orElseThrow(() -> new IllegalArgumentException(" Instituição não encontrada"));
 
             LocalDateTime now = LocalDateTime.now();
 
@@ -26,6 +28,8 @@ public class DesativarInstituicaoUseCase implements DesativarInstituicaoInputPor
                     .ativo(false)
                     .cor(existente.getCor())
                     .icone(existente.getIcone())
+                    .fkUsuario(existente.getFkUsuario())
+                    .tipo(existente.getTipo())
                     .criadoEm(existente.getCriadoEm())
                     .atualizadoEm(now);
 

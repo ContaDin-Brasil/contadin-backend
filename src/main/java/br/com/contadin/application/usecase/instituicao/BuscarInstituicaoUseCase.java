@@ -4,9 +4,11 @@ import br.com.contadin.application.port.in.instituicao.BuscarInstituicaoInputPor
 import br.com.contadin.application.port.out.InstituicaoRepository;
 import br.com.contadin.domain.model.Instituicao;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class BuscarInstituicaoUseCase implements BuscarInstituicaoInputPort {
 
@@ -24,8 +26,8 @@ public class BuscarInstituicaoUseCase implements BuscarInstituicaoInputPort {
     }
 
     @Override
-    public List<Instituicao> executeBuscarPorNome(String nome, Integer fkUsuario) {
-        return instituicaoRepository.findByNomeAndUsuario(nome, fkUsuario);
+    public List<Instituicao> executeBuscarPorNome(Integer fkUsuario, String nome) {
+        return instituicaoRepository.findByNomeAndUsuario(fkUsuario, nome);
     }
 
 }

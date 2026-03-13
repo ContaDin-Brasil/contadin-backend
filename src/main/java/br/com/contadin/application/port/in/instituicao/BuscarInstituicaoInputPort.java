@@ -9,5 +9,5 @@ public interface BuscarInstituicaoInputPort {
 
     Instituicao executeBuscarPorId(Integer instituicaoId);
 
-    List<Instituicao> executeBuscarPorNome(String nome, Integer fkUsuario);
+    List<Instituicao> executeBuscarPorNome(Integer fkUsuario, String nome);
 }

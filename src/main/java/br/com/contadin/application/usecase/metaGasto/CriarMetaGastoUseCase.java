@@ -4,9 +4,11 @@ import br.com.contadin.application.port.in.metaGasto.CriarMetaGastoInputPort;
 import br.com.contadin.application.port.out.MetaGastoRepository;
 import br.com.contadin.domain.model.MetaGasto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service
 @RequiredArgsConstructor
 public class CriarMetaGastoUseCase implements CriarMetaGastoInputPort {
     private final MetaGastoRepository metaGastoRepository;
@@ -22,6 +24,7 @@ public class CriarMetaGastoUseCase implements CriarMetaGastoInputPort {
                 .valor(metaGasto.getValor())
                 .dataFimMeta(metaGasto.getDataFimMeta())
                 .fkUsuario(metaGasto.getFkUsuario())
+                .fkCategoria(metaGasto.getFkCategoria())
                 .criadoEm(now);
 
 

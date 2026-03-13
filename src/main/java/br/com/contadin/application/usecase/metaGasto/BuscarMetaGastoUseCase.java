@@ -4,9 +4,11 @@ import br.com.contadin.application.port.in.metaGasto.BuscarMetaGastoInputPort;
 import br.com.contadin.application.port.out.MetaGastoRepository;
 import br.com.contadin.domain.model.MetaGasto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class BuscarMetaGastoUseCase implements BuscarMetaGastoInputPort {
 

@@ -10,7 +10,7 @@ public record InstituicaoResponse(
         String icone,
         String cor,
         TipoInstituicao tipo,
-        boolean ativo,
+        Boolean ativo,
         LocalDateTime criadoEm,
         LocalDateTime atualizadoEm
 ) {
