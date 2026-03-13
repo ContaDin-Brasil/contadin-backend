@@ -1,0 +1,9 @@
+
+
+${Ansi.BLUE}   ██████  ██████  ███    ██ ████████  █████  ██████  ██ ███    ██
+${Ansi.BLUE}  ██      ██    ██ ████   ██    ██    ██   ██ ██   ██ ██ ████   ██
+${Ansi.BLUE}  ██      ██    ██ ██ ██  ██    ██    ███████ ██   ██ ██ ██ ██  ██
+${Ansi.BLUE}  ██      ██    ██ ██  ██ ██    ██    ██   ██ ██   ██ ██ ██  ██ ██
+${Ansi.BLUE}   ██████  ██████  ██   ████    ██    ██   ██ ██████  ██ ██   ████
+${AnsiColor.BRIGHT_GREEN}               :: CONTADIN :: Spring Boot ${spring-boot.formatted-version} ::
+${Ansi.DEFAULT}
