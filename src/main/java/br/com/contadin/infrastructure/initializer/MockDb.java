@@ -67,7 +67,6 @@ public class MockDb implements ApplicationRunner{
 
         List<Instituicao> instituicoes = List.of(
             Instituicao.builder()
-                .id(1)
                 .nome("Nubank")
                 .icone("nubank")
                 .cor("#820AD1")
@@ -78,7 +77,6 @@ public class MockDb implements ApplicationRunner{
                 .atualizadoEm(LocalDateTime.now())
                 .build(),
             Instituicao.builder()
-                .id(2)
                 .nome("Vale Alimentação")
                 .icone("vale")
                 .cor("#00A86B")
@@ -98,10 +96,10 @@ public class MockDb implements ApplicationRunner{
         // Categorias
 
         List<Categoria> categorias = List.of(
-            Categoria.builder().id(1).nome("Alimentação").fkUsuario(1).build(),
-            Categoria.builder().id(2).nome("Transporte").fkUsuario(1).build(),
-            Categoria.builder().id(3).nome("Lazer").fkUsuario(1).build(),
-            Categoria.builder().id(4).nome("Saúde").fkUsuario(1).build()
+            Categoria.builder().nome("Alimentação").fkUsuario(1).build(),
+            Categoria.builder().nome("Transporte").fkUsuario(1).build(),
+            Categoria.builder().nome("Lazer").fkUsuario(1).build(),
+            Categoria.builder().nome("Saúde").fkUsuario(1).build()
         );
 
         for (Categoria categoria : categorias) {
@@ -119,7 +117,6 @@ public class MockDb implements ApplicationRunner{
 
         List<MetaGasto> metasGasto = List.of(
             MetaGasto.builder()
-                .id(1)
                 .nome("Meta Supermercado")
                 .valor(new BigDecimal("1500.00"))
                 .dataFimMeta(dataFim)
@@ -128,7 +125,6 @@ public class MockDb implements ApplicationRunner{
                 .fkCategoria(1)
                 .build(),
             MetaGasto.builder()
-                .id(2)
                 .nome("Meta Transporte")
                 .valor(new BigDecimal("400.00"))
                 .dataFimMeta(dataFim)
@@ -153,7 +149,6 @@ public class MockDb implements ApplicationRunner{
 
         List<Transacao> transacoes = List.of(
             Transacao.builder()
-                .id(1)
                 .valor(150.50)
                 .tipo(TipoTransacao.GASTO)
                 .descricao("Supermercado")
@@ -167,7 +162,6 @@ public class MockDb implements ApplicationRunner{
                 .atualizadoEm(LocalDateTime.now())
                 .build(),
             Transacao.builder()
-                .id(2)
                 .valor(3500.00)
                 .tipo(TipoTransacao.RECEITA)
                 .descricao("Salário")
@@ -176,7 +170,7 @@ public class MockDb implements ApplicationRunner{
                 .recorrencia(Recorrencia.MENSAL)
                 .fimRecorrencia(fimRecorrencia)
                 .fkInstituicao(1)
-                .fkCategoria(null)
+                .fkCategoria(2)
                 .criadoEm(LocalDateTime.now())
                 .atualizadoEm(LocalDateTime.now())
                 .build()
