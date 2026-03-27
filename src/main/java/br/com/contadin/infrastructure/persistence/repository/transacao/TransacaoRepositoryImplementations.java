@@ -6,6 +6,9 @@ import br.com.contadin.infrastructure.persistence.mapper.TransacaoPersistenceMap
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class TransacaoRepositoryImplementations implements TransacaoRepository {
@@ -15,9 +18,27 @@ public class TransacaoRepositoryImplementations implements TransacaoRepository {
 
      @Override
     public Transacao save(Transacao transacao) {
-         var entity = persistenceMapper.toEntity(transacao);
-         var saved = jpaRepository.save(entity);
-         return persistenceMapper.toDomain(saved);
+          var entity = persistenceMapper.toEntity(transacao);
+          var saved = jpaRepository.save(entity);
+          return persistenceMapper.toDomain(saved);
+     }
+
+     @Override
+     public Optional<Transacao> findById(Integer id) {
+          return jpaRepository.findById(id)
+                    .map(persistenceMapper::toDomain);
+     }
+
+     @Override
+     public List<Transacao> findAll() {
+          return jpaRepository.findAll().stream()
+                    .map(persistenceMapper::toDomain)
+                    .toList();
+     }
+
+     @Override
+     public void deleteById(Integer id) {
+          jpaRepository.deleteById(id);
      }
 }
 

@@ -21,6 +21,7 @@ public record TransacaoRequest(
         Recorrencia recorrencia,
         @JsonFormat(pattern = "yyyy-MM-dd")
         Date fimRecorrencia,
+        Boolean ativo,
         Integer fkInstituicao,
         Integer fkCategoria
 ) { }

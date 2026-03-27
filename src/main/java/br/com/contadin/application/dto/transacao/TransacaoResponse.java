@@ -18,6 +18,7 @@ public record TransacaoResponse(
         Recorrencia recorrencia,
         @JsonFormat(pattern = "dd/MM/yyyy")
         Date fimRecorrencia,
+        Boolean ativo,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
         LocalDateTime criadoEm,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")

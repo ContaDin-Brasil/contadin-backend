@@ -24,6 +24,7 @@ public class Transacao {
     private Boolean parcelado;
     private Recorrencia recorrencia;
     private Date fimRecorrencia;
+    private Boolean ativo;
     private Integer fkInstituicao;
     private Integer fkCategoria;
     private LocalDateTime criadoEm;
