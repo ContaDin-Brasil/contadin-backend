@@ -25,8 +25,6 @@ public class AtualizarTransacaoUseCase implements AtualizarTransacaoInputPort {
         Transacao existente = transacaoRepository.findById(id)
                 .orElseThrow(() -> new TransacaoNaoEncontradaException("Transação não encontrada."));
 
-        validarTransacao(transacao);
-
         Transacao toSave = Transacao.builder()
                 .id(existente.getId())
                 .valor(transacao.getValor() != null ? transacao.getValor() : existente.getValor())
@@ -42,6 +40,8 @@ public class AtualizarTransacaoUseCase implements AtualizarTransacaoInputPort {
                 .criadoEm(existente.getCriadoEm())
                 .atualizadoEm(LocalDateTime.now())
                 .build();
+
+            validarTransacao(toSave);
 
         return transacaoRepository.save(toSave);
     }
