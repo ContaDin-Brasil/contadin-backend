@@ -66,26 +66,26 @@ public class MockDb implements ApplicationRunner{
         // Instituicoes
 
         List<Instituicao> instituicoes = List.of(
-                Instituicao.builder()
-                        .nome("Nubank")
-                        .icone("nubank")
-                        .cor("#820AD1")
-                        .tipo(TipoInstituicao.BANCO)
-                        .fkUsuario(1)
-                        .ativo(true)
-                        .criadoEm(LocalDateTime.now())
-                        .atualizadoEm(LocalDateTime.now())
-                        .build(),
-                Instituicao.builder()
-                        .nome("Vale Alimentação")
-                        .icone("vale")
-                        .cor("#00A86B")
-                        .tipo(TipoInstituicao.VALE)
-                        .fkUsuario(1)
-                        .ativo(true)
-                        .criadoEm(LocalDateTime.now())
-                        .atualizadoEm(LocalDateTime.now())
-                        .build()
+            Instituicao.builder()
+                .nome("Nubank")
+                .icone("nubank")
+                .cor("#820AD1")
+                .tipo(TipoInstituicao.BANCO)
+                .fkUsuario(1)
+                .ativo(true)
+                .criadoEm(LocalDateTime.now())
+                .atualizadoEm(LocalDateTime.now())
+                .build(),
+            Instituicao.builder()
+                .nome("Vale Alimentação")
+                .icone("vale")
+                .cor("#00A86B")
+                .tipo(TipoInstituicao.VALE)
+                .fkUsuario(1)
+                .ativo(true)
+                .criadoEm(LocalDateTime.now())
+                .atualizadoEm(LocalDateTime.now())
+                .build()
         );
 
         for (Instituicao instituicao : instituicoes) {
@@ -96,10 +96,10 @@ public class MockDb implements ApplicationRunner{
         // Categorias
 
         List<Categoria> categorias = List.of(
-                Categoria.builder().nome("Alimentação").fkUsuario(1).build(),
-                Categoria.builder().nome("Transporte").fkUsuario(1).build(),
-                Categoria.builder().nome("Lazer").fkUsuario(1).build(),
-                Categoria.builder().nome("Saúde").fkUsuario(1).build()
+            Categoria.builder().nome("Alimentação").fkUsuario(1).build(),
+            Categoria.builder().nome("Transporte").fkUsuario(1).build(),
+            Categoria.builder().nome("Lazer").fkUsuario(1).build(),
+            Categoria.builder().nome("Saúde").fkUsuario(1).build()
         );
 
         for (Categoria categoria : categorias) {
@@ -116,22 +116,22 @@ public class MockDb implements ApplicationRunner{
         dataFim = c.getTime();
 
         List<MetaGasto> metasGasto = List.of(
-                MetaGasto.builder()
-                        .nome("Meta Supermercado")
-                        .valor(new BigDecimal("1500.00"))
-                        .dataFimMeta(dataFim)
-                        .criadoEm(LocalDateTime.now())
-                        .fkUsuario(1)
-                        .fkCategoria(1)
-                        .build(),
-                MetaGasto.builder()
-                        .nome("Meta Transporte")
-                        .valor(new BigDecimal("400.00"))
-                        .dataFimMeta(dataFim)
-                        .criadoEm(LocalDateTime.now())
-                        .fkUsuario(1)
-                        .fkCategoria(2)
-                        .build()
+            MetaGasto.builder()
+                .nome("Meta Supermercado")
+                .valor(new BigDecimal("1500.00"))
+                .dataFimMeta(dataFim)
+                .criadoEm(LocalDateTime.now())
+                .fkUsuario(1)
+                .fkCategoria(1)
+                .build(),
+            MetaGasto.builder()
+                .nome("Meta Transporte")
+                .valor(new BigDecimal("400.00"))
+                .dataFimMeta(dataFim)
+                .criadoEm(LocalDateTime.now())
+                .fkUsuario(1)
+                .fkCategoria(2)
+                .build()
         );
 
         for (MetaGasto metaGasto : metasGasto) {
@@ -148,32 +148,32 @@ public class MockDb implements ApplicationRunner{
         fimRecorrencia = cal.getTime();
 
         List<Transacao> transacoes = List.of(
-                Transacao.builder()
-                        .valor(150.50)
-                        .tipo(TipoTransacao.GASTO)
-                        .descricao("Supermercado")
-                        .dataTransacao(LocalDateTime.now())
-                        .parcelado(false)
-                        .recorrencia(Recorrencia.MENSAL)
-                        .fimRecorrencia(fimRecorrencia)
-                        .fkInstituicao(1)
-                        .fkCategoria(1)
-                        .criadoEm(LocalDateTime.now())
-                        .atualizadoEm(LocalDateTime.now())
-                        .build(),
-                Transacao.builder()
-                        .valor(3500.00)
-                        .tipo(TipoTransacao.RECEITA)
-                        .descricao("Salário")
-                        .dataTransacao(LocalDateTime.now())
-                        .parcelado(false)
-                        .recorrencia(Recorrencia.MENSAL)
-                        .fimRecorrencia(fimRecorrencia)
-                        .fkInstituicao(1)
-                        .fkCategoria(2)
-                        .criadoEm(LocalDateTime.now())
-                        .atualizadoEm(LocalDateTime.now())
-                        .build()
+            Transacao.builder()
+                .valor(150.50)
+                .tipo(TipoTransacao.GASTO)
+                .descricao("Supermercado")
+                .dataTransacao(LocalDateTime.now())
+                .parcelado(false)
+                .recorrencia(Recorrencia.MENSAL)
+                .fimRecorrencia(fimRecorrencia)
+                .fkInstituicao(1)
+                .fkCategoria(1)
+                .criadoEm(LocalDateTime.now())
+                .atualizadoEm(LocalDateTime.now())
+                .build(),
+            Transacao.builder()
+                .valor(3500.00)
+                .tipo(TipoTransacao.RECEITA)
+                .descricao("Salário")
+                .dataTransacao(LocalDateTime.now())
+                .parcelado(false)
+                .recorrencia(Recorrencia.MENSAL)
+                .fimRecorrencia(fimRecorrencia)
+                .fkInstituicao(1)
+                .fkCategoria(2)
+                .criadoEm(LocalDateTime.now())
+                .atualizadoEm(LocalDateTime.now())
+                .build()
         );
 
         for (Transacao transacao : transacoes) {
