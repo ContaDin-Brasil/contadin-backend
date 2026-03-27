@@ -41,6 +41,8 @@ public class TransacaoEntity {
     @Column(name = "fim_recorrencia")
     private Date fimRecorrencia;
 
+    private Boolean ativo;
+
     @Column(name = "fk_instituicao", nullable = false)
     private Integer fkInstituicao;
 
