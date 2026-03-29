@@ -1,8 +1,10 @@
 package br.com.contadin.application.dto.usuario.auth;
 
+import java.util.UUID;
+
 public record LoginOutputDTO(
         String accessToken,
-        Integer id,
+        UUID id,
         String nome,
         String sobrenome,
         String email,
