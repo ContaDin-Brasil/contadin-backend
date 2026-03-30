@@ -2,8 +2,8 @@ package br.com.contadin.application.usecase.usuario.auth;
 
 import br.com.contadin.application.dto.usuario.auth.LoginInputDTO;
 import br.com.contadin.application.dto.usuario.auth.LoginOutputDTO;
-import br.com.contadin.application.exception.auth.CredenciaisInvalidasException;
-import br.com.contadin.application.exception.auth.UsuarioInativoException;
+import br.com.contadin.application.exception.usuario.auth.CredenciaisInvalidasException;
+import br.com.contadin.application.exception.usuario.UsuarioInativoException;
 import br.com.contadin.application.mapper.auth.LoginMapper;
 import br.com.contadin.application.port.in.auth.LoginUseCase;
 import br.com.contadin.application.port.out.PasswordEncoderPort;

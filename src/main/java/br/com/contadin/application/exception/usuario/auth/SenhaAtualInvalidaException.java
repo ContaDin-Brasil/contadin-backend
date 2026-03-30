@@ -1,17 +1,17 @@
-package br.com.contadin.application.exception.auth;
+package br.com.contadin.application.exception.usuario.auth;
 
 import br.com.contadin.application.exception.ApplicationException;
 import br.com.contadin.infrastructure.web.exception.HttpStatusException;
 import org.springframework.http.HttpStatus;
 
-public class CredenciaisInvalidasException extends ApplicationException implements HttpStatusException {
+public class SenhaAtualInvalidaException extends ApplicationException implements HttpStatusException {
 
-    public CredenciaisInvalidasException(String message) {
+    public SenhaAtualInvalidaException(String message) {
         super(message);
     }
 
     @Override
     public HttpStatus getStatus() {
-        return HttpStatus.UNAUTHORIZED;
+        return HttpStatus.UNPROCESSABLE_ENTITY;
     }
 }
