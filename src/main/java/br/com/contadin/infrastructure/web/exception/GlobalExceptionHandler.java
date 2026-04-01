@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -100,6 +101,20 @@ public class GlobalExceptionHandler {
 
     private String normalizar(String msg) {
         return msg == null ? "" : msg.replaceAll("\\s+", " ").trim();
+    }
+
+    /**
+     * ERROS DE PARÂMETROS DE REQUISIÇÃO (Query/Path)
+     * <p>
+     * Quando há falha na conversão de parâmetros da URL.
+     * Exemplos:
+     * - Enum inválido em query param (ex: tipo=ABC)
+     * - Número inválido (ex: _page=abc)
+     */
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, IllegalArgumentException.class})
+    public ResponseEntity<ApiError> handleBadRequest(Exception ex) {
+        ApiError error = new ApiError(BAD_REQUEST.value(), "Parâmetro inválido na requisição.", LocalDateTime.now());
+        return ResponseEntity.status(BAD_REQUEST).body(error);
     }
 
     /**
