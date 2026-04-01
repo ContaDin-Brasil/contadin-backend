@@ -1,7 +1,10 @@
 package br.com.contadin.infrastructure.web.controller;
 
+import br.com.contadin.application.dto.transacao.TransacaoConsultaParams;
+import br.com.contadin.application.dto.transacao.TransacaoPaginadaResponse;
 import br.com.contadin.application.dto.transacao.TransacaoRequest;
 import br.com.contadin.application.dto.transacao.TransacaoResponse;
+import br.com.contadin.domain.enums.TipoTransacao;
 import br.com.contadin.application.port.in.transacao.AtualizarTransacaoInputPort;
 import br.com.contadin.application.port.in.transacao.BuscarTransacaoInputPort;
 import br.com.contadin.application.port.in.transacao.CriarTransacaoInputPort;
@@ -23,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/transacoes")
+@RequestMapping({"/transacoes", "/transacao"})
 @RequiredArgsConstructor
 @Tag(name = "Transações", description = "Gerenciamento de transações")
 public class TransacaoController {
@@ -51,12 +54,56 @@ public class TransacaoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping
-    @Operation(summary = "Listar todas as transações", description = "Retorna todas as transações cadastradas.")
-    public ResponseEntity<List<TransacaoResponse>> listarTransacoes() {
-        List<TransacaoResponse> response = buscarTransacaoInputPort.execute().stream()
-                .map(transacaoWebMapper::toResponse)
-                .toList();
+        @GetMapping
+        @Operation(summary = "Listar transações com filtros", description = "Retorna transações paginadas com filtros dinâmicos e ordenação.")
+        public ResponseEntity<TransacaoPaginadaResponse> listarTransacoes(
+            @RequestParam(name = "_page", required = false) Integer page,
+            @RequestParam(name = "_limit", required = false) Integer limit,
+            @RequestParam(name = "_sort", required = false) String sort,
+            @RequestParam(name = "_order", required = false) String order,
+            @RequestParam(name = "tipo", required = false) TipoTransacao tipo,
+            @RequestParam(name = "fk_instituicao", required = false) Integer fkInstituicao,
+            @RequestParam(name = "fk_categoria", required = false) Integer fkCategoria,
+            @RequestParam(name = "valor_gte", required = false) Double valorGte,
+            @RequestParam(name = "valor_lte", required = false) Double valorLte,
+            @RequestParam(name = "parcelado", required = false) Boolean parcelado,
+            @RequestParam(name = "recorrente", required = false) Boolean recorrente,
+            @RequestParam(name = "data_transacao_gte", required = false) String dataTransacaoGte,
+            @RequestParam(name = "data_transacao_lte", required = false) String dataTransacaoLte,
+            @RequestParam(name = "search", required = false) String search
+        ) {
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+            page,
+            limit,
+            sort,
+            order,
+            tipo,
+            fkInstituicao,
+            fkCategoria,
+            valorGte,
+            valorLte,
+            parcelado,
+            recorrente,
+            dataTransacaoGte,
+            dataTransacaoLte,
+            search
+        );
+
+        var transacoesPage = buscarTransacaoInputPort.execute(params);
+
+        List<TransacaoResponse> data = transacoesPage.getContent().stream()
+            .map(transacaoWebMapper::toResponse)
+            .toList();
+
+        TransacaoPaginadaResponse response = new TransacaoPaginadaResponse(
+            data,
+            transacoesPage.getNumber() + 1,
+            transacoesPage.getSize(),
+            transacoesPage.getTotalElements(),
+            transacoesPage.getTotalPages(),
+            transacoesPage.hasNext()
+        );
+
         return ResponseEntity.ok(response);
     }
 
