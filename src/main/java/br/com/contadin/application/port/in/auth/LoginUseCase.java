@@ -1,9 +1,9 @@
 package br.com.contadin.application.port.in.auth;
 
-import br.com.contadin.application.dto.usuario.auth.LoginInputDTO;
-import br.com.contadin.application.dto.usuario.auth.LoginOutputDTO;
+import br.com.contadin.application.dto.usuario.auth.LoginRequest;
+import br.com.contadin.application.dto.usuario.auth.LoginResponse;
 
 public interface LoginUseCase {
 
-    LoginOutputDTO execute(LoginInputDTO input);
+    LoginResponse execute(LoginRequest input);
 }

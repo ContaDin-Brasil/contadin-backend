@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record UsuarioPostResponse(
+public record CriarUsuarioResponse(
         UUID id,
         String nome,
         String sobrenome,
@@ -19,5 +19,4 @@ public record UsuarioPostResponse(
 
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
         LocalDateTime atualizadoEm
-) {
-}
+) {}

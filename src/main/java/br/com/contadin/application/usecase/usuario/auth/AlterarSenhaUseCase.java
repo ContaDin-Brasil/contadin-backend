@@ -1,10 +1,10 @@
 package br.com.contadin.application.usecase.usuario.auth;
 
-import br.com.contadin.application.dto.usuario.auth.AlterarSenhaInputDTO;
+import br.com.contadin.application.dto.usuario.auth.AlterarSenhaRequest;
+import br.com.contadin.application.exception.usuario.UsuarioNaoEncontradoException;
 import br.com.contadin.application.exception.usuario.auth.ConfirmacaoSenhaInvalidaException;
 import br.com.contadin.application.exception.usuario.auth.SenhaAtualInvalidaException;
 import br.com.contadin.application.exception.usuario.auth.SenhaRepetidaException;
-import br.com.contadin.application.exception.usuario.UsuarioNaoEncontradoException;
 import br.com.contadin.application.port.in.auth.AlterarSenhaInputPort;
 import br.com.contadin.application.port.out.PasswordEncoderPort;
 import br.com.contadin.application.port.out.UsuarioRepository;
@@ -27,7 +27,7 @@ public class AlterarSenhaUseCase implements AlterarSenhaInputPort {
     private final PasswordEncoderPort passwordEncoderPort;
 
     @Override
-    public void execute(AlterarSenhaInputDTO input) {
+    public void execute(AlterarSenhaRequest input) {
 
         Usuario usuario = buscarUsuario(input.id());
 
@@ -43,19 +43,19 @@ public class AlterarSenhaUseCase implements AlterarSenhaInputPort {
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(MSG_USUARIO_NAO_ENCONTRADO));
     }
 
-    private void validarSenhaAtual(AlterarSenhaInputDTO input, Usuario usuario) {
+    private void validarSenhaAtual(AlterarSenhaRequest input, Usuario usuario) {
         if (!passwordEncoderPort.matches(input.senhaAtual(), usuario.getSenha())) {
             throw new SenhaAtualInvalidaException(MSG_SENHA_ATUAL_INVALIDA);
         }
     }
 
-    private void validarNovaSenhaDiferente(AlterarSenhaInputDTO input, Usuario usuario) {
+    private void validarNovaSenhaDiferente(AlterarSenhaRequest input, Usuario usuario) {
         if (passwordEncoderPort.matches(input.novaSenha(), usuario.getSenha())) {
             throw new SenhaRepetidaException(MSG_SENHA_REPETIDA);
         }
     }
 
-    private void validarConfirmacaoSenha(AlterarSenhaInputDTO input) {
+    private void validarConfirmacaoSenha(AlterarSenhaRequest input) {
         if (!input.novaSenha().equals(input.confirmacaoNovaSenha())) {
             throw new ConfirmacaoSenhaInvalidaException(MSG_CONFIRMACAO_INVALIDA);
         }

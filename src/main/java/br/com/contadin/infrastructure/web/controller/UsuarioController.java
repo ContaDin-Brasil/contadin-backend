@@ -1,6 +1,6 @@
 package br.com.contadin.infrastructure.web.controller;
 
-import br.com.contadin.application.dto.usuario.UsuarioPatchRequest;
+import br.com.contadin.application.dto.usuario.AtualizarUsuarioRequest;
 import br.com.contadin.application.dto.usuario.UsuarioResponse;
 import br.com.contadin.application.port.in.usuario.AtualizarUsuarioInputPort;
 import br.com.contadin.application.port.in.usuario.BuscarUsuarioInputPort;
@@ -54,7 +54,7 @@ public class UsuarioController {
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
-    public ResponseEntity<UsuarioResponse> atualizar(@PathVariable UUID id, @Valid @RequestBody UsuarioPatchRequest request) {
+    public ResponseEntity<UsuarioResponse> atualizar(@PathVariable UUID id, @Valid @RequestBody AtualizarUsuarioRequest request) {
         Usuario patch = usuarioWebMapper.toDomain(request);
         Usuario atualizado = atualizarUsuarioInputPort.execute(id, patch);
         UsuarioResponse response = usuarioWebMapper.toUsuarioResponse(atualizado);

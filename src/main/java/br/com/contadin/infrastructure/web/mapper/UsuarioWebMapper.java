@@ -1,8 +1,8 @@
 package br.com.contadin.infrastructure.web.mapper;
 
-import br.com.contadin.application.dto.usuario.UsuarioPatchRequest;
-import br.com.contadin.application.dto.usuario.UsuarioPostRequest;
-import br.com.contadin.application.dto.usuario.UsuarioPostResponse;
+import br.com.contadin.application.dto.usuario.AtualizarUsuarioRequest;
+import br.com.contadin.application.dto.usuario.CriarUsuarioRequest;
+import br.com.contadin.application.dto.usuario.CriarUsuarioResponse;
 import br.com.contadin.application.dto.usuario.UsuarioResponse;
 import br.com.contadin.domain.model.Usuario;
 import br.com.contadin.domain.valueobject.Email;
@@ -11,23 +11,19 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 @Mapper(componentModel = "spring")
 public interface UsuarioWebMapper {
 
     @Mapping(target = "email", source = "email", qualifiedByName = "stringToEmail")
     @Mapping(target = "telefone", source = "telefone", qualifiedByName = "stringToTelefone")
-    Usuario toDomain(UsuarioPostRequest request);
+    Usuario toDomain(CriarUsuarioRequest request);
 
     @Mapping(target = "telefone", source = "telefone", qualifiedByName = "stringToTelefone")
-    Usuario toDomain(UsuarioPatchRequest request);
+    Usuario toDomain(AtualizarUsuarioRequest request);
 
     @Mapping(target = "email", source = "email", qualifiedByName = "emailToString")
     @Mapping(target = "telefone", source = "telefone", qualifiedByName = "telefoneToString")
-    UsuarioPostResponse toResponse(Usuario model);
+    CriarUsuarioResponse toResponse(Usuario model);
 
     @Mapping(target = "email", source = "email", qualifiedByName = "emailToString")
     @Mapping(target = "telefone", source = "telefone", qualifiedByName = "telefoneToString")

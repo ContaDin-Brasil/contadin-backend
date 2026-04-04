@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
-public record AlterarSenhaInputDTO(
+public record AlterarSenhaRequest(
         @NotNull(message = "Id do usuário é obrigatório")
         UUID id,
 
@@ -25,5 +25,4 @@ public record AlterarSenhaInputDTO(
 
         @NotBlank(message = "Confirmação da nova senha é obrigatória")
         String confirmacaoNovaSenha
-) {
-}
+) {}

@@ -52,7 +52,14 @@ public class SecurityConfig {
                             ));
                         }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/cadastro").permitAll()
+                        .requestMatchers(HttpMethod.POST,
+                                "/auth/login",
+                                "/auth/cadastro",
+                                "/auth/esqueceu-senha",
+                                "/auth/validar-pin",
+                                "/auth/redefinir-senha",
+                                "/auth/reenviar-pin"
+                        ).permitAll()
                         .requestMatchers(
                                 "/api-contadin/**",
                                 "/api-contadin-json/**",

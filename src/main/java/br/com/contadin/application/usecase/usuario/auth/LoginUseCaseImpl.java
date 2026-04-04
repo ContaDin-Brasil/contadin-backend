@@ -1,7 +1,7 @@
 package br.com.contadin.application.usecase.usuario.auth;
 
-import br.com.contadin.application.dto.usuario.auth.LoginInputDTO;
-import br.com.contadin.application.dto.usuario.auth.LoginOutputDTO;
+import br.com.contadin.application.dto.usuario.auth.LoginRequest;
+import br.com.contadin.application.dto.usuario.auth.LoginResponse;
 import br.com.contadin.application.exception.usuario.auth.CredenciaisInvalidasException;
 import br.com.contadin.application.exception.usuario.UsuarioInativoException;
 import br.com.contadin.application.mapper.auth.LoginMapper;
@@ -26,7 +26,7 @@ public class LoginUseCaseImpl implements LoginUseCase {
     private final LoginMapper loginMapper;
 
     @Override
-    public LoginOutputDTO execute(LoginInputDTO input) {
+    public LoginResponse execute(LoginRequest input) {
         String emailNormalizado = input.email().trim().toLowerCase();
 
         Usuario usuario = usuarioRepository.findByEmail(emailNormalizado)
@@ -41,7 +41,7 @@ public class LoginUseCaseImpl implements LoginUseCase {
         }
 
         String token = tokenProviderPort.generateToken(usuario.getEmail().valor());
-        return loginMapper.toOutput(usuario, token);
+        return loginMapper.toResponse(usuario, token);
     }
 
 }
