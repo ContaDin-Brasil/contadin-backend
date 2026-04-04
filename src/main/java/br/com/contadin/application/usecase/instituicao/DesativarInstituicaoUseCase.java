@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public class DesativarInstituicaoUseCase implements DesativarInstituicaoInputPor
         private final InstituicaoRepository instituicaoRepository;
 
         @Override
-        public void execute(Integer id) {
+        public void execute(UUID id) {
 
             Instituicao existente = instituicaoRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException(" Instituição não encontrada"));

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class InstituicaoRepositoryImplementations implements InstituicaoReposito
     }
 
     @Override
-    public Optional<Instituicao> findById(Integer id) {
+    public Optional<Instituicao> findById(UUID id) {
         return jpaRepository.findById(id)
                 .map(mapper::toDomain);
     }

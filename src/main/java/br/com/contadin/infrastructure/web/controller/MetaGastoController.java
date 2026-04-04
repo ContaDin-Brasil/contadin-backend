@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class MetaGastoController {
     }
 
      @PatchMapping("/{id}")
-    public ResponseEntity<MetaGastoResponse> atualizarMetaGasto( @PathVariable Integer id, @Valid @RequestBody MetaGastoRequest request) {
+    public ResponseEntity<MetaGastoResponse> atualizarMetaGasto( @PathVariable UUID id, @Valid @RequestBody MetaGastoRequest request) {
          MetaGasto metaGasto = metaGastoWebMapper.toDomain(request);
          MetaGasto metaGastoCriada = atualizarMetaGastoInputPort.execute(id, metaGasto);
          MetaGastoResponse response = metaGastoWebMapper.toResponse(metaGastoCriada);
@@ -47,7 +48,7 @@ public class MetaGastoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MetaGastoResponse> buscarMetaGastoPorId(@PathVariable Integer id) {
+    public ResponseEntity<MetaGastoResponse> buscarMetaGastoPorId(@PathVariable UUID id) {
         MetaGasto metaGasto = buscarMetaGastoInputPort.executeBuscarPorId(id);
         MetaGastoResponse response = metaGastoWebMapper.toResponse(metaGasto);
         return ResponseEntity.ok(response);
@@ -72,7 +73,7 @@ public class MetaGastoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarMetaGasto(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletarMetaGasto(@PathVariable UUID id) {
         deletarMetaGastoInputPort.execute(id);
         return ResponseEntity.noContent().build();
     }

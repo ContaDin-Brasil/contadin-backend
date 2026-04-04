@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,13 +24,13 @@ public class MetaGastoRepositoryImplementations implements MetaGastoRepository {
         }
 
          @Override
-        public Optional<MetaGasto> findById(Integer id) {
+        public Optional<MetaGasto> findById(UUID id) {
             return jpaRepository.findById(id)
                     .map(mapper::toDomain);
         }
 
         @Override
-        public void deleteById(Integer id) {
+        public void deleteById(UUID id) {
             jpaRepository.deleteById(id);
         }
 

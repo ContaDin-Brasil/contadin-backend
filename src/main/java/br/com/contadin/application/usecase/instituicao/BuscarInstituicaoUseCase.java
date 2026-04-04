@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public class BuscarInstituicaoUseCase implements BuscarInstituicaoInputPort {
     private final InstituicaoRepository instituicaoRepository;
 
     @Override
-    public Instituicao executeBuscarPorId(Integer instituicaoId) {
+    public Instituicao executeBuscarPorId(UUID instituicaoId) {
         return instituicaoRepository.findById(instituicaoId)
                 .orElseThrow(() -> new IllegalArgumentException("Instituição não encontrada"));
     }

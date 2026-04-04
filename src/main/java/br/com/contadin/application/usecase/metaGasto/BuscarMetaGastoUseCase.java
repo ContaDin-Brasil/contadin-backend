@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class BuscarMetaGastoUseCase implements BuscarMetaGastoInputPort {
     }
 
     @Override
-    public MetaGasto executeBuscarPorId(Integer metaGastoId) {
+    public MetaGasto executeBuscarPorId(UUID metaGastoId) {
         if (metaGastoId == null) {
             throw new IllegalArgumentException("ID da meta de gasto é obrigatório para busca");
         }

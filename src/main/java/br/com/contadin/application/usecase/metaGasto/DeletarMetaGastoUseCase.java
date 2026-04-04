@@ -5,6 +5,8 @@ import br.com.contadin.application.port.out.MetaGastoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class DeletarMetaGastoUseCase implements DeletarMetaGastoInputPort {
@@ -12,7 +14,7 @@ public class DeletarMetaGastoUseCase implements DeletarMetaGastoInputPort {
     private final MetaGastoRepository metaGastoRepository;
 
     @Override
-    public void execute(Integer id) {
+    public void execute(UUID id) {
         if (id == null) {
             throw new IllegalArgumentException("ID da meta de gasto é obrigatório para exclusão");
         }

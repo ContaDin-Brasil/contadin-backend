@@ -1,5 +1,7 @@
 package br.com.contadin.application.port.in.instituicao;
 
+import java.util.UUID;
+
 public interface DesativarInstituicaoInputPort {
-        void execute(Integer id);
+        void execute(UUID id);
 }
