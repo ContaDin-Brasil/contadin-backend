@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Builder
 public class TokenRecuperarSenha {
-    private Integer id;
+    private UUID id;
     private String token;
     private LocalDateTime dataExpiracao;
     private UUID fkUsuario;

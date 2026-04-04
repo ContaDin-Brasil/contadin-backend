@@ -16,5 +16,5 @@ public interface TokenRecuperarSenhaRepository {
 
     void invalidarTokensDoUsuario(UUID fkUsuario);
 
-    void marcarComoUtilizado(Integer id);
+    void marcarComoUtilizado(UUID id);
 }

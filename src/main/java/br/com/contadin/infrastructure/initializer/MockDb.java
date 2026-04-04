@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -94,12 +95,13 @@ public class MockDb implements ApplicationRunner{
         log.info("Instituicoes cadastras com sucesso!");
 
         // Categorias
+        UUID usuarioId = UUID.randomUUID();
 
         List<Categoria> categorias = List.of(
-            Categoria.builder().nome("Alimentação").fkUsuario(1).build(),
-            Categoria.builder().nome("Transporte").fkUsuario(1).build(),
-            Categoria.builder().nome("Lazer").fkUsuario(1).build(),
-            Categoria.builder().nome("Saúde").fkUsuario(1).build()
+            Categoria.builder().nome("Alimentação").fkUsuario(usuarioId).build(),
+            Categoria.builder().nome("Transporte").fkUsuario(usuarioId).build(),
+            Categoria.builder().nome("Lazer").fkUsuario(usuarioId).build(),
+            Categoria.builder().nome("Saúde").fkUsuario(usuarioId).build()
         );
 
         for (Categoria categoria : categorias) {

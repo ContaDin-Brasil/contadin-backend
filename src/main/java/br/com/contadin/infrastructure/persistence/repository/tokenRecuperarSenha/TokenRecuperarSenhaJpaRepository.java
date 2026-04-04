@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface TokenRecuperarSenhaJpaRepository extends JpaRepository<TokenRecuperarSenhaEntity, Integer> {
+public interface TokenRecuperarSenhaJpaRepository extends JpaRepository<TokenRecuperarSenhaEntity, UUID> {
 
     Optional<TokenRecuperarSenhaEntity> findFirstByFkUsuarioAndUtilizadoFalseOrderByCriadoEmDesc(UUID fkUsuario);
 
@@ -36,5 +36,5 @@ public interface TokenRecuperarSenhaJpaRepository extends JpaRepository<TokenRec
             SET t.utilizado = true
             WHERE t.id = :id
             """)
-    void marcarComoUtilizado(@Param("id") Integer id);
+    void marcarComoUtilizado(@Param("id") UUID id);
 }

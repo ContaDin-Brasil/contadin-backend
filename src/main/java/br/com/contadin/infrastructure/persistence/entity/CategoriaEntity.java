@@ -31,7 +31,7 @@ public class CategoriaEntity {
     private TipoCategoria tipo;
 
     @Column(name = "fk_usuario")
-    private Integer fkUsuario;
+    private UUID fkUsuario;
 
     @CreationTimestamp
     @Column(name = "criado_em", nullable = false, updatable = false)

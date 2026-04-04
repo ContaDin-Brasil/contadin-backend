@@ -46,7 +46,7 @@ public class TokenRecuperarSenhaRepositoryImplementations implements TokenRecupe
     }
 
     @Override
-    public void marcarComoUtilizado(Integer id) {
+    public void marcarComoUtilizado(UUID id) {
         jpaRepository.marcarComoUtilizado(id);
     }
 }

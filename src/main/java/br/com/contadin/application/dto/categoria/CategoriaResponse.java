@@ -12,7 +12,7 @@ public record CategoriaResponse(
         String icone,
         String cor,
         TipoCategoria tipo,
-        Integer fkUsuario,
+        UUID fkUsuario,
 
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
         LocalDateTime criadoEm,

@@ -19,7 +19,7 @@ public class Categoria {
     private String icone;
     private String cor;
     private TipoCategoria tipo;
-    private Integer fkUsuario;
+    private UUID fkUsuario;
     private LocalDateTime criadoEm;
     private LocalDateTime atualizadoEm;
 }
