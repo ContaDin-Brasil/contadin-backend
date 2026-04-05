@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -19,17 +20,19 @@ import java.time.LocalDateTime;
 public class TokenRecuperarSenhaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     private String token;
 
-    @CreationTimestamp
-    @Column(name = "data_expiracao", nullable = false, updatable = false)
+    @Column(name = "data_expiracao", nullable = false)
     private LocalDateTime dataExpiracao;
 
     @Column(name = "fk_usuario")
-    private Integer fkUsuario;
+    private UUID fkUsuario;
+
+    @Column(name = "utilizado")
+    private Boolean utilizado;
 
     @CreationTimestamp
     @Column(name = "criado_em", nullable = false, updatable = false)

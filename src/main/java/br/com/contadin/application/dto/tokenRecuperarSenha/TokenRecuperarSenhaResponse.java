@@ -5,10 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record TokenRecuperarSenhaResponse(
         @NotNull(message = "Id é obrigatório")
-        Integer id,
+        UUID id,
 
         @NotBlank(message = "Token é obrigatório")
         String token,
@@ -17,7 +18,7 @@ public record TokenRecuperarSenhaResponse(
         LocalDateTime dataExpiracao,
 
         @NotNull(message = "Fk usuário é obrigatório")
-        Integer fkUsuario,
+        UUID fkUsuario,
 
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
         LocalDateTime criadoEm,

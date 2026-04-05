@@ -12,7 +12,7 @@ public record Telefone(String numero) {
         numero = removerMascara(numero);
 
         if (!telefoneValido(numero)) {
-            throw new TelefoneInvalidoException("Telefone inválido");
+            throw new TelefoneInvalidoException("Telefone inválido com quantidade de caracteres inválida");
         }
     }
 
