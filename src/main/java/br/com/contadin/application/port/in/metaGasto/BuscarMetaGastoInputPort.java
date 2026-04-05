@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BuscarMetaGastoInputPort {
-    List<MetaGasto> execute(Integer fkUsuario);
+    List<MetaGasto> execute(UUID fkUsuario);
 
     MetaGasto executeBuscarPorId(UUID MetaGastoId);
 
-    List<MetaGasto> executeBuscarPorNome(String nome, Integer fkUsuario);
+    List<MetaGasto> executeBuscarPorNome(String nome, UUID fkUsuario);
 
 }

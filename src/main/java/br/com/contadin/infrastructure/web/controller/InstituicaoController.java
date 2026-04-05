@@ -70,7 +70,7 @@ public class InstituicaoController {
     }
 
     @GetMapping
-    public ResponseEntity<?> buscarInstituicoesPorUsuario(@RequestParam Integer fkUsuario) {
+    public ResponseEntity<?> buscarInstituicoesPorUsuario(@RequestParam UUID fkUsuario) {
         return ResponseEntity.ok(buscarInstituicaoInputPort.execute(fkUsuario)
                 .stream()
                 .map(instituicaoWebMapper::toResponse)
@@ -78,7 +78,7 @@ public class InstituicaoController {
     }
 
      @GetMapping("/nome")
-    public ResponseEntity<?> buscarInstituicoesPorNome(@RequestParam String nome, @RequestParam Integer fkUsuario) {
+    public ResponseEntity<?> buscarInstituicoesPorNome(@RequestParam String nome, @RequestParam UUID fkUsuario) {
          return ResponseEntity.ok(buscarInstituicaoInputPort.executeBuscarPorNome(fkUsuario, nome)
                  .stream()
                  .map(instituicaoWebMapper::toResponse)

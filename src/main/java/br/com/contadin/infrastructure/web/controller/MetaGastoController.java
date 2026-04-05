@@ -55,7 +55,7 @@ public class MetaGastoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MetaGastoResponse>> buscarMetaGastoPorUsuario(@RequestParam Integer fkUsuario) {
+    public ResponseEntity<List<MetaGastoResponse>> buscarMetaGastoPorUsuario(@RequestParam UUID fkUsuario) {
         java.util.List<MetaGasto> metaGastos = buscarMetaGastoInputPort.execute(fkUsuario);
         java.util.List<MetaGastoResponse> response = metaGastos.stream()
                 .map(metaGastoWebMapper::toResponse)
@@ -64,7 +64,7 @@ public class MetaGastoController {
     }
 
     @GetMapping("/nome")
-    public ResponseEntity<List<MetaGastoResponse>> buscarMetaGastoPorNome(@RequestParam String nome, @RequestParam Integer fkUsuario) {
+    public ResponseEntity<List<MetaGastoResponse>> buscarMetaGastoPorNome(@RequestParam String nome, @RequestParam UUID fkUsuario) {
         java.util.List<MetaGasto> metaGastos = buscarMetaGastoInputPort.executeBuscarPorNome(nome, fkUsuario);
         java.util.List<MetaGastoResponse> response = metaGastos.stream()
                 .map(metaGastoWebMapper::toResponse)

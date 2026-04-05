@@ -35,7 +35,7 @@ public class MetaGastoRepositoryImplementations implements MetaGastoRepository {
         }
 
         @Override
-        public java.util.List<MetaGasto> findByUsuario(Integer fkUsuario) {
+        public java.util.List<MetaGasto> findByUsuario(UUID fkUsuario) {
             return jpaRepository.findByFkUsuario(fkUsuario)
                     .stream()
                     .map(mapper::toDomain)
@@ -43,7 +43,7 @@ public class MetaGastoRepositoryImplementations implements MetaGastoRepository {
         }
 
         @Override
-        public java.util.List<MetaGasto> findByNomeAndUsuario(String nome, Integer fkUsuario) {
+        public java.util.List<MetaGasto> findByNomeAndUsuario(String nome, UUID fkUsuario) {
             return jpaRepository.findByFkUsuarioAndNome(fkUsuario, nome)
                     .stream().map(mapper::toDomain)
                     .toList();

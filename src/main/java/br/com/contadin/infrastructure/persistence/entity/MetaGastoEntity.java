@@ -32,7 +32,7 @@ public class MetaGastoEntity {
     private  LocalDateTime atualizadoEm;
 
     @Column(name = "fk_usuario", nullable = false)
-    private  Integer fkUsuario;
+    private  UUID fkUsuario;
 
-    private  Integer fkCategoria;
+    private  UUID fkCategoria;
 }

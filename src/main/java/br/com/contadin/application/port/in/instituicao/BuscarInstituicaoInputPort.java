@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BuscarInstituicaoInputPort {
-    List<Instituicao> execute(Integer fkUsuario);
+    List<Instituicao> execute(UUID fkUsuario);
 
     Instituicao executeBuscarPorId(UUID instituicaoId);
 
-    List<Instituicao> executeBuscarPorNome(Integer fkUsuario, String nome);
+    List<Instituicao> executeBuscarPorNome(UUID fkUsuario, String nome);
 }

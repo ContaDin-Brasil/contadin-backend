@@ -32,7 +32,7 @@ public class InstituicaoRepositoryImplementations implements InstituicaoReposito
     }
 
     @Override
-    public List<Instituicao> findAtivasByUsuario(Integer fkUsuario) {
+    public List<Instituicao> findAtivasByUsuario(UUID fkUsuario) {
         return jpaRepository
                 .findByFkUsuarioAndAtivoTrue(fkUsuario)
                 .stream()
@@ -41,7 +41,7 @@ public class InstituicaoRepositoryImplementations implements InstituicaoReposito
     }
 
     @Override
-    public List<Instituicao> findByNomeAndUsuario(Integer fkUsuario, String nome){
+    public List<Instituicao> findByNomeAndUsuario(UUID fkUsuario, String nome){
         return jpaRepository
                 .findByFkUsuarioAndNome(fkUsuario, nome)
                 .stream()

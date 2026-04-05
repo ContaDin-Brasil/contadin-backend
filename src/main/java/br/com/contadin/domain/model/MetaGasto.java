@@ -20,6 +20,6 @@ public class MetaGasto {
     private final Date dataFimMeta;
     private final LocalDateTime criadoEm;
     private final LocalDateTime atualizadoEm;
-    private final Integer fkUsuario;
-    private final Integer fkCategoria;
+    private final UUID fkUsuario;
+    private final UUID fkCategoria;
 }

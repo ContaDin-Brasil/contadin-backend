@@ -22,12 +22,12 @@ public class BuscarInstituicaoUseCase implements BuscarInstituicaoInputPort {
     }
 
     @Override
-    public List<Instituicao> execute(Integer fkUsuario) {
+    public List<Instituicao> execute(UUID fkUsuario) {
         return instituicaoRepository.findAtivasByUsuario(fkUsuario);
     }
 
     @Override
-    public List<Instituicao> executeBuscarPorNome(Integer fkUsuario, String nome) {
+    public List<Instituicao> executeBuscarPorNome(UUID fkUsuario, String nome) {
         return instituicaoRepository.findByNomeAndUsuario(fkUsuario, nome);
     }
 

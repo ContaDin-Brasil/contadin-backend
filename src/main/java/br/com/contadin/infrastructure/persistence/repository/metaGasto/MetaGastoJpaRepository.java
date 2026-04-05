@@ -10,6 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface MetaGastoJpaRepository extends JpaRepository< MetaGastoEntity, UUID> {
-    List<MetaGastoEntity> findByFkUsuario(Integer fkUsuario);
-    List<MetaGastoEntity> findByFkUsuarioAndNome(Integer fkUsuario, String nome);
+    List<MetaGastoEntity> findByFkUsuario(UUID fkUsuario);
+    List<MetaGastoEntity> findByFkUsuarioAndNome(UUID fkUsuario, String nome);
 }

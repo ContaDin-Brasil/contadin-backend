@@ -12,6 +12,6 @@ public record MetaGastoResponse(
         Date dataFimMeta,
         LocalDateTime criadoEm,
         LocalDateTime atualizadoEm,
-        Integer fkCategoria
+        UUID fkCategoria
 ) {
 }

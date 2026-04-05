@@ -16,7 +16,7 @@ public class BuscarMetaGastoUseCase implements BuscarMetaGastoInputPort {
     private final MetaGastoRepository metaGastoRepository;
 
     @Override
-    public List<MetaGasto> execute(Integer fkUsuario) {
+    public List<MetaGasto> execute(UUID fkUsuario) {
         if (fkUsuario == null) {
             throw new IllegalArgumentException("ID do usuário é obrigatório para busca");
         }
@@ -36,7 +36,7 @@ public class BuscarMetaGastoUseCase implements BuscarMetaGastoInputPort {
     }
 
     @Override
-    public List<MetaGasto> executeBuscarPorNome(String nome, Integer fkUsuario) {
+    public List<MetaGasto> executeBuscarPorNome(String nome, UUID fkUsuario) {
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome da meta de gasto é obrigatório para busca");
         }

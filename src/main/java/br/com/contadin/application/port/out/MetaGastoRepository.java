@@ -11,9 +11,9 @@ public interface MetaGastoRepository {
 
     Optional<MetaGasto> findById(UUID id);
 
-    List<MetaGasto> findByUsuario(Integer fkUsuario);
+    List<MetaGasto> findByUsuario(UUID fkUsuario);
 
-    List<MetaGasto> findByNomeAndUsuario(String nome, Integer fkUsuario);
+    List<MetaGasto> findByNomeAndUsuario(String nome, UUID fkUsuario);
 
     void deleteById(UUID id);
 }

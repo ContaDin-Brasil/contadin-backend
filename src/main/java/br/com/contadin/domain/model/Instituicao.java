@@ -15,7 +15,7 @@ public final class Instituicao {
     private final String icone;
     private final String cor;
     private final TipoInstituicao tipo;
-    private final Integer fkUsuario;
+    private final UUID fkUsuario;
     private final Boolean ativo;
     private final LocalDateTime criadoEm;
     private final LocalDateTime atualizadoEm;

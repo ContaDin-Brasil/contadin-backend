@@ -31,7 +31,7 @@ public class InstituicaoEntity {
     private  TipoInstituicao tipo;
 
     @Column(name = "fk_usuario", nullable = false)
-    private  Integer fkUsuario;
+    private  UUID fkUsuario;
 
     private  Boolean ativo;
 

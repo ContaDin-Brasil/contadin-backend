@@ -49,13 +49,14 @@ public class MockDb implements ApplicationRunner{
 
     @Override
     public void run(ApplicationArguments args) {
+        UUID usuarioId = UUID.randomUUID();
 
         if (!setMockData) {
             log.info("Aplicação iniciando sem dados mocados");
             return;
         }
 
-        if (!instituicaoRepository.findAtivasByUsuario(1).isEmpty()) {
+        if (!instituicaoRepository.findAtivasByUsuario(usuarioId).isEmpty()) {
             log.info("Dados mock já existem; pulando inicialização.");
             return;
         }
@@ -72,7 +73,7 @@ public class MockDb implements ApplicationRunner{
                 .icone("nubank")
                 .cor("#820AD1")
                 .tipo(TipoInstituicao.BANCO)
-                .fkUsuario(1)
+                .fkUsuario(usuarioId)
                 .ativo(true)
                 .criadoEm(LocalDateTime.now())
                 .atualizadoEm(LocalDateTime.now())
@@ -82,7 +83,7 @@ public class MockDb implements ApplicationRunner{
                 .icone("vale")
                 .cor("#00A86B")
                 .tipo(TipoInstituicao.VALE)
-                .fkUsuario(1)
+                .fkUsuario(usuarioId)
                 .ativo(true)
                 .criadoEm(LocalDateTime.now())
                 .atualizadoEm(LocalDateTime.now())
@@ -95,7 +96,6 @@ public class MockDb implements ApplicationRunner{
         log.info("Instituicoes cadastras com sucesso!");
 
         // Categorias
-        UUID usuarioId = UUID.randomUUID();
 
         List<Categoria> categorias = List.of(
             Categoria.builder().nome("Alimentação").fkUsuario(usuarioId).build(),
@@ -104,8 +104,11 @@ public class MockDb implements ApplicationRunner{
             Categoria.builder().nome("Saúde").fkUsuario(usuarioId).build()
         );
 
+        UUID categoriaId = null;
+
         for (Categoria categoria : categorias) {
             categoriaRepository.save(categoria);
+            categoriaId = categoria.getId();
         }
         log.info("Categorias cadastras com sucesso!");
 
@@ -123,16 +126,16 @@ public class MockDb implements ApplicationRunner{
                 .valor(new BigDecimal("1500.00"))
                 .dataFimMeta(dataFim)
                 .criadoEm(LocalDateTime.now())
-                .fkUsuario(1)
-                .fkCategoria(1)
+                .fkUsuario(usuarioId)
+                .fkCategoria(categoriaId)
                 .build(),
             MetaGasto.builder()
                 .nome("Meta Transporte")
                 .valor(new BigDecimal("400.00"))
                 .dataFimMeta(dataFim)
                 .criadoEm(LocalDateTime.now())
-                .fkUsuario(1)
-                .fkCategoria(2)
+                .fkUsuario(usuarioId)
+                .fkCategoria(categoriaId)
                 .build()
         );
 
