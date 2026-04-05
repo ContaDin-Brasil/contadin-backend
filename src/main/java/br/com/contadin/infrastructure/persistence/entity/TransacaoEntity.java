@@ -3,6 +3,7 @@ package br.com.contadin.infrastructure.persistence.entity;
 import br.com.contadin.domain.enums.Recorrencia;
 import br.com.contadin.domain.enums.TipoTransacao;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,11 +22,14 @@ public class TransacaoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @NotNull
     private UUID id;
 
+    @NotNull
     private Double valor;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TipoTransacao tipo;
 
     private String descricao;
@@ -33,6 +37,7 @@ public class TransacaoEntity {
     @Column(name = "data_transacao", nullable = false)
     private LocalDateTime dataTransacao;
 
+    @NotNull
     private Boolean parcelado;
 
     @Enumerated(EnumType.STRING)
@@ -44,6 +49,7 @@ public class TransacaoEntity {
     private Boolean ativo;
 
     @Column(name = "fk_instituicao", nullable = false)
+    @NotNull
     private Integer fkInstituicao;
 
     @Column(name = "fk_categoria", nullable = false)
