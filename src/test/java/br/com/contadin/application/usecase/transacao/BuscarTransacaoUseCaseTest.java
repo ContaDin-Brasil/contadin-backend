@@ -5,6 +5,7 @@ import br.com.contadin.application.dto.transacao.TransacaoFiltro;
 import br.com.contadin.application.port.out.TransacaoRepository;
 import br.com.contadin.domain.enums.TipoTransacao;
 import br.com.contadin.domain.exception.transacao.TransacaoInvalidaException;
+import br.com.contadin.domain.exception.transacao.TransacaoNaoEncontradaException;
 import br.com.contadin.domain.model.Transacao;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,11 +20,13 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -132,5 +135,31 @@ class BuscarTransacaoUseCaseTest {
         );
 
         assertThrows(TransacaoInvalidaException.class, () -> useCase.execute(params));
+    }
+
+    @Test
+    void deveBuscarTransacaoPorIdQuandoUuidValido() {
+        UUID id = UUID.randomUUID();
+        Transacao transacao = Transacao.builder().id(id).build();
+        when(transacaoRepository.findById(id)).thenReturn(Optional.of(transacao));
+
+        Transacao resultado = useCase.executeBuscarPorId(id);
+
+        assertSame(transacao, resultado);
+        verify(transacaoRepository).findById(id);
+    }
+
+    @Test
+    void deveLancarErroQuandoBuscarPorIdComUuidNulo() {
+        assertThrows(TransacaoInvalidaException.class, () -> useCase.executeBuscarPorId(null));
+    }
+
+    @Test
+    void deveLancarErroQuandoTransacaoNaoForEncontradaPorId() {
+        UUID id = UUID.randomUUID();
+        when(transacaoRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(TransacaoNaoEncontradaException.class, () -> useCase.executeBuscarPorId(id));
+        verify(transacaoRepository).findById(id);
     }
 }
