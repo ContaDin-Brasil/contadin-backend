@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping({"/transacoes", "/transacao"})
@@ -109,7 +110,7 @@ public class TransacaoController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar transação por ID", description = "Retorna uma transação específica pelo ID.")
-    public ResponseEntity<TransacaoResponse> buscarTransacaoPorId(@PathVariable Integer id) {
+    public ResponseEntity<TransacaoResponse> buscarTransacaoPorId(@PathVariable UUID id) {
         var transacao = buscarTransacaoInputPort.executeBuscarPorId(id);
         var response = transacaoWebMapper.toResponse(transacao);
         return ResponseEntity.ok(response);
@@ -118,7 +119,7 @@ public class TransacaoController {
     @PatchMapping("/{id}")
     @Operation(summary = "Atualizar transação parcialmente", description = "Atualiza parcialmente os dados de uma transação existente.")
     public ResponseEntity<TransacaoResponse> atualizarTransacao(
-            @PathVariable Integer id,
+            @PathVariable UUID id,
             @Valid @RequestBody
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Dados para atualizar parcialmente uma transação",
@@ -134,14 +135,14 @@ public class TransacaoController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Deletar transação", description = "Remove fisicamente uma transação.")
-    public ResponseEntity<Void> deletarTransacao(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletarTransacao(@PathVariable UUID id) {
         deletarTransacaoInputPort.execute(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}/desativar")
     @Operation(summary = "Desativar transação", description = "Realiza exclusão lógica da transação, marcando-a como inativa.")
-    public ResponseEntity<Void> desativarTransacao(@PathVariable Integer id) {
+    public ResponseEntity<Void> desativarTransacao(@PathVariable UUID id) {
         desativarTransacaoInputPort.execute(id);
         return ResponseEntity.noContent().build();
     }

@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -81,7 +82,7 @@ public class BuscarTransacaoUseCase implements BuscarTransacaoInputPort {
     }
 
     @Override
-    public Transacao executeBuscarPorId(Integer transacaoId) {
+    public Transacao executeBuscarPorId(UUID transacaoId) {
         if (transacaoId == null) {
             throw new TransacaoInvalidaException("ID da transação é obrigatório para busca.");
         }

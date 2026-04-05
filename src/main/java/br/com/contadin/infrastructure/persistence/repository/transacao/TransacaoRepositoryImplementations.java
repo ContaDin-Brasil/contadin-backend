@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class TransacaoRepositoryImplementations implements TransacaoRepository {
      }
 
      @Override
-     public Optional<Transacao> findById(Integer id) {
+     public Optional<Transacao> findById(UUID id) {
           return jpaRepository.findById(id)
                     .map(persistenceMapper::toDomain);
      }
@@ -46,7 +47,7 @@ public class TransacaoRepositoryImplementations implements TransacaoRepository {
      }
 
      @Override
-     public void deleteById(Integer id) {
+     public void deleteById(UUID id) {
           jpaRepository.deleteById(id);
      }
 }

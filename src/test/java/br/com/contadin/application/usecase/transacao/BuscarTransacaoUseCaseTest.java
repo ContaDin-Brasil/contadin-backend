@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,7 +39,7 @@ class BuscarTransacaoUseCaseTest {
 
     @Test
     void deveUsarOrdenacaoDefaultDataTransacaoDescComPaginacaoPadrao() {
-        Page<Transacao> page = new PageImpl<>(List.of(Transacao.builder().id(1).build()));
+        Page<Transacao> page = new PageImpl<>(List.of(Transacao.builder().id(UUID.randomUUID()).build()));
         when(transacaoRepository.findAll(any(TransacaoFiltro.class), any(Pageable.class))).thenReturn(page);
 
         TransacaoConsultaParams params = new TransacaoConsultaParams(

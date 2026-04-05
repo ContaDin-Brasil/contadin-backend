@@ -7,6 +7,8 @@ import br.com.contadin.domain.exception.transacao.TransacaoNaoEncontradaExceptio
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class DeletarTransacaoUseCase implements DeletarTransacaoInputPort {
@@ -14,7 +16,7 @@ public class DeletarTransacaoUseCase implements DeletarTransacaoInputPort {
     private final TransacaoRepository transacaoRepository;
 
     @Override
-    public void execute(Integer id) {
+    public void execute(UUID id) {
         if (id == null) {
             throw new TransacaoInvalidaException("ID da transação é obrigatório para exclusão.");
         }
