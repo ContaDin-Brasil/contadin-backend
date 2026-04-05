@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -65,11 +66,15 @@ public class TransacaoController {
             @RequestParam(name = "tipo", required = false) TipoTransacao tipo,
             @RequestParam(name = "fk_instituicao", required = false) Integer fkInstituicao,
             @RequestParam(name = "fk_categoria", required = false) Integer fkCategoria,
+            @Parameter(description = "Valor minimo do filtro (maior ou igual). Ex.: valor_gte=100 retorna transacoes com valor >= 100")
             @RequestParam(name = "valor_gte", required = false) Double valorGte,
+            @Parameter(description = "Valor maximo do filtro (menor ou igual). Ex.: valor_lte=500 retorna transacoes com valor <= 500")
             @RequestParam(name = "valor_lte", required = false) Double valorLte,
             @RequestParam(name = "parcelado", required = false) Boolean parcelado,
             @RequestParam(name = "recorrente", required = false) Boolean recorrente,
+            @Parameter(description = "Data/hora inicial do filtro (maior ou igual). Aceita yyyy-MM-dd ou yyyy-MM-dd'T'HH:mm:ss. Ex.: data_transacao_gte=2026-03-01")
             @RequestParam(name = "data_transacao_gte", required = false) String dataTransacaoGte,
+            @Parameter(description = "Data/hora final do filtro (menor ou igual). Aceita yyyy-MM-dd ou yyyy-MM-dd'T'HH:mm:ss. Ex.: data_transacao_lte=2026-03-31")
             @RequestParam(name = "data_transacao_lte", required = false) String dataTransacaoLte,
             @RequestParam(name = "search", required = false) String search
         ) {
