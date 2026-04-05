@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -17,8 +18,8 @@ import java.time.LocalDateTime;
 public class CategoriaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     private String nome;
 
@@ -30,7 +31,7 @@ public class CategoriaEntity {
     private TipoCategoria tipo;
 
     @Column(name = "fk_usuario")
-    private Integer fkUsuario;
+    private UUID fkUsuario;
 
     @CreationTimestamp
     @Column(name = "criado_em", nullable = false, updatable = false)

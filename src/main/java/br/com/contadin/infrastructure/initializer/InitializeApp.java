@@ -6,6 +6,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import br.com.contadin.application.port.out.PasswordEncoderPort;
 import br.com.contadin.application.port.out.UsuarioRepository;
 import br.com.contadin.domain.model.Usuario;
 import br.com.contadin.domain.valueobject.Email;
@@ -20,6 +21,7 @@ public class InitializeApp implements ApplicationRunner {
 
     // Repository
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoderPort passwordEncoderPort;
 
     // Environment
     @Value("${app.sysadmin.email}")
@@ -44,7 +46,7 @@ public class InitializeApp implements ApplicationRunner {
             .nome("SYSADMIN")
             .sobrenome(null)
             .email(new Email(email.trim().toLowerCase()))
-            .senha(senha)
+            .senha(passwordEncoderPort.encode(senha))
             .telefone(null)
             .ativo(true)
             .build();

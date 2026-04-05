@@ -3,9 +3,10 @@ package br.com.contadin.application.dto.usuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-public record UsuarioPostResponse(
-        Integer id,
+public record CriarUsuarioResponse(
+        UUID id,
         String nome,
         String sobrenome,
         String email,
@@ -18,5 +19,4 @@ public record UsuarioPostResponse(
 
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
         LocalDateTime atualizadoEm
-) {
-}
+) {}
