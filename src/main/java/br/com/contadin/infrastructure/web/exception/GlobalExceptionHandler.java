@@ -111,8 +111,8 @@ public class GlobalExceptionHandler {
      * - Enum inválido em query param (ex: tipo=ABC)
      * - Número inválido (ex: _page=abc)
      */
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class, IllegalArgumentException.class})
-    public ResponseEntity<ApiError> handleBadRequest(Exception ex) {
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleBadRequest(MethodArgumentTypeMismatchException ex) {
         ApiError error = new ApiError(BAD_REQUEST.value(), "Parâmetro inválido na requisição.", LocalDateTime.now());
         return ResponseEntity.status(BAD_REQUEST).body(error);
     }
