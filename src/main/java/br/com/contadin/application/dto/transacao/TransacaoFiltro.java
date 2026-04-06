@@ -3,11 +3,12 @@ package br.com.contadin.application.dto.transacao;
 import br.com.contadin.domain.enums.TipoTransacao;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record TransacaoFiltro(
         TipoTransacao tipo,
-        Integer fkInstituicao,
-        Integer fkCategoria,
+        UUID fkInstituicao,
+        UUID fkCategoria,
         Double valorGte,
         Double valorLte,
         Boolean parcelado,

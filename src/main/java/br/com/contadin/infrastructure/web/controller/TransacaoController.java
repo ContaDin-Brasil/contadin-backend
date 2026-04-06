@@ -64,8 +64,8 @@ public class TransacaoController {
             @RequestParam(name = "_sort", required = false) String sort,
             @RequestParam(name = "_order", required = false) String order,
             @RequestParam(name = "tipo", required = false) TipoTransacao tipo,
-            @RequestParam(name = "fk_instituicao", required = false) Integer fkInstituicao,
-            @RequestParam(name = "fk_categoria", required = false) Integer fkCategoria,
+            @RequestParam(name = "fk_instituicao", required = false) UUID fkInstituicao,
+            @RequestParam(name = "fk_categoria", required = false) UUID fkCategoria,
             @Parameter(description = "Valor minimo do filtro (maior ou igual). Ex.: valor_gte=100 retorna transacoes com valor >= 100")
             @RequestParam(name = "valor_gte", required = false) Double valorGte,
             @Parameter(description = "Valor maximo do filtro (menor ou igual). Ex.: valor_lte=500 retorna transacoes com valor <= 500")

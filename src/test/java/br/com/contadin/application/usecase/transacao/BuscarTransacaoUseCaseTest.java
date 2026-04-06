@@ -86,8 +86,8 @@ class BuscarTransacaoUseCaseTest {
                 "valor",
                 "asc",
                 TipoTransacao.GASTO,
-                10,
-                15,
+            UUID.fromString("00000000-0000-0000-0000-000000000010"),
+            UUID.fromString("00000000-0000-0000-0000-000000000015"),
                 100.0,
                 250.0,
                 true,
@@ -104,8 +104,8 @@ class BuscarTransacaoUseCaseTest {
 
         TransacaoFiltro filtro = filtroCaptor.getValue();
         assertEquals(TipoTransacao.GASTO, filtro.tipo());
-        assertEquals(10, filtro.fkInstituicao());
-        assertEquals(15, filtro.fkCategoria());
+        assertEquals(UUID.fromString("00000000-0000-0000-0000-000000000010"), filtro.fkInstituicao());
+        assertEquals(UUID.fromString("00000000-0000-0000-0000-000000000015"), filtro.fkCategoria());
         assertEquals(100.0, filtro.valorGte());
         assertEquals(250.0, filtro.valorLte());
         assertEquals(true, filtro.parcelado());

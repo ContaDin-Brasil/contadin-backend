@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -156,8 +157,8 @@ public class MockDb implements ApplicationRunner{
                 .parcelado(false)
                 .recorrencia(Recorrencia.MENSAL)
                 .fimRecorrencia(fimRecorrencia)
-                .fkInstituicao(1)
-                .fkCategoria(1)
+                .fkInstituicao(UUID.fromString("00000000-0000-0000-0000-000000000001"))
+                .fkCategoria(UUID.fromString("00000000-0000-0000-0000-000000000011"))
                 .criadoEm(LocalDateTime.now())
                 .atualizadoEm(LocalDateTime.now())
                 .build(),
@@ -169,8 +170,8 @@ public class MockDb implements ApplicationRunner{
                 .parcelado(false)
                 .recorrencia(Recorrencia.MENSAL)
                 .fimRecorrencia(fimRecorrencia)
-                .fkInstituicao(1)
-                .fkCategoria(2)
+                .fkInstituicao(UUID.fromString("00000000-0000-0000-0000-000000000002"))
+                .fkCategoria(UUID.fromString("00000000-0000-0000-0000-000000000012"))
                 .criadoEm(LocalDateTime.now())
                 .atualizadoEm(LocalDateTime.now())
                 .build()

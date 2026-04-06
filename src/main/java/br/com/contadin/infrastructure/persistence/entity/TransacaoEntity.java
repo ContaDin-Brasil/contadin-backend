@@ -49,10 +49,10 @@ public class TransacaoEntity {
 
     @Column(name = "fk_instituicao", nullable = false)
     @NotNull
-    private Integer fkInstituicao;
+    private UUID fkInstituicao;
 
     @Column(name = "fk_categoria", nullable = false)
-    private Integer fkCategoria;
+    private UUID fkCategoria;
 
     @CreationTimestamp
     @Column(name = "criado_em", nullable = false, updatable = false)
