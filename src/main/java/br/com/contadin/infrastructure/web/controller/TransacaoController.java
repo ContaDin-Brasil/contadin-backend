@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping({"/transacoes", "/transacao"})
+@RequestMapping({"/transacao"})
 @RequiredArgsConstructor
 @Tag(name = "Transações", description = "Gerenciamento de transações")
 public class TransacaoController {
