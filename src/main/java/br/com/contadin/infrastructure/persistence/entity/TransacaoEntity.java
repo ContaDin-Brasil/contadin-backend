@@ -22,7 +22,6 @@ public class TransacaoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @NotNull
     private UUID id;
 
     @NotNull
