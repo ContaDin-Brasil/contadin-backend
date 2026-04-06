@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 public record TransacaoRequest(
         Double valor,
@@ -22,6 +23,6 @@ public record TransacaoRequest(
         @JsonFormat(pattern = "yyyy-MM-dd")
         Date fimRecorrencia,
         Boolean ativo,
-        Integer fkInstituicao,
-        Integer fkCategoria
+        UUID fkInstituicao,
+        UUID fkCategoria
 ) { }

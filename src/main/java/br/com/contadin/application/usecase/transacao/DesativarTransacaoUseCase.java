@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class DesativarTransacaoUseCase implements DesativarTransacaoInputPort {
     private final TransacaoRepository transacaoRepository;
 
     @Override
-    public void execute(Integer id) {
+    public void execute(UUID id) {
         if (id == null) {
             throw new TransacaoInvalidaException("ID da transação é obrigatório para desativação.");
         }

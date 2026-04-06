@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class AtualizarTransacaoUseCase implements AtualizarTransacaoInputPort {
     private final TransacaoRepository transacaoRepository;
 
     @Override
-    public Transacao execute(Integer id, Transacao transacao) {
+    public Transacao execute(UUID id, Transacao transacao) {
         if (id == null) {
             throw new TransacaoInvalidaException("ID da transação é obrigatório para atualização.");
         }

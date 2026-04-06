@@ -7,16 +7,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transacao {
-    private Integer id;
+    private UUID id;
     private Double valor;
     private TipoTransacao tipo;
     private String descricao;
@@ -25,8 +25,8 @@ public class Transacao {
     private Recorrencia recorrencia;
     private Date fimRecorrencia;
     private Boolean ativo;
-    private Integer fkInstituicao;
-    private Integer fkCategoria;
+    private UUID fkInstituicao;
+    private UUID fkCategoria;
     private LocalDateTime criadoEm;
     private LocalDateTime atualizadoEm;
 }

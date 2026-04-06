@@ -3,13 +3,14 @@ package br.com.contadin.infrastructure.persistence.entity;
 import br.com.contadin.domain.enums.Recorrencia;
 import br.com.contadin.domain.enums.TipoTransacao;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -20,12 +21,14 @@ import java.util.Date;
 public class TransacaoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
+    @NotNull
     private Double valor;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private TipoTransacao tipo;
 
     private String descricao;
@@ -33,6 +36,7 @@ public class TransacaoEntity {
     @Column(name = "data_transacao", nullable = false)
     private LocalDateTime dataTransacao;
 
+    @NotNull
     private Boolean parcelado;
 
     @Enumerated(EnumType.STRING)
@@ -44,10 +48,11 @@ public class TransacaoEntity {
     private Boolean ativo;
 
     @Column(name = "fk_instituicao", nullable = false)
-    private Integer fkInstituicao;
+    @NotNull
+    private UUID fkInstituicao;
 
     @Column(name = "fk_categoria", nullable = false)
-    private Integer fkCategoria;
+    private UUID fkCategoria;
 
     @CreationTimestamp
     @Column(name = "criado_em", nullable = false, updatable = false)
