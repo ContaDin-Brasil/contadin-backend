@@ -3,9 +3,10 @@ package br.com.contadin.application.dto.instituicao;
 import br.com.contadin.domain.enums.TipoInstituicao;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record InstituicaoResponse(
-        Integer id,
+        UUID id,
         String nome,
         String icone,
         String cor,

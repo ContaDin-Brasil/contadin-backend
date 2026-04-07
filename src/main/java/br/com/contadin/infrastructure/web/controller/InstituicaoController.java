@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/instituicoes")
@@ -42,7 +44,7 @@ public class InstituicaoController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<InstituicaoResponse> atualizarInstituicao( @PathVariable Integer id, @Valid @RequestBody InstituicaoRequest request){
+    public ResponseEntity<InstituicaoResponse> atualizarInstituicao(@PathVariable UUID id, @Valid @RequestBody InstituicaoRequest request){
 
         Instituicao instituicao = instituicaoWebMapper.toDomain(request);
 
@@ -55,20 +57,20 @@ public class InstituicaoController {
     }
 
     @PatchMapping("/{id}/desativar")
-    public ResponseEntity<Void> desativarInstituicao(@PathVariable Integer id) {
+    public ResponseEntity<Void> desativarInstituicao(@PathVariable UUID id) {
         desativarInstituicaoInputPort.execute(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InstituicaoResponse> buscarInstituicaoPorId(@PathVariable Integer id) {
+    public ResponseEntity<InstituicaoResponse> buscarInstituicaoPorId(@PathVariable UUID id) {
         Instituicao instituicao = buscarInstituicaoInputPort.executeBuscarPorId(id);
         InstituicaoResponse response = instituicaoWebMapper.toResponse(instituicao);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<?> buscarInstituicoesPorUsuario(@RequestParam Integer fkUsuario) {
+    public ResponseEntity<?> buscarInstituicoesPorUsuario(@RequestParam UUID fkUsuario) {
         return ResponseEntity.ok(buscarInstituicaoInputPort.execute(fkUsuario)
                 .stream()
                 .map(instituicaoWebMapper::toResponse)
@@ -76,7 +78,7 @@ public class InstituicaoController {
     }
 
      @GetMapping("/nome")
-    public ResponseEntity<?> buscarInstituicoesPorNome(@RequestParam String nome, @RequestParam Integer fkUsuario) {
+    public ResponseEntity<?> buscarInstituicoesPorNome(@RequestParam String nome, @RequestParam UUID fkUsuario) {
          return ResponseEntity.ok(buscarInstituicaoInputPort.executeBuscarPorNome(fkUsuario, nome)
                  .stream()
                  .map(instituicaoWebMapper::toResponse)

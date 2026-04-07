@@ -4,16 +4,17 @@ import br.com.contadin.domain.model.Instituicao;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface InstituicaoRepository {
 
     Instituicao save(Instituicao instituicao);
 
-    Optional<Instituicao> findById(Integer id);
+    Optional<Instituicao> findById(UUID id);
 
-    List<Instituicao> findAtivasByUsuario(Integer fkUsuario);
+    List<Instituicao> findAtivasByUsuario(UUID fkUsuario);
 
-    List<Instituicao> findByNomeAndUsuario(Integer fkUsuario, String nome);
+    List<Instituicao> findByNomeAndUsuario(UUID fkUsuario, String nome);
     
 }
 

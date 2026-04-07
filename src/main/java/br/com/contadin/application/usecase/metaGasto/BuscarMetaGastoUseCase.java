@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public class BuscarMetaGastoUseCase implements BuscarMetaGastoInputPort {
     private final MetaGastoRepository metaGastoRepository;
 
     @Override
-    public List<MetaGasto> execute(Integer fkUsuario) {
+    public List<MetaGasto> execute(UUID fkUsuario) {
         if (fkUsuario == null) {
             throw new IllegalArgumentException("ID do usuário é obrigatório para busca");
         }
@@ -24,7 +25,7 @@ public class BuscarMetaGastoUseCase implements BuscarMetaGastoInputPort {
     }
 
     @Override
-    public MetaGasto executeBuscarPorId(Integer metaGastoId) {
+    public MetaGasto executeBuscarPorId(UUID metaGastoId) {
         if (metaGastoId == null) {
             throw new IllegalArgumentException("ID da meta de gasto é obrigatório para busca");
         }
@@ -35,7 +36,7 @@ public class BuscarMetaGastoUseCase implements BuscarMetaGastoInputPort {
     }
 
     @Override
-    public List<MetaGasto> executeBuscarPorNome(String nome, Integer fkUsuario) {
+    public List<MetaGasto> executeBuscarPorNome(String nome, UUID fkUsuario) {
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("Nome da meta de gasto é obrigatório para busca");
         }

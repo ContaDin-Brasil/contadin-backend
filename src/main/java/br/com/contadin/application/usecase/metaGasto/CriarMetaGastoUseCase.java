@@ -25,6 +25,7 @@ public class CriarMetaGastoUseCase implements CriarMetaGastoInputPort {
                 .dataFimMeta(metaGasto.getDataFimMeta())
                 .fkUsuario(metaGasto.getFkUsuario())
                 .fkCategoria(metaGasto.getFkCategoria())
+                .atualizadoEm(now)
                 .criadoEm(now);
 
 

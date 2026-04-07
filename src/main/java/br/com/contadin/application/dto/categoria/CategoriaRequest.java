@@ -18,7 +18,7 @@ public record CategoriaRequest(
         @NotNull(message = "Tipo é obrigatório")
         TipoCategoria tipo,
 
-        @Positive(message = "fkUsuario deve ser maior que 0")
+        @NotNull(message = "fkUsuario é obrigatório")
         UUID fkUsuario
 ) {
 }

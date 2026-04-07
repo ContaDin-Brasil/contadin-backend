@@ -6,6 +6,9 @@ import br.com.contadin.domain.model.MetaGasto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AtualizarMetaGastoUseCase implements AtualizarMetaGastoInputPort {
@@ -13,7 +16,7 @@ public class AtualizarMetaGastoUseCase implements AtualizarMetaGastoInputPort {
         private final MetaGastoRepository metaGastoRepository;
 
         @Override
-        public MetaGasto execute(Integer id, MetaGasto metaGasto) {
+        public MetaGasto execute(UUID id, MetaGasto metaGasto) {
             if (id == null) {
                 throw new IllegalArgumentException("ID da meta é obrigatório para atualização");
             }
@@ -29,6 +32,7 @@ public class AtualizarMetaGastoUseCase implements AtualizarMetaGastoInputPort {
                     .fkUsuario(existente.getFkUsuario())
                     .fkCategoria(metaGasto.getFkCategoria() != null ? metaGasto.getFkCategoria() : existente.getFkCategoria())
                     .dataFimMeta(metaGasto.getDataFimMeta() != null ? metaGasto.getDataFimMeta() : existente.getDataFimMeta())
+                    .atualizadoEm(LocalDateTime.now())
                     .criadoEm(existente.getCriadoEm());
 
             MetaGasto toSave = builder.build();

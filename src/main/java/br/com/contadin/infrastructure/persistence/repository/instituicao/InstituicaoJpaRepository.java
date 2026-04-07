@@ -5,9 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface InstituicaoJpaRepository extends JpaRepository<InstituicaoEntity, Integer> {
-    List<InstituicaoEntity> findByFkUsuarioAndAtivoTrue(Integer fkUsuario);
-    List<InstituicaoEntity> findByFkUsuarioAndNome(Integer fkUsuario, String nome);
+public interface InstituicaoJpaRepository extends JpaRepository<InstituicaoEntity, UUID> {
+    List<InstituicaoEntity> findByFkUsuarioAndAtivoTrue(UUID fkUsuario);
+    List<InstituicaoEntity> findByFkUsuarioAndNome(UUID fkUsuario, String nome);
 }

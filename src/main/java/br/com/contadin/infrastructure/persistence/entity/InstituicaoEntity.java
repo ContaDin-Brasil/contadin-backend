@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -17,8 +19,9 @@ import java.time.LocalDateTime;
 @Builder
 public class InstituicaoEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Integer id;
+    @UuidGenerator
+    @GeneratedValue
+    private UUID id;
 
     private  String nome;
     private  String icone;
@@ -28,7 +31,7 @@ public class InstituicaoEntity {
     private  TipoInstituicao tipo;
 
     @Column(name = "fk_usuario", nullable = false)
-    private  Integer fkUsuario;
+    private  UUID fkUsuario;
 
     private  Boolean ativo;
 

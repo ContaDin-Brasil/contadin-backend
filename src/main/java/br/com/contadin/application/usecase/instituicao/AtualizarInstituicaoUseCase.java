@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public class AtualizarInstituicaoUseCase implements AtualizarInstituicaoInputPor
     private final InstituicaoRepository instituicaoRepository;
 
      @Override
-    public Instituicao execute(Integer id, Instituicao instituicao) {
+    public Instituicao execute(UUID id, Instituicao instituicao) {
          if (id == null) {
              throw new IllegalArgumentException("ID da instituição é obrigatório para atualização");
          }

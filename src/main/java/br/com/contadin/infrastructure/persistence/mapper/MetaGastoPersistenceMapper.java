@@ -9,7 +9,8 @@ import org.mapstruct.Mapping;
 public interface MetaGastoPersistenceMapper {
 
     @Mapping(target = "fkUsuario", source = "fkUsuario")
-    MetaGastoEntity toEntity(MetaGasto meta);
+    MetaGastoEntity
+    toEntity(MetaGasto meta);
 
     @Mapping(target = "fkUsuario", source = "fkUsuario")
     MetaGasto toDomain(MetaGastoEntity entity);
