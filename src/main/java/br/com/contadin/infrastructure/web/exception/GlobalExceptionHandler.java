@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
@@ -115,6 +116,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleBadRequest(MethodArgumentTypeMismatchException ex) {
         ApiError error = new ApiError(BAD_REQUEST.value(), "Parâmetro inválido na requisição.", LocalDateTime.now());
         return ResponseEntity.status(BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiError> handleNoResourceFound(NoResourceFoundException ex) {
+        ApiError error = new ApiError(HttpStatus.NOT_FOUND.value(), "Recurso não encontrado.", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
     /**

@@ -7,6 +7,10 @@ import br.com.contadin.infrastructure.persistence.mapper.CategoriaPersistenceMap
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 @Repository
 @RequiredArgsConstructor
 public class CategoriaRepositoryImplementations implements CategoriaRepository {
@@ -19,5 +23,32 @@ public class CategoriaRepositoryImplementations implements CategoriaRepository {
         CategoriaEntity entity = mapper.toEntity(categoria);
         jpaRepository.save(entity);
         return mapper.toDomain(entity);
+    }
+
+    @Override
+    public Optional<Categoria> findById(UUID id) {
+        return jpaRepository.findById(id)
+                .map(mapper::toDomain);
+    }
+
+    @Override
+    public List<Categoria> findByUsuario(UUID fkUsuario) {
+        return jpaRepository.findByFkUsuario(fkUsuario)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Categoria> findByNomeAndUsuario(String nome, UUID fkUsuario) {
+        return jpaRepository.findByFkUsuarioAndNomeContainingIgnoreCase(fkUsuario, nome)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaRepository.deleteById(id);
     }
 }
