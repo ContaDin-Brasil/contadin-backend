@@ -17,7 +17,10 @@ public class Usuario {
     private Email email;
     private String senha;
     private Telefone telefone;
-    private boolean ativo;
+
+    @Builder.Default
+    private boolean ativo = true;
+
     private LocalDateTime criadoEm;
     private LocalDateTime atualizadoEm;
 }
