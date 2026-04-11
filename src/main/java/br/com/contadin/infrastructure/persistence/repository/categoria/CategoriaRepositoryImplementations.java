@@ -21,19 +21,38 @@ public class CategoriaRepositoryImplementations implements CategoriaRepository {
     @Override
     public Categoria save(Categoria categoria) {
         CategoriaEntity entity = mapper.toEntity(categoria);
-        jpaRepository.save(entity);
-        return mapper.toDomain(entity);
+        CategoriaEntity saved = jpaRepository.save(entity);
+        return mapper.toDomain(saved);
     }
 
     @Override
     public Optional<Categoria> findById(UUID id) {
+        return jpaRepository.findByIdAndAtivoTrue(id)
+                .map(mapper::toDomain);
+    }
+
+    @Override
+    public Optional<Categoria> findByIdIncludingInactive(UUID id) {
         return jpaRepository.findById(id)
                 .map(mapper::toDomain);
     }
 
     @Override
+    public void deleteById(UUID id) {
+        jpaRepository.deleteById(id);
+    }
+
+    @Override
     public List<Categoria> findByUsuario(UUID fkUsuario) {
-        return jpaRepository.findByFkUsuario(fkUsuario)
+        return jpaRepository.findByFkUsuarioAndAtivoTrue(fkUsuario)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Categoria> findByUsuarioInativas(UUID fkUsuario) {
+        return jpaRepository.findByFkUsuarioAndAtivoFalse(fkUsuario)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
@@ -41,14 +60,9 @@ public class CategoriaRepositoryImplementations implements CategoriaRepository {
 
     @Override
     public List<Categoria> findByNomeAndUsuario(String nome, UUID fkUsuario) {
-        return jpaRepository.findByFkUsuarioAndNomeContainingIgnoreCase(fkUsuario, nome)
+        return jpaRepository.findByFkUsuarioAndNomeContainingIgnoreCaseAndAtivoTrue(fkUsuario, nome)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
-    }
-
-    @Override
-    public void deleteById(UUID id) {
-        jpaRepository.deleteById(id);
     }
 }
