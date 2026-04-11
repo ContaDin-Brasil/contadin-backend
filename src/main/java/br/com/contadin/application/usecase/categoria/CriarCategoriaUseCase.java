@@ -14,6 +14,17 @@ public class CriarCategoriaUseCase implements CriarCategoriaInputPort {
 
     @Override
     public Categoria execute(Categoria categoria) {
-        return categoriaRepository.save(categoria);
+        Categoria novaCategoria = Categoria.builder()
+                .nome(categoria.getNome())
+                .icone(categoria.getIcone())
+                .cor(categoria.getCor())
+                .tipo(categoria.getTipo())
+                .fkUsuario(categoria.getFkUsuario())
+                .ativo(categoria.getAtivo() != null ? categoria.getAtivo() : true)
+                .criadoEm(categoria.getCriadoEm())
+                .atualizadoEm(categoria.getAtualizadoEm())
+                .build();
+
+        return categoriaRepository.save(novaCategoria);
     }
 }

@@ -21,9 +21,8 @@ public class DeletarCategoriaUseCase implements DeletarCategoriaInputPort {
 			throw new CategoriaInvalidaException("ID da categoria é obrigatório para deleção.");
 		}
 
-		if (categoriaRepository.findById(id).isEmpty()) {
-			throw new CategoriaNaoEncontradaException("Categoria não encontrada.");
-		}
+		categoriaRepository.findByIdIncludingInactive(id)
+				.orElseThrow(() -> new CategoriaNaoEncontradaException("Categoria não encontrada."));
 
 		categoriaRepository.deleteById(id);
 	}
