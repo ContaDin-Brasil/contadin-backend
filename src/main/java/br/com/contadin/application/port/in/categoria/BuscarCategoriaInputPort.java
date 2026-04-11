@@ -8,6 +8,8 @@ import java.util.UUID;
 public interface BuscarCategoriaInputPort {
     List<Categoria> execute(UUID fkUsuario);
 
+    List<Categoria> executeBuscarInativas(UUID fkUsuario);
+
     Categoria executeBuscarPorId(UUID categoriaId);
 
     List<Categoria> executeBuscarPorNome(String nome, UUID fkUsuario);
