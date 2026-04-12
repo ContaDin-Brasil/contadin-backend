@@ -20,6 +20,8 @@ public record TransacaoResponse(
         @JsonFormat(pattern = "dd/MM/yyyy")
         Date fimRecorrencia,
         Boolean ativo,
+        UUID fkInstituicao,
+        UUID fkCategoria,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
         LocalDateTime criadoEm,
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
