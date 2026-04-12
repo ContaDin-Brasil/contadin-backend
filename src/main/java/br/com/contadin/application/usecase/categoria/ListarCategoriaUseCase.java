@@ -2,6 +2,7 @@ package br.com.contadin.application.usecase.categoria;
 
 import br.com.contadin.application.port.in.categoria.BuscarCategoriaInputPort;
 import br.com.contadin.application.port.out.CategoriaRepository;
+import br.com.contadin.domain.enums.TipoCategoria;
 import br.com.contadin.domain.exception.categoria.CategoriaInvalidaException;
 import br.com.contadin.domain.exception.categoria.CategoriaNaoEncontradaException;
 import br.com.contadin.domain.model.Categoria;
@@ -18,12 +19,16 @@ public class ListarCategoriaUseCase implements BuscarCategoriaInputPort {
 	private final CategoriaRepository categoriaRepository;
 
 	@Override
-	public List<Categoria> execute(UUID fkUsuario) {
+	public List<Categoria> execute(UUID fkUsuario, TipoCategoria tipoCategoria) {
 		if (fkUsuario == null) {
 			throw new CategoriaInvalidaException("fkUsuario é obrigatório para buscar categorias.");
 		}
 
-		return categoriaRepository.findByUsuario(fkUsuario);
+		if (tipoCategoria == null) {
+			throw new CategoriaInvalidaException("tipoCategoria é obrigatório para buscar categorias.");
+		}
+
+		return categoriaRepository.findByUsuario(fkUsuario, tipoCategoria);
 	}
 
 	@Override
@@ -46,15 +51,19 @@ public class ListarCategoriaUseCase implements BuscarCategoriaInputPort {
 	}
 
 	@Override
-	public List<Categoria> executeBuscarPorNome(String nome, UUID fkUsuario) {
+	public List<Categoria> executeBuscarPorNome(String nome, UUID fkUsuario, TipoCategoria tipoCategoria) {
 		if (fkUsuario == null) {
 			throw new CategoriaInvalidaException("fkUsuario é obrigatório para buscar categorias por nome.");
+		}
+
+		if (tipoCategoria == null) {
+			throw new CategoriaInvalidaException("tipoCategoria é obrigatório para buscar categorias por nome.");
 		}
 
 		if (nome == null || nome.isBlank()) {
 			throw new CategoriaInvalidaException("Nome é obrigatório para buscar categorias por nome.");
 		}
 
-		return categoriaRepository.findByNomeAndUsuario(nome.trim(), fkUsuario);
+		return categoriaRepository.findByNomeAndUsuario(nome.trim(), fkUsuario, tipoCategoria);
 	}
 }
