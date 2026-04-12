@@ -7,6 +7,7 @@ import br.com.contadin.application.port.in.categoria.AlternarStatusCategoriaInpu
 import br.com.contadin.application.port.in.categoria.BuscarCategoriaInputPort;
 import br.com.contadin.application.port.in.categoria.CriarCategoriaInputPort;
 import br.com.contadin.application.port.in.categoria.DeletarCategoriaInputPort;
+import br.com.contadin.domain.enums.TipoCategoria;
 import br.com.contadin.domain.model.Categoria;
 import br.com.contadin.infrastructure.web.mapper.CategoriaWebMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -80,8 +81,11 @@ public class CategoriaController {
 
     @GetMapping
     @Operation(summary = "Listar categorias por usuário", description = "Retorna todas as categorias do usuário informado.")
-    public ResponseEntity<List<CategoriaResponse>> listarPorUsuario(@RequestParam UUID fkUsuario) {
-        List<CategoriaResponse> response = buscarCategoriaInputPort.execute(fkUsuario)
+    public ResponseEntity<List<CategoriaResponse>> listarPorUsuario(
+            @RequestParam UUID fkUsuario,
+            @RequestParam TipoCategoria tipoCategoria
+    ) {
+        List<CategoriaResponse> response = buscarCategoriaInputPort.execute(fkUsuario, tipoCategoria)
                 .stream()
                 .map(categoriaWebMapper::toResponse)
                 .toList();
@@ -100,8 +104,12 @@ public class CategoriaController {
 
     @GetMapping("/nome")
     @Operation(summary = "Buscar categorias por nome", description = "Retorna categorias do usuário filtrando por nome.")
-    public ResponseEntity<List<CategoriaResponse>> buscarPorNome(@RequestParam String nome, @RequestParam UUID fkUsuario) {
-        List<CategoriaResponse> response = buscarCategoriaInputPort.executeBuscarPorNome(nome, fkUsuario)
+    public ResponseEntity<List<CategoriaResponse>> buscarPorNome(
+            @RequestParam String nome,
+            @RequestParam UUID fkUsuario,
+            @RequestParam TipoCategoria tipoCategoria
+    ) {
+        List<CategoriaResponse> response = buscarCategoriaInputPort.executeBuscarPorNome(nome, fkUsuario, tipoCategoria)
                 .stream()
                 .map(categoriaWebMapper::toResponse)
                 .toList();
