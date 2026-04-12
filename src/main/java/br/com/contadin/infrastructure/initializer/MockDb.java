@@ -1,31 +1,25 @@
 package br.com.contadin.infrastructure.initializer;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import br.com.contadin.application.port.out.CategoriaRepository;
 import br.com.contadin.application.port.out.InstituicaoRepository;
 import br.com.contadin.application.port.out.MetaGastoRepository;
 import br.com.contadin.application.port.out.TransacaoRepository;
-
 import br.com.contadin.domain.enums.Recorrencia;
+import br.com.contadin.domain.enums.TipoCategoria;
 import br.com.contadin.domain.enums.TipoInstituicao;
 import br.com.contadin.domain.enums.TipoTransacao;
 import br.com.contadin.domain.model.Categoria;
 import br.com.contadin.domain.model.Instituicao;
 import br.com.contadin.domain.model.MetaGasto;
 import br.com.contadin.domain.model.Transacao;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -58,26 +52,26 @@ public class MockDb {
         // Instituicoes
 
         List<Instituicao> instituicoesParaSalvar = List.of(
-            Instituicao.builder()
-                .nome("Nubank")
-                .icone("nubank")
-                .cor("#820AD1")
-                .tipo(TipoInstituicao.BANCO)
-                .fkUsuario(usuarioId)
-                .ativo(true)
-                .criadoEm(LocalDateTime.now())
-                .atualizadoEm(LocalDateTime.now())
-                .build(),
-            Instituicao.builder()
-                .nome("Vale Alimentação")
-                .icone("vale")
-                .cor("#00A86B")
-                .tipo(TipoInstituicao.VALE)
-                .fkUsuario(usuarioId)
-                .ativo(true)
-                .criadoEm(LocalDateTime.now())
-                .atualizadoEm(LocalDateTime.now())
-                .build()
+                Instituicao.builder()
+                        .nome("Nubank")
+                        .icone("nubank")
+                        .cor("#820AD1")
+                        .tipo(TipoInstituicao.BANCO)
+                        .fkUsuario(usuarioId)
+                        .ativo(true)
+                        .criadoEm(LocalDateTime.now())
+                        .atualizadoEm(LocalDateTime.now())
+                        .build(),
+                Instituicao.builder()
+                        .nome("Vale Alimentação")
+                        .icone("vale")
+                        .cor("#00A86B")
+                        .tipo(TipoInstituicao.VALE)
+                        .fkUsuario(usuarioId)
+                        .ativo(true)
+                        .criadoEm(LocalDateTime.now())
+                        .atualizadoEm(LocalDateTime.now())
+                        .build()
         );
 
         List<UUID> instituicaoIds = new ArrayList<>();
@@ -90,10 +84,22 @@ public class MockDb {
         // Categorias
 
         List<Categoria> categoriasParaSalvar = List.of(
-            Categoria.builder().nome("Alimentação").fkUsuario(usuarioId).build(),
-            Categoria.builder().nome("Transporte").fkUsuario(usuarioId).build(),
-            Categoria.builder().nome("Lazer").fkUsuario(usuarioId).build(),
-            Categoria.builder().nome("Saúde").fkUsuario(usuarioId).build()
+                Categoria.builder()
+                        .nome("Alimentação")
+                        .tipo(TipoCategoria.GASTO)
+                        .fkUsuario(usuarioId).build(),
+                Categoria.builder()
+                        .nome("Transporte")
+                        .tipo(TipoCategoria.GASTO)
+                        .fkUsuario(usuarioId).build(),
+                Categoria.builder()
+                        .nome("Outros")
+                        .tipo(TipoCategoria.RECEITA)
+                        .fkUsuario(usuarioId).build(),
+                Categoria.builder()
+                        .nome("Aluguel")
+                        .tipo(TipoCategoria.RECEITA)
+                        .fkUsuario(usuarioId).build()
         );
 
         List<UUID> categoriaIds = new ArrayList<>();
@@ -112,22 +118,22 @@ public class MockDb {
         dataFim = c.getTime();
 
         List<MetaGasto> metasGasto = List.of(
-            MetaGasto.builder()
-                .nome("Meta Supermercado")
-                .valor(new BigDecimal("1500.00"))
-                .dataFimMeta(dataFim)
-                .criadoEm(LocalDateTime.now())
-                .fkUsuario(usuarioId)
-                .fkCategoria(categoriaIds.get(0))
-                .build(),
-            MetaGasto.builder()
-                .nome("Meta Transporte")
-                .valor(new BigDecimal("400.00"))
-                .dataFimMeta(dataFim)
-                .criadoEm(LocalDateTime.now())
-                .fkUsuario(usuarioId)
-                .fkCategoria(categoriaIds.get(1))
-                .build()
+                MetaGasto.builder()
+                        .nome("Meta Supermercado")
+                        .valor(new BigDecimal("1500.00"))
+                        .dataFimMeta(dataFim)
+                        .criadoEm(LocalDateTime.now())
+                        .fkUsuario(usuarioId)
+                        .fkCategoria(categoriaIds.get(0))
+                        .build(),
+                MetaGasto.builder()
+                        .nome("Meta Transporte")
+                        .valor(new BigDecimal("400.00"))
+                        .dataFimMeta(dataFim)
+                        .criadoEm(LocalDateTime.now())
+                        .fkUsuario(usuarioId)
+                        .fkCategoria(categoriaIds.get(1))
+                        .build()
         );
 
         for (MetaGasto metaGasto : metasGasto) {
@@ -144,32 +150,32 @@ public class MockDb {
         fimRecorrencia = cal.getTime();
 
         List<Transacao> transacoes = List.of(
-            Transacao.builder()
-                .valor(150.50)
-                .tipo(TipoTransacao.GASTO)
-                .descricao("Supermercado")
-                .dataTransacao(LocalDateTime.now())
-                .parcelado(false)
-                .recorrencia(Recorrencia.MENSAL)
-                .fimRecorrencia(fimRecorrencia)
-                .fkInstituicao(instituicaoIds.get(0))
-                .fkCategoria(categoriaIds.get(0))
-                .criadoEm(LocalDateTime.now())
-                .atualizadoEm(LocalDateTime.now())
-                .build(),
-            Transacao.builder()
-                .valor(3500.00)
-                .tipo(TipoTransacao.RECEITA)
-                .descricao("Salário")
-                .dataTransacao(LocalDateTime.now())
-                .parcelado(false)
-                .recorrencia(Recorrencia.MENSAL)
-                .fimRecorrencia(fimRecorrencia)
-                .fkInstituicao(instituicaoIds.get(1))
-                .fkCategoria(categoriaIds.get(1))
-                .criadoEm(LocalDateTime.now())
-                .atualizadoEm(LocalDateTime.now())
-                .build()
+                Transacao.builder()
+                        .valor(150.50)
+                        .tipo(TipoTransacao.GASTO)
+                        .descricao("Supermercado")
+                        .dataTransacao(LocalDateTime.now())
+                        .parcelado(false)
+                        .recorrencia(Recorrencia.MENSAL)
+                        .fimRecorrencia(fimRecorrencia)
+                        .fkInstituicao(instituicaoIds.get(0))
+                        .fkCategoria(categoriaIds.get(0))
+                        .criadoEm(LocalDateTime.now())
+                        .atualizadoEm(LocalDateTime.now())
+                        .build(),
+                Transacao.builder()
+                        .valor(3500.00)
+                        .tipo(TipoTransacao.RECEITA)
+                        .descricao("Salário")
+                        .dataTransacao(LocalDateTime.now())
+                        .parcelado(false)
+                        .recorrencia(Recorrencia.MENSAL)
+                        .fimRecorrencia(fimRecorrencia)
+                        .fkInstituicao(instituicaoIds.get(1))
+                        .fkCategoria(categoriaIds.get(1))
+                        .criadoEm(LocalDateTime.now())
+                        .atualizadoEm(LocalDateTime.now())
+                        .build()
         );
 
         for (Transacao transacao : transacoes) {
