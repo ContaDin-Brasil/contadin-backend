@@ -39,6 +39,7 @@ public class AtualizarCategoriaUseCase implements AtualizarCategoriaInputPort {
                 .cor(categoria.getCor() != null ? categoria.getCor() : existente.getCor())
                 .tipo(categoria.getTipo() != null ? categoria.getTipo() : existente.getTipo())
                 .fkUsuario(existente.getFkUsuario())
+            .ativo(existente.getAtivo())
                 .criadoEm(existente.getCriadoEm())
                 .atualizadoEm(now);
 

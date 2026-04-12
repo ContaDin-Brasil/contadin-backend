@@ -33,6 +33,9 @@ public class CategoriaEntity {
     @Column(name = "fk_usuario")
     private UUID fkUsuario;
 
+    @Builder.Default
+    private Boolean ativo = true;
+
     @CreationTimestamp
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;

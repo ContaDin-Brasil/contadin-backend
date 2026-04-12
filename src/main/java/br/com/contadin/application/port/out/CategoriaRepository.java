@@ -11,9 +11,13 @@ public interface CategoriaRepository {
 
     Optional<Categoria> findById(UUID id);
 
-    List<Categoria> findByUsuario(UUID fkUsuario);
-
-    List<Categoria> findByNomeAndUsuario(String nome, UUID fkUsuario);
+    Optional<Categoria> findByIdIncludingInactive(UUID id);
 
     void deleteById(UUID id);
+
+    List<Categoria> findByUsuario(UUID fkUsuario);
+
+    List<Categoria> findByUsuarioInativas(UUID fkUsuario);
+
+    List<Categoria> findByNomeAndUsuario(String nome, UUID fkUsuario);
 }

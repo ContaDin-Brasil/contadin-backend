@@ -27,6 +27,15 @@ public class ListarCategoriaUseCase implements BuscarCategoriaInputPort {
 	}
 
 	@Override
+	public List<Categoria> executeBuscarInativas(UUID fkUsuario) {
+		if (fkUsuario == null) {
+			throw new CategoriaInvalidaException("fkUsuario é obrigatório para buscar categorias inativas.");
+		}
+
+		return categoriaRepository.findByUsuarioInativas(fkUsuario);
+	}
+
+	@Override
 	public Categoria executeBuscarPorId(UUID categoriaId) {
 		if (categoriaId == null) {
 			throw new CategoriaInvalidaException("ID da categoria é obrigatório para busca.");

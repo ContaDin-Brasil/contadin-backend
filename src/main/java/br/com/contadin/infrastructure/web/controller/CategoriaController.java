@@ -3,6 +3,7 @@ package br.com.contadin.infrastructure.web.controller;
 import br.com.contadin.application.dto.categoria.CategoriaRequest;
 import br.com.contadin.application.dto.categoria.CategoriaResponse;
 import br.com.contadin.application.port.in.categoria.AtualizarCategoriaInputPort;
+import br.com.contadin.application.port.in.categoria.AlternarStatusCategoriaInputPort;
 import br.com.contadin.application.port.in.categoria.BuscarCategoriaInputPort;
 import br.com.contadin.application.port.in.categoria.CriarCategoriaInputPort;
 import br.com.contadin.application.port.in.categoria.DeletarCategoriaInputPort;
@@ -30,9 +31,10 @@ import java.util.UUID;
 public class CategoriaController {
 
     private final CriarCategoriaInputPort criarCategoriaInputPort;
-        private final AtualizarCategoriaInputPort atualizarCategoriaInputPort;
-        private final BuscarCategoriaInputPort buscarCategoriaInputPort;
-        private final DeletarCategoriaInputPort deletarCategoriaInputPort;
+    private final AtualizarCategoriaInputPort atualizarCategoriaInputPort;
+    private final BuscarCategoriaInputPort buscarCategoriaInputPort;
+    private final DeletarCategoriaInputPort deletarCategoriaInputPort;
+    private final AlternarStatusCategoriaInputPort alternarStatusCategoriaInputPort;
     private final CategoriaWebMapper categoriaWebMapper;
 
     @PostMapping
@@ -86,6 +88,16 @@ public class CategoriaController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/inativas")
+    @Operation(summary = "Listar categorias inativas por usuário", description = "Retorna todas as categorias inativas do usuário informado.")
+    public ResponseEntity<List<CategoriaResponse>> listarCategoriasInativas(@RequestParam UUID fkUsuario) {
+        List<CategoriaResponse> response = buscarCategoriaInputPort.executeBuscarInativas(fkUsuario)
+                .stream()
+                .map(categoriaWebMapper::toResponse)
+                .toList();
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/nome")
     @Operation(summary = "Buscar categorias por nome", description = "Retorna categorias do usuário filtrando por nome.")
     public ResponseEntity<List<CategoriaResponse>> buscarPorNome(@RequestParam String nome, @RequestParam UUID fkUsuario) {
@@ -97,9 +109,16 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deletar categoria", description = "Remove uma categoria existente.")
+    @Operation(summary = "Excluir categoria", description = "Realiza exclusão física de uma categoria.")
     public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         deletarCategoriaInputPort.execute(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/alternar-status")
+    @Operation(summary = "Alternar status da categoria", description = "Alterna o status lógico da categoria entre ativa e inativa.")
+    public ResponseEntity<Void> alternarStatus(@PathVariable UUID id) {
+        alternarStatusCategoriaInputPort.execute(id);
         return ResponseEntity.noContent().build();
     }
 }

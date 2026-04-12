@@ -20,6 +20,8 @@ public class Categoria {
     private String cor;
     private TipoCategoria tipo;
     private UUID fkUsuario;
+    @Builder.Default
+    private Boolean ativo = true;
     private LocalDateTime criadoEm;
     private LocalDateTime atualizadoEm;
 }
