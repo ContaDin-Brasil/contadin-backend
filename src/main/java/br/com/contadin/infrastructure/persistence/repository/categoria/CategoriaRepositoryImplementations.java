@@ -1,6 +1,7 @@
 package br.com.contadin.infrastructure.persistence.repository.categoria;
 
 import br.com.contadin.application.port.out.CategoriaRepository;
+import br.com.contadin.domain.enums.TipoCategoria;
 import br.com.contadin.domain.model.Categoria;
 import br.com.contadin.infrastructure.persistence.entity.CategoriaEntity;
 import br.com.contadin.infrastructure.persistence.mapper.CategoriaPersistenceMapper;
@@ -43,8 +44,8 @@ public class CategoriaRepositoryImplementations implements CategoriaRepository {
     }
 
     @Override
-    public List<Categoria> findByUsuario(UUID fkUsuario) {
-        return jpaRepository.findByFkUsuarioAndAtivoTrue(fkUsuario)
+    public List<Categoria> findByUsuario(UUID fkUsuario, TipoCategoria tipoCategoria) {
+        return jpaRepository.findByFkUsuarioAndTipoIncludingGlobalAndAtivoTrue(fkUsuario, tipoCategoria)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
@@ -59,8 +60,12 @@ public class CategoriaRepositoryImplementations implements CategoriaRepository {
     }
 
     @Override
-    public List<Categoria> findByNomeAndUsuario(String nome, UUID fkUsuario) {
-        return jpaRepository.findByFkUsuarioAndNomeContainingIgnoreCaseAndAtivoTrue(fkUsuario, nome)
+    public List<Categoria> findByNomeAndUsuario(String nome, UUID fkUsuario, TipoCategoria tipoCategoria) {
+        return jpaRepository.findByFkUsuarioAndNomeContainingIgnoreCaseAndTipoIncludingGlobalAndAtivoTrue(
+                        fkUsuario,
+                        nome,
+                        tipoCategoria
+                )
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
