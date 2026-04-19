@@ -44,6 +44,14 @@ public class CategoriaRepositoryImplementations implements CategoriaRepository {
     }
 
     @Override
+    public List<Categoria> findTodasByUsuario(UUID fkUsuario) {
+        return jpaRepository.findByFkUsuarioAndAtivoTrue(fkUsuario)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public List<Categoria> findByUsuario(UUID fkUsuario, TipoCategoria tipoCategoria) {
         return jpaRepository.findByFkUsuarioAndTipoIncludingGlobalAndAtivoTrue(fkUsuario, tipoCategoria)
                 .stream()

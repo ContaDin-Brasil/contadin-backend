@@ -16,6 +16,8 @@ public interface CategoriaRepository {
 
     void deleteById(UUID id);
 
+    List<Categoria> findTodasByUsuario(UUID fkUsuario);
+
     List<Categoria> findByUsuario(UUID fkUsuario, TipoCategoria tipoCategoria);
 
     List<Categoria> findByUsuarioInativas(UUID fkUsuario);

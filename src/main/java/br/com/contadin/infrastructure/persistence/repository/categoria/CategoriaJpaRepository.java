@@ -15,6 +15,8 @@ import java.util.UUID;
 public interface CategoriaJpaRepository extends JpaRepository<CategoriaEntity, UUID> {
 	Optional<CategoriaEntity> findByIdAndAtivoTrue(UUID id);
 
+	List<CategoriaEntity> findByFkUsuarioAndAtivoTrue(UUID fkUsuario);
+
 	@Query("""
 		SELECT c
 		FROM CategoriaEntity c
