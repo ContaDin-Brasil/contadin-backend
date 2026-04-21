@@ -4,6 +4,7 @@ import br.com.contadin.application.exception.ApplicationException;
 import br.com.contadin.domain.exception.DomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -115,6 +116,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiError> handleBadRequest(MethodArgumentTypeMismatchException ex) {
         ApiError error = new ApiError(BAD_REQUEST.value(), "Parâmetro inválido na requisição.", LocalDateTime.now());
+        return ResponseEntity.status(BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiError> handleNotReadable(HttpMessageNotReadableException ex) {
+        ApiError error = new ApiError(BAD_REQUEST.value(), "Corpo da requisição inválido ou mal formatado.", LocalDateTime.now());
         return ResponseEntity.status(BAD_REQUEST).body(error);
     }
 
