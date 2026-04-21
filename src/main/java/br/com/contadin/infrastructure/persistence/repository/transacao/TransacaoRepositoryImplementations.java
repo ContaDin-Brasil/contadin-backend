@@ -21,6 +21,12 @@ public class TransacaoRepositoryImplementations implements TransacaoRepository {
      private final TransacaoPersistenceMapper persistenceMapper;
 
      @Override
+     public List<Transacao> saveAll(List<Transacao> transacoes) {
+          var entities = transacoes.stream().map(persistenceMapper::toEntity).toList();
+          return jpaRepository.saveAll(entities).stream().map(persistenceMapper::toDomain).toList();
+     }
+
+     @Override
     public Transacao save(Transacao transacao) {
           var entity = persistenceMapper.toEntity(transacao);
           var saved = jpaRepository.save(entity);

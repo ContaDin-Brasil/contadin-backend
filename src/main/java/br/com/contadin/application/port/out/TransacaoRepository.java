@@ -12,6 +12,8 @@ import java.util.UUID;
 public interface TransacaoRepository {
     Transacao save(Transacao transacao);
 
+    List<Transacao> saveAll(List<Transacao> transacoes);
+
     Optional<Transacao> findById(UUID id);
 
     List<Transacao> findAll();
