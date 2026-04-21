@@ -1,10 +1,12 @@
 package br.com.contadin.infrastructure.web.controller;
 
 import br.com.contadin.application.dto.usuario.AtualizarUsuarioRequest;
+import br.com.contadin.application.dto.usuario.ListarUsuariosResponse;
 import br.com.contadin.application.dto.usuario.UsuarioResponse;
 import br.com.contadin.application.port.in.usuario.AtualizarUsuarioInputPort;
 import br.com.contadin.application.port.in.usuario.BuscarUsuarioInputPort;
 import br.com.contadin.application.port.in.usuario.DesativarUsuarioInputPort;
+import br.com.contadin.application.port.in.usuario.ListarUsuariosInputPort;
 import br.com.contadin.domain.model.Usuario;
 import br.com.contadin.infrastructure.web.mapper.UsuarioWebMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,10 +29,24 @@ import java.util.UUID;
 @Tag(name = "Usuários", description = "Gerenciamento de usuários")
 public class UsuarioController {
 
+    private final ListarUsuariosInputPort listarUsuariosInputPort;
     private final BuscarUsuarioInputPort buscarUsuarioInputPort;
     private final AtualizarUsuarioInputPort atualizarUsuarioInputPort;
     private final DesativarUsuarioInputPort desativarUsuarioInputPort;
     private final UsuarioWebMapper usuarioWebMapper;
+
+    @GetMapping
+    @Operation(summary = "Listar usuários", description = "Retorna id e nome de todos os usuários cadastrados.")
+    @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ListarUsuariosResponse.class)))
+    public ResponseEntity<List<ListarUsuariosResponse>> listar() {
+        List<ListarUsuariosResponse> response = listarUsuariosInputPort.execute()
+                .stream()
+                .map(usuarioWebMapper::toListarResponse)
+                .toList();
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar usuário por id", description = "Busca um usuário pelo seu identificador UUID.")
