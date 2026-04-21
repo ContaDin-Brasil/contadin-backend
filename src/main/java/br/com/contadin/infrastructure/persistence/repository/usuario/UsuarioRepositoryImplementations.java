@@ -7,6 +7,7 @@ import br.com.contadin.infrastructure.persistence.mapper.UsuarioPersistenceMappe
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,5 +39,10 @@ public class UsuarioRepositoryImplementations implements UsuarioRepository {
     @Override
     public Optional<Usuario> findById(UUID id) {
         return jpaRepository.findById(id).map(mapper::toDomain);
+    }
+
+    @Override
+    public List<Usuario> findAll() {
+        return jpaRepository.findAll().stream().map(mapper::toDomain).toList();
     }
 }
