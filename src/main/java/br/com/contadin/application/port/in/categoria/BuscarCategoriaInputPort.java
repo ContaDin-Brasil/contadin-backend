@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface BuscarCategoriaInputPort {
+    List<Categoria> executeBuscarTodas(UUID fkUsuario);
+
     List<Categoria> execute(UUID fkUsuario, TipoCategoria tipoCategoria);
 
     List<Categoria> executeBuscarInativas(UUID fkUsuario);

@@ -66,4 +66,13 @@ public class ListarCategoriaUseCase implements BuscarCategoriaInputPort {
 
 		return categoriaRepository.findByNomeAndUsuario(nome.trim(), fkUsuario, tipoCategoria);
 	}
+
+	@Override
+	public List<Categoria> executeBuscarTodas(UUID fkUsuario) {
+		if (fkUsuario == null) {
+			throw new CategoriaInvalidaException("fkUsuario é obrigatório para buscar categorias.");
+		}
+
+		return categoriaRepository.findTodasByUsuario(fkUsuario);
+	}
 }

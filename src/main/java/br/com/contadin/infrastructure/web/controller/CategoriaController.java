@@ -79,6 +79,18 @@ public class CategoriaController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/all")
+    @Operation(summary = "Listar todas as categorias por usuário", description = "Retorna todas as categorias ativas do usuário informado, independente do tipo.")
+    public ResponseEntity<List<CategoriaResponse>> listarTodasPorUsuario(
+            @RequestParam UUID fkUsuario
+    ) {
+        List<CategoriaResponse> response = buscarCategoriaInputPort.executeBuscarTodas(fkUsuario)
+                .stream()
+                .map(categoriaWebMapper::toResponse)
+                .toList();
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping
     @Operation(summary = "Listar categorias por usuário", description = "Retorna todas as categorias do usuário informado.")
     public ResponseEntity<List<CategoriaResponse>> listarPorUsuario(
