@@ -3,6 +3,7 @@ package br.com.contadin.infrastructure.web.mapper;
 import br.com.contadin.application.dto.usuario.AtualizarUsuarioRequest;
 import br.com.contadin.application.dto.usuario.CriarUsuarioRequest;
 import br.com.contadin.application.dto.usuario.CriarUsuarioResponse;
+import br.com.contadin.application.dto.usuario.ListarUsuariosResponse;
 import br.com.contadin.application.dto.usuario.UsuarioResponse;
 import br.com.contadin.domain.model.Usuario;
 import br.com.contadin.domain.valueobject.Email;
@@ -28,6 +29,8 @@ public interface UsuarioWebMapper {
     @Mapping(target = "email", source = "email", qualifiedByName = "emailToString")
     @Mapping(target = "telefone", source = "telefone", qualifiedByName = "telefoneToString")
     UsuarioResponse toUsuarioResponse(Usuario model);
+
+    ListarUsuariosResponse toListarResponse(Usuario model);
 
     // ======================
     // Email

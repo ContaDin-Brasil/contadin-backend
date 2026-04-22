@@ -5,6 +5,7 @@ import br.com.contadin.application.dto.transacao.TransacaoPaginadaResponse;
 import br.com.contadin.application.dto.transacao.TransacaoRequest;
 import br.com.contadin.application.dto.transacao.TransacaoResponse;
 import br.com.contadin.domain.enums.TipoTransacao;
+import br.com.contadin.application.port.in.transacao.CriarMultiplasTransacoesInputPort;
 import br.com.contadin.application.port.in.transacao.AtualizarTransacaoInputPort;
 import br.com.contadin.application.port.in.transacao.BuscarTransacaoInputPort;
 import br.com.contadin.application.port.in.transacao.CriarTransacaoInputPort;
@@ -14,6 +15,7 @@ import br.com.contadin.infrastructure.web.mapper.TransacaoWebMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,14 +36,93 @@ import java.util.UUID;
 public class TransacaoController {
 
     private final CriarTransacaoInputPort criarTransacaoInputPort;
+    private final CriarMultiplasTransacoesInputPort criarMultiplasTransacoesInputPort;
     private final BuscarTransacaoInputPort buscarTransacaoInputPort;
     private final AtualizarTransacaoInputPort atualizarTransacaoInputPort;
     private final DeletarTransacaoInputPort deletarTransacaoInputPort;
     private final DesativarTransacaoInputPort desativarTransacaoInputPort;
     private final TransacaoWebMapper transacaoWebMapper;
 
+    @PostMapping("/lote")
+    @Operation(
+        summary = "Criar múltiplas transações",
+        description = "Cria uma lista de transações em uma única operação. Se qualquer transação for inválida, nenhuma é salva.",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = TransacaoRequest.class),
+                examples = @ExampleObject(value = """
+                    [
+                      {
+                        "valor": 100.50,
+                        "tipo": "GASTO",
+                        "descricao": "Mercado",
+                        "dataTransacao": "2026-04-21T20:00:00",
+                        "parcelado": false,
+                        "recorrencia": "MENSAL",
+                        "fimRecorrencia": "2026-12-31",
+                        "ativo": true,
+                        "fkInstituicao": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        "fkCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      },
+                      {
+                        "valor": 250.00,
+                        "tipo": "RECEITA",
+                        "descricao": "Salário",
+                        "dataTransacao": "2026-04-21T08:00:00",
+                        "parcelado": false,
+                        "recorrencia": null,
+                        "fimRecorrencia": null,
+                        "ativo": true,
+                        "fkInstituicao": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                        "fkCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                      }
+                    ]
+                    """)
+            )
+        )
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Transações criadas com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TransacaoResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida — indica qual transação falhou",
+                    content = @Content)
+    })
+    public ResponseEntity<List<TransacaoResponse>> criarMultiplasTransacoes(@Valid @RequestBody List<TransacaoRequest> requests) {
+        var transacoes = requests.stream().map(transacaoWebMapper::toDomain).toList();
+        var criadas = criarMultiplasTransacoesInputPort.execute(transacoes);
+        var response = criadas.stream().map(transacaoWebMapper::toResponse).toList();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @PostMapping
-    @Operation(summary = "Criar uma nova transação", description = "Cria uma nova transação no sistema.")
+    @Operation(
+        summary = "Criar uma nova transação",
+        description = "Cria uma nova transação no sistema.",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = TransacaoRequest.class),
+                examples = @ExampleObject(value = """
+                    {
+                      "valor": 100.50,
+                      "tipo": "GASTO",
+                      "descricao": "Mercado",
+                      "dataTransacao": "2026-04-21T20:00:00",
+                      "parcelado": false,
+                      "recorrencia": "MENSAL",
+                      "fimRecorrencia": "2026-12-31",
+                      "ativo": true,
+                      "fkInstituicao": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                      "fkCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                    }
+                    """)
+            )
+        )
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Transação criada com sucesso",
                     content = @Content(mediaType = "application/json",
