@@ -2,16 +2,13 @@ package br.com.contadin.infrastructure.initializer;
 
 import br.com.contadin.application.port.out.CategoriaRepository;
 import br.com.contadin.application.port.out.InstituicaoRepository;
-import br.com.contadin.application.port.out.MetaGastoRepository;
+import br.com.contadin.application.port.out.ObjetivoRepository;
 import br.com.contadin.application.port.out.TransacaoRepository;
 import br.com.contadin.domain.enums.Recorrencia;
 import br.com.contadin.domain.enums.TipoCategoria;
 import br.com.contadin.domain.enums.TipoInstituicao;
 import br.com.contadin.domain.enums.TipoTransacao;
-import br.com.contadin.domain.model.Categoria;
-import br.com.contadin.domain.model.Instituicao;
-import br.com.contadin.domain.model.MetaGasto;
-import br.com.contadin.domain.model.Transacao;
+import br.com.contadin.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +25,7 @@ public class MockDb {
 
     private final InstituicaoRepository instituicaoRepository;
     private final CategoriaRepository categoriaRepository;
-    private final MetaGastoRepository metaGastoRepository;
+    private final ObjetivoRepository objetivoRepository;
     private final TransacaoRepository transacaoRepository;
 
     @Value("${app.set.mockdata:false}")
@@ -117,7 +114,7 @@ public class MockDb {
         }
         log.info("Categorias cadastradas com sucesso!");
 
-        // Meta Gasto
+        // Objetivo
 
         Date dataFim = new Date();
         Calendar c = Calendar.getInstance();
@@ -125,29 +122,29 @@ public class MockDb {
         c.add(Calendar.MONTH, 3);
         dataFim = c.getTime();
 
-        List<MetaGasto> metasGasto = List.of(
-                MetaGasto.builder()
-                        .nome("Meta Supermercado")
+        List<Objetivo> objetivos = List.of(
+                Objetivo.builder()
+                        .nome("Objetivo Supermercado")
                         .valor(new BigDecimal("1500.00"))
-                        .dataFimMeta(dataFim)
+                        .dataFimObjetivo(dataFim)
                         .criadoEm(LocalDateTime.now())
                         .fkUsuario(usuarioId)
                         .fkCategoria(categoriaIds.get(0))
                         .build(),
-                MetaGasto.builder()
-                        .nome("Meta Transporte")
+                Objetivo.builder()
+                        .nome("Objetivo Transporte")
                         .valor(new BigDecimal("400.00"))
-                        .dataFimMeta(dataFim)
+                        .dataFimObjetivo(dataFim)
                         .criadoEm(LocalDateTime.now())
                         .fkUsuario(usuarioId)
                         .fkCategoria(categoriaIds.get(1))
                         .build()
         );
 
-        for (MetaGasto metaGasto : metasGasto) {
-            metaGastoRepository.save(metaGasto);
+        for (Objetivo objetivo : objetivos) {
+            objetivoRepository.save(objetivo);
         }
-        log.info("Metas de gasto cadastradas com sucesso!");
+        log.info("Objetivos cadastradas com sucesso!");
 
         // Transacoes
 

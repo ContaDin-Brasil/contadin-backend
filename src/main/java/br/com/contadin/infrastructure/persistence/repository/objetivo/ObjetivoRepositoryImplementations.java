@@ -1,9 +1,9 @@
-package br.com.contadin.infrastructure.persistence.repository.metaGasto;
+package br.com.contadin.infrastructure.persistence.repository.objetivo;
 
-import br.com.contadin.application.port.out.MetaGastoRepository;
-import br.com.contadin.domain.model.MetaGasto;
-import br.com.contadin.infrastructure.persistence.entity.MetaGastoEntity;
-import br.com.contadin.infrastructure.persistence.mapper.MetaGastoPersistenceMapper;
+import br.com.contadin.application.port.out.ObjetivoRepository;
+import br.com.contadin.domain.model.Objetivo;
+import br.com.contadin.infrastructure.persistence.entity.ObjetivoEntity;
+import br.com.contadin.infrastructure.persistence.mapper.ObjetivoPersistenceMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,19 +12,19 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-public class MetaGastoRepositoryImplementations implements MetaGastoRepository {
-        private final MetaGastoPersistenceMapper mapper;
-        private final MetaGastoJpaRepository jpaRepository;
+public class ObjetivoRepositoryImplementations implements ObjetivoRepository {
+        private final ObjetivoPersistenceMapper mapper;
+        private final ObjetivoJpaRepository jpaRepository;
 
         @Override
-        public MetaGasto save(MetaGasto meta){
-            MetaGastoEntity entity = mapper.toEntity(meta);
+        public Objetivo save(Objetivo objetivo){
+            ObjetivoEntity entity = mapper.toEntity(objetivo);
             jpaRepository.save(entity);
             return mapper.toDomain(entity);
         }
 
          @Override
-        public Optional<MetaGasto> findById(UUID id) {
+        public Optional<Objetivo> findById(UUID id) {
             return jpaRepository.findById(id)
                     .map(mapper::toDomain);
         }
@@ -35,7 +35,7 @@ public class MetaGastoRepositoryImplementations implements MetaGastoRepository {
         }
 
         @Override
-        public java.util.List<MetaGasto> findByUsuario(UUID fkUsuario) {
+        public java.util.List<Objetivo> findByUsuario(UUID fkUsuario) {
             return jpaRepository.findByFkUsuario(fkUsuario)
                     .stream()
                     .map(mapper::toDomain)
@@ -43,7 +43,7 @@ public class MetaGastoRepositoryImplementations implements MetaGastoRepository {
         }
 
         @Override
-        public java.util.List<MetaGasto> findByNomeAndUsuario(String nome, UUID fkUsuario) {
+        public java.util.List<Objetivo> findByNomeAndUsuario(String nome, UUID fkUsuario) {
             return jpaRepository.findByFkUsuarioAndNome(fkUsuario, nome)
                     .stream().map(mapper::toDomain)
                     .toList();

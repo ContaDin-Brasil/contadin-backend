@@ -12,12 +12,12 @@ import java.util.UUID;
 @Getter
 @Builder
 @ToString
-public class MetaGasto {
+public class Objetivo {
 
     private final UUID id;
     private final String nome;
     private final BigDecimal valor;
-    private final Date dataFimMeta;
+    private final Date dataFimObjetivo;
     private final LocalDateTime criadoEm;
     private final LocalDateTime atualizadoEm;
     private final UUID fkUsuario;

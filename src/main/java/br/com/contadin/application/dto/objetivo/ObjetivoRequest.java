@@ -1,13 +1,13 @@
-package br.com.contadin.application.dto.metaGasto;
+package br.com.contadin.application.dto.objetivo;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
-public record MetaGastoRequest(
+public record ObjetivoRequest(
         String nome,
         BigDecimal valor,
-        Date dataFimMeta,
+        Date dataFimObjetivo,
         UUID fkCategoria,
         UUID fkUsuario
 ) {

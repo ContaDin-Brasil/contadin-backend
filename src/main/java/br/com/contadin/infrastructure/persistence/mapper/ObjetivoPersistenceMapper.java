@@ -1,17 +1,17 @@
 package br.com.contadin.infrastructure.persistence.mapper;
 
-import br.com.contadin.domain.model.MetaGasto;
-import br.com.contadin.infrastructure.persistence.entity.MetaGastoEntity;
+import br.com.contadin.domain.model.Objetivo;
+import br.com.contadin.infrastructure.persistence.entity.ObjetivoEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
-public interface MetaGastoPersistenceMapper {
+public interface ObjetivoPersistenceMapper {
 
     @Mapping(target = "fkUsuario", source = "fkUsuario")
-    MetaGastoEntity
-    toEntity(MetaGasto meta);
+    ObjetivoEntity
+    toEntity(Objetivo objetivo);
 
     @Mapping(target = "fkUsuario", source = "fkUsuario")
-    MetaGasto toDomain(MetaGastoEntity entity);
+    Objetivo toDomain(ObjetivoEntity entity);
 }

@@ -10,7 +10,7 @@ Este documento serve como **guia de onboarding** e referência para entender com
 
 ### O que é este projeto
 
-O **contadin-backend** expõe uma API REST para operações do domínio financeiro (por exemplo: categorias, transações, instituições, metas de gasto e usuários). A lógica de negócio fica protegida em **camadas internas**; detalhes de HTTP, persistência JPA e configuração Spring ficam na **periferia** (infraestrutura).
+O **contadin-backend** expõe uma API REST para operações do domínio financeiro (por exemplo: categorias, transações, instituições, objetivos de gasto e usuários). A lógica de negócio fica protegida em **camadas internas**; detalhes de HTTP, persistência JPA e configuração Spring ficam na **periferia** (infraestrutura).
 
 ### O que é Arquitetura Hexagonal
 

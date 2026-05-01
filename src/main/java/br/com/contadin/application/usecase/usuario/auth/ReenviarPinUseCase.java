@@ -4,9 +4,9 @@ import br.com.contadin.application.dto.tokenRecuperarSenha.recuperarSenha.Reenvi
 import br.com.contadin.application.dto.tokenRecuperarSenha.recuperarSenha.ReenviarPinResponse;
 import br.com.contadin.application.exception.auth.ReenvioNaoPermitidoException;
 import br.com.contadin.application.port.in.auth.ReenviarPinInputPort;
-import br.com.contadin.application.port.out.EmailPort;
-import br.com.contadin.application.port.out.PasswordEncoderPort;
-import br.com.contadin.application.port.out.TokenRecuperarSenhaRepository;
+import br.com.contadin.application.port.out.email.EmailPort;
+import br.com.contadin.application.port.out.security.PasswordEncoderPort;
+import br.com.contadin.application.port.out.security.TokenRecuperarSenhaRepository;
 import br.com.contadin.application.port.out.UsuarioRepository;
 import br.com.contadin.domain.model.TokenRecuperarSenha;
 import br.com.contadin.domain.model.Usuario;
