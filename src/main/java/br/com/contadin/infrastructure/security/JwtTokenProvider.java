@@ -1,6 +1,6 @@
 package br.com.contadin.infrastructure.security;
 
-import br.com.contadin.application.port.out.TokenProviderPort;
+import br.com.contadin.application.port.out.security.TokenProviderPort;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

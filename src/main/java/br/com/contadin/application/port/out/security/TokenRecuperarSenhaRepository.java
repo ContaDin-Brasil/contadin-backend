@@ -1,4 +1,4 @@
-package br.com.contadin.application.port.out;
+package br.com.contadin.application.port.out.security;
 
 import br.com.contadin.domain.model.TokenRecuperarSenha;
 

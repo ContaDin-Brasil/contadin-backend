@@ -1,6 +1,6 @@
 package br.com.contadin.infrastructure.persistence.repository.tokenRecuperarSenha;
 
-import br.com.contadin.application.port.out.TokenRecuperarSenhaRepository;
+import br.com.contadin.application.port.out.security.TokenRecuperarSenhaRepository;
 import br.com.contadin.domain.model.TokenRecuperarSenha;
 import br.com.contadin.infrastructure.persistence.entity.TokenRecuperarSenhaEntity;
 import br.com.contadin.infrastructure.persistence.mapper.TokenRecuperarSenhaPersistenceMapper;

@@ -1,6 +1,6 @@
 package br.com.contadin.infrastructure.initializer;
 
-import br.com.contadin.application.port.out.PasswordEncoderPort;
+import br.com.contadin.application.port.out.security.PasswordEncoderPort;
 import br.com.contadin.application.port.out.UsuarioRepository;
 import br.com.contadin.domain.model.Usuario;
 import br.com.contadin.domain.valueobject.Email;

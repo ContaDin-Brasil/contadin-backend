@@ -6,7 +6,7 @@ import br.com.contadin.application.exception.usuario.auth.ConfirmacaoSenhaInvali
 import br.com.contadin.application.exception.usuario.auth.SenhaAtualInvalidaException;
 import br.com.contadin.application.exception.usuario.auth.SenhaRepetidaException;
 import br.com.contadin.application.port.in.auth.AlterarSenhaInputPort;
-import br.com.contadin.application.port.out.PasswordEncoderPort;
+import br.com.contadin.application.port.out.security.PasswordEncoderPort;
 import br.com.contadin.application.port.out.UsuarioRepository;
 import br.com.contadin.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;

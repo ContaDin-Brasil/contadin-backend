@@ -6,8 +6,8 @@ import br.com.contadin.application.exception.usuario.auth.CredenciaisInvalidasEx
 import br.com.contadin.application.exception.usuario.UsuarioInativoException;
 import br.com.contadin.application.mapper.auth.LoginMapper;
 import br.com.contadin.application.port.in.auth.LoginUseCase;
-import br.com.contadin.application.port.out.PasswordEncoderPort;
-import br.com.contadin.application.port.out.TokenProviderPort;
+import br.com.contadin.application.port.out.security.PasswordEncoderPort;
+import br.com.contadin.application.port.out.security.TokenProviderPort;
 import br.com.contadin.application.port.out.UsuarioRepository;
 import br.com.contadin.domain.model.Usuario;
 import lombok.RequiredArgsConstructor;
