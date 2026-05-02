@@ -83,19 +83,19 @@ public class MockDb {
         List<Categoria> categoriasParaSalvar = List.of(
                 Categoria.builder()
                         .nome("Alimentação")
-                        .icone("fork-knife")
+                        .icone("restaurant")
                         .cor("#FF6B6B")
                         .tipo(TipoCategoria.GASTO)
                         .fkUsuario(usuarioId).build(),
                 Categoria.builder()
                         .nome("Transporte")
-                        .icone("car")
+                        .icone("directions-car")
                         .cor("#4ECDC4")
                         .tipo(TipoCategoria.GASTO)
                         .fkUsuario(usuarioId).build(),
                 Categoria.builder()
                         .nome("Outros")
-                        .icone("dots-horizontal")
+                        .icone("category")
                         .cor("#A29BFE")
                         .tipo(TipoCategoria.RECEITA)
                         .fkUsuario(usuarioId).build(),
