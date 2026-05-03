@@ -22,6 +22,7 @@ public class Transacao {
     private String descricao;
     private LocalDateTime dataTransacao;
     private Boolean parcelado;
+    private Integer qtdParcelas;
     private Recorrencia recorrencia;
     private Date fimRecorrencia;
     private Boolean ativo;

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
@@ -19,6 +18,7 @@ public record TransacaoRequest(
         @JsonDeserialize(using = LocalDateTimeDeserializer.class)
         LocalDateTime dataTransacao,
         Boolean parcelado,
+        Integer qtdParcelas,
         Recorrencia recorrencia,
         @JsonFormat(pattern = "yyyy-MM-dd")
         Date fimRecorrencia,

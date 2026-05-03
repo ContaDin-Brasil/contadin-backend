@@ -39,6 +39,9 @@ public class TransacaoEntity {
     @NotNull
     private Boolean parcelado;
 
+    @Column(name = "qtd_parcelas")
+    private Integer qtdParcelas;
+
     @Enumerated(EnumType.STRING)
     private Recorrencia recorrencia;
 
