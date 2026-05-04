@@ -17,6 +17,9 @@ public class CriarTransacaoUseCase implements CriarTransacaoInputPort {
     @Override
     public Transacao execute(Transacao transacao) {
         validarTransacao(transacao);
+
+        Integer qtdParcelas = ajustarQtdParcelas(transacao.getParcelado(), transacao.getQtdParcelas());
+
         Transacao transacaoParaSalvar = Transacao.builder()
                 .id(transacao.getId())
                 .valor(transacao.getValor())
@@ -24,6 +27,7 @@ public class CriarTransacaoUseCase implements CriarTransacaoInputPort {
                 .descricao(transacao.getDescricao())
                 .dataTransacao(transacao.getDataTransacao())
                 .parcelado(transacao.getParcelado())
+                .qtdParcelas(qtdParcelas)
                 .recorrencia(transacao.getRecorrencia())
                 .fimRecorrencia(transacao.getFimRecorrencia())
                 .ativo(transacao.getAtivo() != null ? transacao.getAtivo() : true)
@@ -46,6 +50,25 @@ public class CriarTransacaoUseCase implements CriarTransacaoInputPort {
         if (transacao.getDataTransacao() == null) {
             throw new TransacaoInvalidaException("A data da transação é obrigatória.");
         }
+        if (transacao.getParcelado() == null) {
+            throw new TransacaoInvalidaException("O campo parcelado é obrigatório.");
+        }
+        validarParcelamento(transacao.getParcelado(), transacao.getQtdParcelas());
+    }
+
+    private void validarParcelamento(Boolean parcelado, Integer qtdParcelas) {
+        if (Boolean.TRUE.equals(parcelado)) {
+            if (qtdParcelas == null) {
+                throw new TransacaoInvalidaException("A quantidade de parcelas é obrigatória para transações parceladas.");
+            }
+            if (qtdParcelas < 2 || qtdParcelas > 720) {
+                throw new TransacaoInvalidaException("A quantidade de parcelas deve estar entre 2 e 720.");
+            }
+        }
+    }
+
+    private Integer ajustarQtdParcelas(Boolean parcelado, Integer qtdParcelas) {
+        return Boolean.FALSE.equals(parcelado) ? null : qtdParcelas;
     }
 
 }

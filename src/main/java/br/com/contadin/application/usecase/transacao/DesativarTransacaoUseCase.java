@@ -26,6 +26,8 @@ public class DesativarTransacaoUseCase implements DesativarTransacaoInputPort {
         Transacao existente = transacaoRepository.findById(id)
                 .orElseThrow(() -> new TransacaoNaoEncontradaException("Transação não encontrada."));
 
+        Integer qtdParcelas = Boolean.TRUE.equals(existente.getParcelado()) ? existente.getQtdParcelas() : null;
+
         Transacao toSave = Transacao.builder()
                 .id(existente.getId())
                 .valor(existente.getValor())
@@ -33,6 +35,7 @@ public class DesativarTransacaoUseCase implements DesativarTransacaoInputPort {
                 .descricao(existente.getDescricao())
                 .dataTransacao(existente.getDataTransacao())
                 .parcelado(existente.getParcelado())
+                .qtdParcelas(qtdParcelas)
                 .recorrencia(existente.getRecorrencia())
                 .fimRecorrencia(existente.getFimRecorrencia())
                 .ativo(false)
