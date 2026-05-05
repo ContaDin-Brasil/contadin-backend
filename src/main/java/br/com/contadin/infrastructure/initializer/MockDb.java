@@ -4,10 +4,7 @@ import br.com.contadin.application.port.out.CategoriaRepository;
 import br.com.contadin.application.port.out.InstituicaoRepository;
 import br.com.contadin.application.port.out.ObjetivoRepository;
 import br.com.contadin.application.port.out.TransacaoRepository;
-import br.com.contadin.domain.enums.Recorrencia;
-import br.com.contadin.domain.enums.TipoCategoria;
-import br.com.contadin.domain.enums.TipoInstituicao;
-import br.com.contadin.domain.enums.TipoTransacao;
+import br.com.contadin.domain.enums.*;
 import br.com.contadin.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -114,37 +112,51 @@ public class MockDb {
         }
         log.info("Categorias cadastradas com sucesso!");
 
-        // Objetivo
+        // Objetivos
 
-        Date dataFim = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(dataFim);
-        c.add(Calendar.MONTH, 3);
-        dataFim = c.getTime();
+        LocalDate inicioMes = LocalDate.now().withDayOfMonth(1);
+        LocalDate fimMes = inicioMes.plusMonths(1).minusDays(1);
 
         List<Objetivo> objetivos = List.of(
                 Objetivo.builder()
-                        .nome("Objetivo Supermercado")
-                        .valor(new BigDecimal("1500.00"))
-                        .dataFimObjetivo(dataFim)
-                        .criadoEm(LocalDateTime.now())
+                        .nome("Limitar delivery no mês")
+                        .descricao("Controlar gastos com alimentação delivery")
+                        .valor(new BigDecimal("450.00"))
+                        .tipoObjetivo(TipoObjetivo.LIMITE_GASTO)
+                        .prioridade(PrioridadeObjetivo.ALTA)
+                        .dataInicio(inicioMes)
+                        .dataFim(fimMes)
                         .fkUsuario(usuarioId)
                         .fkCategoria(categoriaIds.get(0))
                         .build(),
                 Objetivo.builder()
-                        .nome("Objetivo Transporte")
+                        .nome("Limitar transporte")
+                        .descricao("Reduzir gastos com transporte este mês")
                         .valor(new BigDecimal("400.00"))
-                        .dataFimObjetivo(dataFim)
-                        .criadoEm(LocalDateTime.now())
+                        .tipoObjetivo(TipoObjetivo.LIMITE_GASTO)
+                        .prioridade(PrioridadeObjetivo.MEDIA)
+                        .dataInicio(inicioMes)
+                        .dataFim(fimMes)
                         .fkUsuario(usuarioId)
                         .fkCategoria(categoriaIds.get(1))
+                        .build(),
+                Objetivo.builder()
+                        .nome("Renda extra com freelas")
+                        .descricao("Aumentar receita com trabalhos extras")
+                        .valor(new BigDecimal("800.00"))
+                        .tipoObjetivo(TipoObjetivo.AUMENTO_RECEITA)
+                        .prioridade(PrioridadeObjetivo.ALTA)
+                        .dataInicio(inicioMes)
+                        .dataFim(fimMes)
+                        .fkUsuario(usuarioId)
+                        .fkCategoria(categoriaIds.get(2))
                         .build()
         );
 
         for (Objetivo objetivo : objetivos) {
             objetivoRepository.save(objetivo);
         }
-        log.info("Objetivos cadastradas com sucesso!");
+        log.info("Objetivos cadastrados com sucesso!");
 
         // Transacoes
 
