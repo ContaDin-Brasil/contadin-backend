@@ -8,10 +8,12 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ObjetivoPersistenceMapper {
 
-    @Mapping(target = "fkUsuario", source = "fkUsuario")
-    ObjetivoEntity
-    toEntity(Objetivo objetivo);
-
-    @Mapping(target = "fkUsuario", source = "fkUsuario")
+    @Mapping(target = "realizado", ignore = true)
+    @Mapping(target = "percentual", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "mensagemStatus", ignore = true)
     Objetivo toDomain(ObjetivoEntity entity);
+
+    @Mapping(target = "id", source = "id")
+    ObjetivoEntity toEntity(Objetivo objetivo);
 }
