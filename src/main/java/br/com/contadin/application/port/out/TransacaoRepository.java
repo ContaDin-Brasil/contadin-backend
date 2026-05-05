@@ -5,6 +5,10 @@ import br.com.contadin.domain.model.Transacao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import br.com.contadin.domain.enums.TipoTransacao;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,4 +25,6 @@ public interface TransacaoRepository {
     Page<Transacao> findAll(TransacaoFiltro filtro, Pageable pageable);
 
     void deleteById(UUID id);
+
+    BigDecimal sumValorByCategoriaTipoEPeriodo(UUID fkCategoria, TipoTransacao tipo, LocalDateTime inicio, LocalDateTime fim);
 }

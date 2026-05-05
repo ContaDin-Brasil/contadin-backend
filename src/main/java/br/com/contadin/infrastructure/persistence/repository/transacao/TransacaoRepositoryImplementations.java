@@ -2,6 +2,7 @@ package br.com.contadin.infrastructure.persistence.repository.transacao;
 
 import br.com.contadin.application.dto.transacao.TransacaoFiltro;
 import br.com.contadin.application.port.out.TransacaoRepository;
+import br.com.contadin.domain.enums.TipoTransacao;
 import br.com.contadin.domain.model.Transacao;
 import br.com.contadin.infrastructure.persistence.mapper.TransacaoPersistenceMapper;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,6 +58,12 @@ public class TransacaoRepositoryImplementations implements TransacaoRepository {
      @Override
      public void deleteById(UUID id) {
           jpaRepository.deleteById(id);
+     }
+
+     @Override
+     public BigDecimal sumValorByCategoriaTipoEPeriodo(UUID fkCategoria, TipoTransacao tipo, LocalDateTime inicio, LocalDateTime fim) {
+          Double result = jpaRepository.sumValorByCategoriaTipoEPeriodo(fkCategoria, tipo, inicio, fim);
+          return BigDecimal.valueOf(result != null ? result : 0);
      }
 }
 
