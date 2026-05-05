@@ -1,5 +1,7 @@
 package br.com.contadin.application.usecase.objetivo;
 
+import br.com.contadin.application.exception.objetivo.ObjetivoInvalidoException;
+import br.com.contadin.application.exception.objetivo.ObjetivoNaoEncontradoException;
 import br.com.contadin.application.port.in.objetivo.DeletarObjetivoInputPort;
 import br.com.contadin.application.port.out.ObjetivoRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +18,10 @@ public class DeletarObjetivoUseCase implements DeletarObjetivoInputPort {
     @Override
     public void execute(UUID id) {
         if (id == null) {
-            throw new IllegalArgumentException("ID do objetivo é obrigatório para exclusão");
+            throw new ObjetivoInvalidoException("ID do objetivo é obrigatório para exclusão");
         }
-
         objetivoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Objetivo não encontrado"));
-
+                .orElseThrow(ObjetivoNaoEncontradoException::new);
         objetivoRepository.deleteById(id);
     }
 }

@@ -8,8 +8,7 @@ import java.util.UUID;
 public interface BuscarObjetivoInputPort {
     List<Objetivo> execute(UUID fkUsuario);
 
-    Objetivo executeBuscarPorId(UUID ObjetivoId);
+    Objetivo executeBuscarPorId(UUID objetivoId);
 
     List<Objetivo> executeBuscarPorNome(String nome, UUID fkUsuario);
-
 }
