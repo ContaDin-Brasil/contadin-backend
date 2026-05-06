@@ -100,6 +100,46 @@ class BuscarObjetivoUseCaseTest {
     }
 
     @Test
+    void deveFiltrarObjetivosConcluidosNaBuscaPorUsuario() {
+        UUID usuarioId = UUID.randomUUID();
+        Objetivo concluido = objetivoBase().toBuilder()
+                .dataFim(LocalDate.now().minusDays(1))
+                .build();
+        Objetivo naoConcluido = objetivoBase().toBuilder()
+                .dataFim(LocalDate.now().plusDays(1))
+                .build();
+
+        when(objetivoRepository.findByUsuario(usuarioId)).thenReturn(List.of(concluido, naoConcluido));
+        when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
+                .thenReturn(BigDecimal.ZERO);
+
+        List<Objetivo> resultado = useCase.execute(usuarioId, true, null);
+
+        assertEquals(1, resultado.size());
+        assertEquals(concluido.getId(), resultado.get(0).getId());
+    }
+
+    @Test
+    void deveFiltrarObjetivosPorTipoNaBuscaPorUsuario() {
+        UUID usuarioId = UUID.randomUUID();
+        Objetivo aumentar = objetivoBase().toBuilder()
+                .tipoObjetivo(TipoObjetivo.AUMENTO_RECEITA)
+                .build();
+        Objetivo diminuir = objetivoBase().toBuilder()
+                .tipoObjetivo(TipoObjetivo.LIMITE_GASTO)
+                .build();
+
+        when(objetivoRepository.findByUsuario(usuarioId)).thenReturn(List.of(aumentar, diminuir));
+        when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
+                .thenReturn(BigDecimal.ZERO);
+
+        List<Objetivo> resultado = useCase.execute(usuarioId, null, TipoObjetivo.AUMENTO_RECEITA);
+
+        assertEquals(1, resultado.size());
+        assertEquals(TipoObjetivo.AUMENTO_RECEITA, resultado.get(0).getTipoObjetivo());
+    }
+
+    @Test
     void deveBuscarObjetivosPorNome() {
         // Arrange
         UUID usuarioId = UUID.randomUUID();

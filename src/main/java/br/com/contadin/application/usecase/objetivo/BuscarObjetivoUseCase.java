@@ -6,10 +6,12 @@ import br.com.contadin.application.port.in.objetivo.BuscarObjetivoInputPort;
 import br.com.contadin.application.usecase.objetivo.helper.ObjetivoMetricasHelper;
 import br.com.contadin.application.port.out.ObjetivoRepository;
 import br.com.contadin.application.port.out.TransacaoRepository;
+import br.com.contadin.domain.enums.TipoObjetivo;
 import br.com.contadin.domain.model.Objetivo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,11 +24,26 @@ public class BuscarObjetivoUseCase implements BuscarObjetivoInputPort {
 
     @Override
     public List<Objetivo> execute(UUID fkUsuario) {
+        return execute(fkUsuario, null, null);
+    }
+
+    @Override
+    public List<Objetivo> execute(UUID fkUsuario, Boolean concluido, TipoObjetivo tipoObjetivo) {
         if (fkUsuario == null) {
             throw new ObjetivoInvalidoException("ID do usuário é obrigatório para busca");
         }
+        LocalDate hoje = LocalDate.now();
+
         return objetivoRepository.findByUsuario(fkUsuario).stream()
                 .map(o -> ObjetivoMetricasHelper.calcular(o, transacaoRepository))
+                .filter(o -> tipoObjetivo == null || o.getTipoObjetivo() == tipoObjetivo)
+                .filter(o -> {
+                    if (concluido == null) {
+                        return true;
+                    }
+                    boolean objetivoConcluido = o.getDataFim() != null && o.getDataFim().isBefore(hoje);
+                    return concluido.equals(objetivoConcluido);
+                })
                 .toList();
     }
 
