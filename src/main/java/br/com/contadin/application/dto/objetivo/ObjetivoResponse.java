@@ -18,7 +18,6 @@ public record ObjetivoResponse(
         BigDecimal realizado,
         BigDecimal percentual,
         StatusObjetivo status,
-        String mensagemStatus,
         LocalDate dataInicio,
         LocalDate dataFim,
         PrioridadeObjetivo prioridade,
