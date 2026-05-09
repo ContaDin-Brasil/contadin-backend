@@ -7,7 +7,6 @@ import br.com.contadin.application.port.in.objetivo.AtualizarObjetivoInputPort;
 import br.com.contadin.application.port.in.objetivo.BuscarObjetivoInputPort;
 import br.com.contadin.application.port.in.objetivo.CriarObjetivoInputPort;
 import br.com.contadin.application.port.in.objetivo.DeletarObjetivoInputPort;
-import br.com.contadin.domain.enums.TipoObjetivo;
 import br.com.contadin.domain.model.Objetivo;
 import br.com.contadin.infrastructure.web.mapper.ObjetivoWebMapper;
 import jakarta.validation.Valid;
@@ -55,11 +54,9 @@ public class ObjetivoController {
     @GetMapping
     public ResponseEntity<List<ObjetivoResponse>> buscarObjetivoPorUsuario(
             @RequestParam UUID fkUsuario,
-            @RequestParam(required = false) Boolean concluido,
-            @RequestParam(required = false) String tipo) {
-        TipoObjetivo tipoObjetivo = mapTipoObjetivo(tipo);
+            @RequestParam(required = false) Boolean concluido) {
 
-        List<ObjetivoResponse> response = buscarObjetivoInputPort.execute(fkUsuario, concluido, tipoObjetivo).stream()
+        List<ObjetivoResponse> response = buscarObjetivoInputPort.execute(fkUsuario, concluido).stream()
                 .map(objetivoWebMapper::toResponse)
                 .toList();
         return ResponseEntity.ok(response);
@@ -68,8 +65,9 @@ public class ObjetivoController {
     @GetMapping("/nome")
     public ResponseEntity<List<ObjetivoResponse>> buscarObjetivoPorNome(
             @RequestParam String nome,
-            @RequestParam UUID fkUsuario) {
-        List<ObjetivoResponse> response = buscarObjetivoInputPort.executeBuscarPorNome(nome, fkUsuario).stream()
+            @RequestParam UUID fkUsuario,
+            @RequestParam(required = false) Boolean concluido) {
+        List<ObjetivoResponse> response = buscarObjetivoInputPort.executeBuscarPorNome(nome, fkUsuario, concluido).stream()
                 .map(objetivoWebMapper::toResponse)
                 .toList();
         return ResponseEntity.ok(response);
@@ -79,18 +77,5 @@ public class ObjetivoController {
     public ResponseEntity<Void> deletarObjetivo(@PathVariable UUID id) {
         deletarObjetivoInputPort.execute(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private TipoObjetivo mapTipoObjetivo(String tipo) {
-        if (tipo == null || tipo.isBlank()) {
-            return null;
-        }
-
-        String valorNormalizado = tipo.trim().toUpperCase();
-        return switch (valorNormalizado) {
-            case "AUMENTAR", "AUMENTO_RECEITA" -> TipoObjetivo.AUMENTO_RECEITA;
-            case "DIMINUIR", "LIMITE_GASTO" -> TipoObjetivo.LIMITE_GASTO;
-            default -> throw new ObjetivoInvalidoException("Tipo de objetivo inválido: " + tipo);
-        };
     }
 }

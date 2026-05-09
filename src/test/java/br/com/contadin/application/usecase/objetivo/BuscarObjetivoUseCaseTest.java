@@ -113,30 +113,10 @@ class BuscarObjetivoUseCaseTest {
         when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
                 .thenReturn(BigDecimal.ZERO);
 
-        List<Objetivo> resultado = useCase.execute(usuarioId, true, null);
+        List<Objetivo> resultado = useCase.execute(usuarioId, true);
 
         assertEquals(1, resultado.size());
         assertEquals(concluido.getId(), resultado.get(0).getId());
-    }
-
-    @Test
-    void deveFiltrarObjetivosPorTipoNaBuscaPorUsuario() {
-        UUID usuarioId = UUID.randomUUID();
-        Objetivo aumentar = objetivoBase().toBuilder()
-                .tipoObjetivo(TipoObjetivo.AUMENTO_RECEITA)
-                .build();
-        Objetivo diminuir = objetivoBase().toBuilder()
-                .tipoObjetivo(TipoObjetivo.LIMITE_GASTO)
-                .build();
-
-        when(objetivoRepository.findByUsuario(usuarioId)).thenReturn(List.of(aumentar, diminuir));
-        when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
-                .thenReturn(BigDecimal.ZERO);
-
-        List<Objetivo> resultado = useCase.execute(usuarioId, null, TipoObjetivo.AUMENTO_RECEITA);
-
-        assertEquals(1, resultado.size());
-        assertEquals(TipoObjetivo.AUMENTO_RECEITA, resultado.get(0).getTipoObjetivo());
     }
 
     @Test
@@ -149,21 +129,41 @@ class BuscarObjetivoUseCaseTest {
                 .thenReturn(BigDecimal.ZERO);
 
         // Act
-        List<Objetivo> resultado = useCase.executeBuscarPorNome("delivery", usuarioId);
+        List<Objetivo> resultado = useCase.executeBuscarPorNome("delivery", usuarioId, null);
 
         // Assert
         assertEquals(1, resultado.size());
     }
 
     @Test
+    void deveFiltrarObjetivosConcluidosNaBuscaPorNome() {
+        UUID usuarioId = UUID.randomUUID();
+        Objetivo concluido = objetivoBase().toBuilder()
+                .dataFim(LocalDate.now().minusDays(1))
+                .build();
+        Objetivo naoConcluido = objetivoBase().toBuilder()
+                .dataFim(LocalDate.now().plusDays(1))
+                .build();
+
+        when(objetivoRepository.findByNomeAndUsuario("delivery", usuarioId)).thenReturn(List.of(concluido, naoConcluido));
+        when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
+                .thenReturn(BigDecimal.ZERO);
+
+        List<Objetivo> resultado = useCase.executeBuscarPorNome("delivery", usuarioId, true);
+
+        assertEquals(1, resultado.size());
+        assertEquals(concluido.getId(), resultado.get(0).getId());
+    }
+
+    @Test
     void deveLancarErroQuandoNomeVazioNaBuscaPorNome() {
         assertThrows(ObjetivoInvalidoException.class,
-                () -> useCase.executeBuscarPorNome("", UUID.randomUUID()));
+                () -> useCase.executeBuscarPorNome("", UUID.randomUUID(), null));
     }
 
     @Test
     void deveLancarErroQuandoFkUsuarioNuloNaBuscaPorNome() {
         assertThrows(ObjetivoInvalidoException.class,
-                () -> useCase.executeBuscarPorNome("teste", null));
+                () -> useCase.executeBuscarPorNome("teste", null, null));
     }
 }
