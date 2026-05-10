@@ -1,9 +1,9 @@
 package br.com.contadin.application.usecase.dashboard;
 
-import br.com.contadin.application.dto.dashboard.DashReceitaResponse;
+import br.com.contadin.application.dto.dashboard.DashReceitaGastoResponse;
 import br.com.contadin.application.port.in.dashboard.DashQueryInputPort;
 import br.com.contadin.application.port.out.dashboard.DashMetricsOutputPort;
-import br.com.contadin.application.projection.ReceitaMetricsProjection;
+import br.com.contadin.application.projection.ReceitaGastoMetricsProjection;
 import br.com.contadin.domain.enums.TipoTransacao;
 
 import java.time.YearMonth;
@@ -21,18 +21,35 @@ public class DashQueryUseCase
     }
 
     @Override
-    public DashReceitaResponse buscarReceitasPorPeriodo(
+    public DashReceitaGastoResponse buscarReceitasPorPeriodo(
             YearMonth periodo,
             UUID usuarioId
     ) {
 
-        ReceitaMetricsProjection projection =
+        ReceitaGastoMetricsProjection projection =
                 dashMetricsOutputPort
                         .buscarMetricasReceitaPeriodo(periodo, usuarioId);
 
-        return new DashReceitaResponse(
+        return new DashReceitaGastoResponse(
                 periodo.getMonthValue(),
                 TipoTransacao.RECEITA,
+                projection.valorTotal()
+        );
+    }
+
+    @Override
+    public DashReceitaGastoResponse buscarGastosPorPeriodo(
+            YearMonth periodo,
+            UUID usuarioId
+    ) {
+
+        ReceitaGastoMetricsProjection projection =
+                dashMetricsOutputPort
+                        .buscarMetricasGastoPeriodo(periodo, usuarioId);
+
+        return new DashReceitaGastoResponse(
+                periodo.getMonthValue(),
+                TipoTransacao.GASTO,
                 projection.valorTotal()
         );
     }

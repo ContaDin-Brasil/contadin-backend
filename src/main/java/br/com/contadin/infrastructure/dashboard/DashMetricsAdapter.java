@@ -1,12 +1,11 @@
 package br.com.contadin.infrastructure.dashboard;
 
 import br.com.contadin.application.port.out.dashboard.DashMetricsOutputPort;
-import br.com.contadin.application.projection.ReceitaMetricsProjection;
+import br.com.contadin.application.projection.ReceitaGastoMetricsProjection;
 import br.com.contadin.domain.enums.TipoTransacao;
 import br.com.contadin.infrastructure.persistence.repository.transacao.TransacaoJpaRepository;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
@@ -24,7 +23,7 @@ public class DashMetricsAdapter implements DashMetricsOutputPort {
         }
 
     @Override
-    public ReceitaMetricsProjection buscarMetricasReceitaPeriodo(
+    public ReceitaGastoMetricsProjection buscarMetricasReceitaPeriodo(
             YearMonth periodo,
             UUID usuarioId
     ) {
@@ -37,12 +36,34 @@ public class DashMetricsAdapter implements DashMetricsOutputPort {
                 .atEndOfMonth()
                 .atTime(LocalTime.MAX);
 
-        return transacaoRepository.buscarMetricasReceitaPeriodo(
+        return transacaoRepository.buscarMetricasReceitaGastoPeriodo(
                 inicio,
                 fim,
                 TipoTransacao.RECEITA,
                 usuarioId
         );
     }
+
+    @Override
+    public ReceitaGastoMetricsProjection buscarMetricasGastoPeriodo(
+            YearMonth periodo,
+            UUID usuarioId
+    ) {
+
+        LocalDateTime inicio = periodo
+                .atDay(1)
+                .atStartOfDay();
+
+        LocalDateTime fim = periodo
+                .atEndOfMonth()
+                .atTime(LocalTime.MAX);
+
+        return transacaoRepository.buscarMetricasReceitaGastoPeriodo(
+                inicio,
+                fim,
+                TipoTransacao.GASTO,
+                usuarioId
+        );
     }
+}
 

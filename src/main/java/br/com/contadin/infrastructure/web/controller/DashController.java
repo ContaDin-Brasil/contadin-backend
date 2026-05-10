@@ -1,6 +1,6 @@
 package br.com.contadin.infrastructure.web.controller;
 
-import br.com.contadin.application.dto.dashboard.DashReceitaResponse;
+import br.com.contadin.application.dto.dashboard.DashReceitaGastoResponse;
 import br.com.contadin.application.port.in.dashboard.DashQueryInputPort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +23,7 @@ public class DashController {
         }
 
         @GetMapping("/receita")
-        public DashReceitaResponse buscarReceita(
+        public DashReceitaGastoResponse buscarReceita(
                 @RequestParam(required = false)
                 YearMonth periodo,
                 UUID usuarioId
@@ -36,5 +36,21 @@ public class DashController {
 
             return dashQueryInputPort
                     .buscarReceitasPorPeriodo(periodoConsulta, usuarioId);
+        }
+
+        @GetMapping("/gasto")
+        public DashReceitaGastoResponse buscarGasto(
+                @RequestParam(required = false)
+                YearMonth periodo,
+                UUID usuarioId
+        ) {
+
+            YearMonth periodoConsulta =
+                    periodo != null
+                            ? periodo
+                            : YearMonth.now();
+
+            return dashQueryInputPort
+                    .buscarGastosPorPeriodo(periodoConsulta, usuarioId);
         }
 }
