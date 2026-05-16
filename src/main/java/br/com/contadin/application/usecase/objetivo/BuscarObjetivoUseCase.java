@@ -4,6 +4,7 @@ import br.com.contadin.application.exception.objetivo.ObjetivoInvalidoException;
 import br.com.contadin.application.exception.objetivo.ObjetivoNaoEncontradoException;
 import br.com.contadin.application.port.in.objetivo.BuscarObjetivoInputPort;
 import br.com.contadin.application.usecase.objetivo.helper.ObjetivoMetricasHelper;
+import br.com.contadin.application.usecase.objetivo.helper.ObjetivoOrdenacaoHelper;
 import br.com.contadin.application.port.out.ObjetivoRepository;
 import br.com.contadin.application.port.out.TransacaoRepository;
 import br.com.contadin.domain.model.Objetivo;
@@ -42,6 +43,7 @@ public class BuscarObjetivoUseCase implements BuscarObjetivoInputPort {
                     boolean objetivoConcluido = o.getDataFim() != null && o.getDataFim().isBefore(hoje);
                     return concluido.equals(objetivoConcluido);
                 })
+                .sorted(ObjetivoOrdenacaoHelper.porPrioridadeDesc())
                 .toList();
     }
 
@@ -75,6 +77,7 @@ public class BuscarObjetivoUseCase implements BuscarObjetivoInputPort {
                     boolean objetivoConcluido = o.getDataFim() != null && o.getDataFim().isBefore(hoje);
                     return concluido.equals(objetivoConcluido);
                 })
+                .sorted(ObjetivoOrdenacaoHelper.porPrioridadeDesc())
                 .toList();
     }
 }

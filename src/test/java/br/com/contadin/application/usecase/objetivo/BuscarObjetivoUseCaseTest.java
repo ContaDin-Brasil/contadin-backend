@@ -4,6 +4,7 @@ import br.com.contadin.application.exception.objetivo.ObjetivoInvalidoException;
 import br.com.contadin.application.exception.objetivo.ObjetivoNaoEncontradoException;
 import br.com.contadin.application.port.out.ObjetivoRepository;
 import br.com.contadin.application.port.out.TransacaoRepository;
+import br.com.contadin.domain.enums.PrioridadeObjetivo;
 import br.com.contadin.domain.enums.TipoObjetivo;
 import br.com.contadin.domain.model.Objetivo;
 import org.junit.jupiter.api.Test;
@@ -165,5 +166,38 @@ class BuscarObjetivoUseCaseTest {
     void deveLancarErroQuandoFkUsuarioNuloNaBuscaPorNome() {
         assertThrows(ObjetivoInvalidoException.class,
                 () -> useCase.executeBuscarPorNome("teste", null, null));
+    }
+
+    @Test
+    void deveOrdenarObjetivosPorPrioridadeNaListagem() {
+        UUID usuarioId = UUID.randomUUID();
+        Objetivo semPrioridade = objetivoBase().toBuilder()
+                .nome("Sem prioridade")
+                .prioridade(null)
+                .build();
+        Objetivo baixa = objetivoBase().toBuilder()
+                .nome("Baixa")
+                .prioridade(PrioridadeObjetivo.BAIXA)
+                .build();
+        Objetivo alta = objetivoBase().toBuilder()
+                .nome("Alta")
+                .prioridade(PrioridadeObjetivo.ALTA)
+                .build();
+        Objetivo media = objetivoBase().toBuilder()
+                .nome("Media")
+                .prioridade(PrioridadeObjetivo.MEDIA)
+                .build();
+
+        when(objetivoRepository.findByUsuario(usuarioId))
+                .thenReturn(List.of(semPrioridade, baixa, alta, media));
+        when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
+                .thenReturn(BigDecimal.ZERO);
+
+        List<Objetivo> resultado = useCase.execute(usuarioId);
+
+        assertEquals("Alta", resultado.get(0).getNome());
+        assertEquals("Media", resultado.get(1).getNome());
+        assertEquals("Baixa", resultado.get(2).getNome());
+        assertEquals("Sem prioridade", resultado.get(3).getNome());
     }
 }
