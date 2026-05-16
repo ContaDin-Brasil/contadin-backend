@@ -2,6 +2,7 @@ package br.com.contadin.infrastructure.web.controller;
 
 import br.com.contadin.application.dto.dashboard.DashReceitaGastoResponse;
 import br.com.contadin.application.port.in.dashboard.DashQueryInputPort;
+import br.com.contadin.domain.enums.TipoTransacao;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,10 +23,11 @@ public class DashController {
             this.dashQueryInputPort = dashQueryInputPort;
         }
 
-        @GetMapping("/receita")
+        @GetMapping("/indicadores-transacoes")
         public DashReceitaGastoResponse buscarReceita(
                 @RequestParam(required = false)
                 YearMonth periodo,
+                TipoTransacao tipo,
                 UUID usuarioId
         ) {
 
@@ -35,22 +37,6 @@ public class DashController {
                             : YearMonth.now();
 
             return dashQueryInputPort
-                    .buscarReceitasPorPeriodo(periodoConsulta, usuarioId);
-        }
-
-        @GetMapping("/gasto")
-        public DashReceitaGastoResponse buscarGasto(
-                @RequestParam(required = false)
-                YearMonth periodo,
-                UUID usuarioId
-        ) {
-
-            YearMonth periodoConsulta =
-                    periodo != null
-                            ? periodo
-                            : YearMonth.now();
-
-            return dashQueryInputPort
-                    .buscarGastosPorPeriodo(periodoConsulta, usuarioId);
+                    .buscarTipoTransacaoPorPeriodo(periodoConsulta, usuarioId, tipo);
         }
 }

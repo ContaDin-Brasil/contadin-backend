@@ -23,9 +23,10 @@ public class DashMetricsAdapter implements DashMetricsOutputPort {
         }
 
     @Override
-    public ReceitaGastoMetricsProjection buscarMetricasReceitaPeriodo(
+    public ReceitaGastoMetricsProjection buscarTipoTransacaoPorPeriodo(
             YearMonth periodo,
-            UUID usuarioId
+            UUID usuarioId,
+            TipoTransacao tipo
     ) {
 
         LocalDateTime inicio = periodo
@@ -39,29 +40,7 @@ public class DashMetricsAdapter implements DashMetricsOutputPort {
         return transacaoRepository.buscarMetricasReceitaGastoPeriodo(
                 inicio,
                 fim,
-                TipoTransacao.RECEITA,
-                usuarioId
-        );
-    }
-
-    @Override
-    public ReceitaGastoMetricsProjection buscarMetricasGastoPeriodo(
-            YearMonth periodo,
-            UUID usuarioId
-    ) {
-
-        LocalDateTime inicio = periodo
-                .atDay(1)
-                .atStartOfDay();
-
-        LocalDateTime fim = periodo
-                .atEndOfMonth()
-                .atTime(LocalTime.MAX);
-
-        return transacaoRepository.buscarMetricasReceitaGastoPeriodo(
-                inicio,
-                fim,
-                TipoTransacao.GASTO,
+                tipo,
                 usuarioId
         );
     }

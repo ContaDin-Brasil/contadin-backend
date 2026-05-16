@@ -21,35 +21,19 @@ public class DashQueryUseCase
     }
 
     @Override
-    public DashReceitaGastoResponse buscarReceitasPorPeriodo(
+    public DashReceitaGastoResponse buscarTipoTransacaoPorPeriodo(
             YearMonth periodo,
-            UUID usuarioId
+            UUID usuarioId,
+            TipoTransacao tipo
     ) {
 
         ReceitaGastoMetricsProjection projection =
                 dashMetricsOutputPort
-                        .buscarMetricasReceitaPeriodo(periodo, usuarioId);
+                        .buscarTipoTransacaoPorPeriodo(periodo, usuarioId, tipo);
 
         return new DashReceitaGastoResponse(
                 periodo.getMonthValue(),
-                TipoTransacao.RECEITA,
-                projection.valorTotal()
-        );
-    }
-
-    @Override
-    public DashReceitaGastoResponse buscarGastosPorPeriodo(
-            YearMonth periodo,
-            UUID usuarioId
-    ) {
-
-        ReceitaGastoMetricsProjection projection =
-                dashMetricsOutputPort
-                        .buscarMetricasGastoPeriodo(periodo, usuarioId);
-
-        return new DashReceitaGastoResponse(
-                periodo.getMonthValue(),
-                TipoTransacao.GASTO,
+                tipo,
                 projection.valorTotal()
         );
     }

@@ -1,18 +1,15 @@
 package br.com.contadin.application.port.in.dashboard;
 
 import br.com.contadin.application.dto.dashboard.DashReceitaGastoResponse;
+import br.com.contadin.domain.enums.TipoTransacao;
 
 import java.time.YearMonth;
 import java.util.UUID;
 
 public interface DashQueryInputPort {
-    DashReceitaGastoResponse buscarReceitasPorPeriodo(
+    DashReceitaGastoResponse buscarTipoTransacaoPorPeriodo(
             YearMonth periodo,
-            UUID usuarioId
-    );
-
-    DashReceitaGastoResponse buscarGastosPorPeriodo(
-            YearMonth periodo,
-            UUID usuarioId
+            UUID usuarioId,
+            TipoTransacao tipo
     );
 }
