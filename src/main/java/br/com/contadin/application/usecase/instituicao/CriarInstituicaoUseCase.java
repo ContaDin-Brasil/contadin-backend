@@ -7,6 +7,7 @@ import br.com.contadin.domain.model.Instituicao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -27,6 +28,7 @@ public class CriarInstituicaoUseCase implements CriarInstituicaoInputPort {
                 .cor(instituicao.getCor())
                 .fkUsuario(instituicao.getFkUsuario())
                 .tipo(instituicao.getTipo())
+                .saldoInicial(BigDecimal.ZERO)
                 .ativo(true)
                 .criadoEm(now)
                 .atualizadoEm(now);
