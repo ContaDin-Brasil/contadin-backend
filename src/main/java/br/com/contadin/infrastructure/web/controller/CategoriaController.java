@@ -2,20 +2,24 @@ package br.com.contadin.infrastructure.web.controller;
 
 import br.com.contadin.application.dto.categoria.CategoriaRequest;
 import br.com.contadin.application.dto.categoria.CategoriaResponse;
+import br.com.contadin.application.dto.categoria.GastoPorCategoriaResponse;
 import br.com.contadin.application.port.in.categoria.AtualizarCategoriaInputPort;
 import br.com.contadin.application.port.in.categoria.AlternarStatusCategoriaInputPort;
 import br.com.contadin.application.port.in.categoria.BuscarCategoriaInputPort;
+import br.com.contadin.application.port.in.categoria.BuscarGastoPorCategoriaInputPort;
 import br.com.contadin.application.port.in.categoria.CriarCategoriaInputPort;
 import br.com.contadin.application.port.in.categoria.DeletarCategoriaInputPort;
 import br.com.contadin.domain.enums.TipoCategoria;
 import br.com.contadin.domain.model.Categoria;
 import br.com.contadin.infrastructure.web.mapper.CategoriaWebMapper;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,6 +38,7 @@ public class CategoriaController {
     private final CriarCategoriaInputPort criarCategoriaInputPort;
     private final AtualizarCategoriaInputPort atualizarCategoriaInputPort;
     private final BuscarCategoriaInputPort buscarCategoriaInputPort;
+    private final BuscarGastoPorCategoriaInputPort buscarGastoPorCategoriaInputPort;
     private final DeletarCategoriaInputPort deletarCategoriaInputPort;
     private final AlternarStatusCategoriaInputPort alternarStatusCategoriaInputPort;
     private final CategoriaWebMapper categoriaWebMapper;
@@ -140,5 +145,63 @@ public class CategoriaController {
     public ResponseEntity<Void> alternarStatus(@PathVariable UUID id) {
         alternarStatusCategoriaInputPort.execute(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/gastos")
+    @Operation(
+            summary = "Gasto por categoria no período",
+            description = """
+                    Retorna o total gasto em cada categoria de GASTO no período informado,
+                    ordenado do maior para o menor valor. Inclui nome, ícone e cor da categoria
+                    para exibição direta no frontend, além do percentual de cada categoria
+                    sobre o total geral do período.
+                    Se `fkInstituicao` for informado, considera apenas aquela instituição;
+                    caso contrário, consolida todas as instituições ativas do usuário.
+                    """,
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Gastos por categoria retornados com sucesso",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = GastoPorCategoriaResponse.class),
+                                    examples = @ExampleObject(value = """
+                                            [
+                                              {
+                                                "fkCategoria": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                                                "nome": "Alimentação",
+                                                "icone": "restaurant",
+                                                "cor": "#FF6B6B",
+                                                "total": 850.00,
+                                                "percentual": 56.67
+                                              },
+                                              {
+                                                "fkCategoria": "7cb91a23-1234-4321-a1b2-9f8e7d6c5b4a",
+                                                "nome": "Transporte",
+                                                "icone": "directions-car",
+                                                "cor": "#4ECDC4",
+                                                "total": 320.00,
+                                                "percentual": 43.33
+                                              }
+                                            ]
+                                            """)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Parâmetros inválidos", content = @Content)
+            }
+    )
+    public ResponseEntity<List<GastoPorCategoriaResponse>> buscarGastoPorCategoria(
+            @Parameter(description = "UUID do usuário", required = true)
+            @RequestParam UUID fkUsuario,
+            @Parameter(description = "Mês (1-12)", required = true, example = "5")
+            @RequestParam int mes,
+            @Parameter(description = "Ano", required = true, example = "2025")
+            @RequestParam int ano,
+            @Parameter(description = "UUID da instituição (opcional). Se omitido, consolida todas as instituições.")
+            @RequestParam(required = false) UUID fkInstituicao
+    ) {
+        return ResponseEntity.ok(
+                buscarGastoPorCategoriaInputPort.execute(fkUsuario, mes, ano, fkInstituicao)
+        );
     }
 }
