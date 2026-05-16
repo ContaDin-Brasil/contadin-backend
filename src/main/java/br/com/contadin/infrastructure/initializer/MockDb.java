@@ -4,6 +4,7 @@ import br.com.contadin.application.port.out.CategoriaRepository;
 import br.com.contadin.application.port.out.InstituicaoRepository;
 import br.com.contadin.application.port.out.ObjetivoRepository;
 import br.com.contadin.application.port.out.TransacaoRepository;
+import br.com.contadin.application.service.SaldoDiarioCalculadorService;
 import br.com.contadin.domain.enums.Recorrencia;
 import br.com.contadin.domain.enums.TipoCategoria;
 import br.com.contadin.domain.enums.TipoInstituicao;
@@ -27,6 +28,7 @@ public class MockDb {
     private final CategoriaRepository categoriaRepository;
     private final ObjetivoRepository objetivoRepository;
     private final TransacaoRepository transacaoRepository;
+    private final SaldoDiarioCalculadorService saldoDiarioCalculadorService;
 
     @Value("${app.set.mockdata:false}")
     private Boolean setMockData;
@@ -55,6 +57,7 @@ public class MockDb {
                         .cor("#820AD1")
                         .tipo(TipoInstituicao.BANCO)
                         .fkUsuario(usuarioId)
+                        .saldoInicial(BigDecimal.ZERO)
                         .ativo(true)
                         .criadoEm(LocalDateTime.now())
                         .atualizadoEm(LocalDateTime.now())
@@ -65,6 +68,7 @@ public class MockDb {
                         .cor("#00A86B")
                         .tipo(TipoInstituicao.VALE)
                         .fkUsuario(usuarioId)
+                        .saldoInicial(BigDecimal.ZERO)
                         .ativo(true)
                         .criadoEm(LocalDateTime.now())
                         .atualizadoEm(LocalDateTime.now())
@@ -154,30 +158,94 @@ public class MockDb {
         cal.add(Calendar.MONTH, 12);
         fimRecorrencia = cal.getTime();
 
+        LocalDateTime tresMesesAtras = LocalDateTime.now().minusMonths(3).withDayOfMonth(1);
+
         List<Transacao> transacoes = List.of(
+                // Nubank - Salário mensal recorrente (3 meses atrás até 1 ano à frente)
                 Transacao.builder()
-                        .valor(150.50)
-                        .tipo(TipoTransacao.GASTO)
-                        .descricao("Supermercado")
-                        .dataTransacao(LocalDateTime.now())
+                        .valor(3500.00)
+                        .tipo(TipoTransacao.RECEITA)
+                        .descricao("Salário")
+                        .dataTransacao(tresMesesAtras.withDayOfMonth(5))
                         .parcelado(false)
                         .recorrencia(Recorrencia.MENSAL)
                         .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(0))
+                        .fkCategoria(categoriaIds.get(2))
+                        .criadoEm(LocalDateTime.now())
+                        .atualizadoEm(LocalDateTime.now())
+                        .build(),
+                // Nubank - Aluguel mensal recorrente
+                Transacao.builder()
+                        .valor(1200.00)
+                        .tipo(TipoTransacao.GASTO)
+                        .descricao("Aluguel")
+                        .dataTransacao(tresMesesAtras.withDayOfMonth(10))
+                        .parcelado(false)
+                        .recorrencia(Recorrencia.MENSAL)
+                        .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(0))
+                        .fkCategoria(categoriaIds.get(3))
+                        .criadoEm(LocalDateTime.now())
+                        .atualizadoEm(LocalDateTime.now())
+                        .build(),
+                // Nubank - Supermercado pontual (mês passado)
+                Transacao.builder()
+                        .valor(320.75)
+                        .tipo(TipoTransacao.GASTO)
+                        .descricao("Supermercado")
+                        .dataTransacao(LocalDateTime.now().minusMonths(1).withDayOfMonth(15))
+                        .parcelado(false)
+                        .recorrencia(null)
+                        .ativo(true)
                         .fkInstituicao(instituicaoIds.get(0))
                         .fkCategoria(categoriaIds.get(0))
                         .criadoEm(LocalDateTime.now())
                         .atualizadoEm(LocalDateTime.now())
                         .build(),
+                // Nubank - Transporte pontual (hoje)
                 Transacao.builder()
-                        .valor(3500.00)
-                        .tipo(TipoTransacao.RECEITA)
-                        .descricao("Salário")
+                        .valor(89.90)
+                        .tipo(TipoTransacao.GASTO)
+                        .descricao("Transporte")
                         .dataTransacao(LocalDateTime.now())
+                        .parcelado(false)
+                        .recorrencia(null)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(0))
+                        .fkCategoria(categoriaIds.get(1))
+                        .criadoEm(LocalDateTime.now())
+                        .atualizadoEm(LocalDateTime.now())
+                        .build(),
+                // Vale - Alimentação semanal recorrente
+                Transacao.builder()
+                        .valor(150.00)
+                        .tipo(TipoTransacao.GASTO)
+                        .descricao("Refeições")
+                        .dataTransacao(tresMesesAtras.withDayOfMonth(1))
+                        .parcelado(false)
+                        .recorrencia(Recorrencia.SEMANAL)
+                        .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(1))
+                        .fkCategoria(categoriaIds.get(0))
+                        .criadoEm(LocalDateTime.now())
+                        .atualizadoEm(LocalDateTime.now())
+                        .build(),
+                // Vale - Recarga mensal
+                Transacao.builder()
+                        .valor(800.00)
+                        .tipo(TipoTransacao.RECEITA)
+                        .descricao("Recarga Vale")
+                        .dataTransacao(tresMesesAtras.withDayOfMonth(1))
                         .parcelado(false)
                         .recorrencia(Recorrencia.MENSAL)
                         .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
                         .fkInstituicao(instituicaoIds.get(1))
-                        .fkCategoria(categoriaIds.get(1))
+                        .fkCategoria(categoriaIds.get(2))
                         .criadoEm(LocalDateTime.now())
                         .atualizadoEm(LocalDateTime.now())
                         .build()
@@ -187,5 +255,16 @@ public class MockDb {
             transacaoRepository.save(transacao);
         }
         log.info("Transacoes cadastradas com sucesso!");
+
+        // Recalcula saldo diário para cada instituição a partir da transação mais antiga
+        LocalDateTime dataInicioRecalculo = tresMesesAtras;
+        for (UUID instId : instituicaoIds) {
+            try {
+                saldoDiarioCalculadorService.recalcular(instId, dataInicioRecalculo.toLocalDate());
+                log.info("Saldo diário recalculado para instituição: {}", instId);
+            } catch (Exception e) {
+                log.warn("Falha ao recalcular saldo diário para instituição {}: {}", instId, e.getMessage());
+            }
+        }
     }
 }
