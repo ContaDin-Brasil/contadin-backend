@@ -2,16 +2,20 @@ package br.com.contadin.application.usecase.transacao;
 
 import br.com.contadin.application.port.in.transacao.CriarTransacaoInputPort;
 import br.com.contadin.application.port.out.TransacaoRepository;
+import br.com.contadin.application.service.SaldoDiarioCalculadorService;
 import br.com.contadin.domain.exception.transacao.TransacaoInvalidaException;
 import br.com.contadin.domain.model.Transacao;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CriarTransacaoUseCase implements CriarTransacaoInputPort {
 
     private final TransacaoRepository transacaoRepository;
+    private final SaldoDiarioCalculadorService calculadorService;
 
 
     @Override
@@ -37,7 +41,15 @@ public class CriarTransacaoUseCase implements CriarTransacaoInputPort {
                 .atualizadoEm(transacao.getAtualizadoEm())
                 .build();
 
-        return transacaoRepository.save(transacaoParaSalvar);
+        Transacao salva = transacaoRepository.save(transacaoParaSalvar);
+
+        try {
+            calculadorService.recalcular(salva.getFkInstituicao(), salva.getDataTransacao().toLocalDate());
+        } catch (Exception e) {
+            log.warn("Falha ao recalcular saldo diário após criar transação {}: {}", salva.getId(), e.getMessage());
+        }
+
+        return salva;
     }
 
     private void validarTransacao(Transacao transacao) {

@@ -2,20 +2,25 @@ package br.com.contadin.application.usecase.transacao;
 
 import br.com.contadin.application.port.in.transacao.AtualizarTransacaoInputPort;
 import br.com.contadin.application.port.out.TransacaoRepository;
+import br.com.contadin.application.service.SaldoDiarioCalculadorService;
 import br.com.contadin.domain.exception.transacao.TransacaoInvalidaException;
 import br.com.contadin.domain.exception.transacao.TransacaoNaoEncontradaException;
 import br.com.contadin.domain.model.Transacao;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AtualizarTransacaoUseCase implements AtualizarTransacaoInputPort {
 
     private final TransacaoRepository transacaoRepository;
+    private final SaldoDiarioCalculadorService calculadorService;
 
     @Override
     public Transacao execute(UUID id, Transacao transacao) {
@@ -49,7 +54,27 @@ public class AtualizarTransacaoUseCase implements AtualizarTransacaoInputPort {
 
             validarTransacao(toSave);
 
-        return transacaoRepository.save(toSave);
+        Transacao salva = transacaoRepository.save(toSave);
+
+        LocalDate dataAnterior = existente.getDataTransacao().toLocalDate();
+        LocalDate dataAtual = salva.getDataTransacao().toLocalDate();
+        LocalDate dataMinima = dataAnterior.isBefore(dataAtual) ? dataAnterior : dataAtual;
+
+        try {
+            calculadorService.recalcular(salva.getFkInstituicao(), dataMinima);
+        } catch (Exception e) {
+            log.warn("Falha ao recalcular saldo diário após atualizar transação {}: {}", salva.getId(), e.getMessage());
+        }
+
+        if (!salva.getFkInstituicao().equals(existente.getFkInstituicao())) {
+            try {
+                calculadorService.recalcular(existente.getFkInstituicao(), dataAnterior);
+            } catch (Exception e) {
+                log.warn("Falha ao recalcular saldo diário da instituição anterior {}: {}", existente.getFkInstituicao(), e.getMessage());
+            }
+        }
+
+        return salva;
     }
 
     private void validarTransacao(Transacao transacao) {
