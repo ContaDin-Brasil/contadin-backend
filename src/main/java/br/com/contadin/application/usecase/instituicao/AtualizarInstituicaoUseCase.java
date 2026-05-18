@@ -33,6 +33,7 @@ public class AtualizarInstituicaoUseCase implements AtualizarInstituicaoInputPor
                  .tipo(instituicao.getTipo() != null ? instituicao.getTipo() : existente.getTipo())
                  .cor(instituicao.getCor() != null ? instituicao.getCor() : existente.getCor())
                  .icone(instituicao.getIcone() != null ? instituicao.getIcone() : existente.getIcone())
+                 .saldoInicial(existente.getSaldoInicial())
                  .fkUsuario(existente.getFkUsuario())
                  .criadoEm(existente.getCriadoEm())
                  .atualizadoEm(now);

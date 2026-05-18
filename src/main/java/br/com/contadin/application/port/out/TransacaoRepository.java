@@ -1,10 +1,12 @@
 package br.com.contadin.application.port.out;
 
+import br.com.contadin.application.dto.transacao.GastoCategoriaAgregado;
 import br.com.contadin.application.dto.transacao.TransacaoFiltro;
 import br.com.contadin.domain.model.Transacao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,4 +23,8 @@ public interface TransacaoRepository {
     Page<Transacao> findAll(TransacaoFiltro filtro, Pageable pageable);
 
     void deleteById(UUID id);
+
+    List<Transacao> findAllAtivasByInstituicao(UUID fkInstituicao);
+
+    List<GastoCategoriaAgregado> buscarGastoPorCategoria(List<UUID> instituicaoIds, LocalDateTime dataInicio, LocalDateTime dataFim);
 }

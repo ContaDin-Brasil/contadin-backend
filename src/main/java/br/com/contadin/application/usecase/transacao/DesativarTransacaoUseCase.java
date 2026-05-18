@@ -2,11 +2,13 @@ package br.com.contadin.application.usecase.transacao;
 
 import br.com.contadin.application.port.in.transacao.DesativarTransacaoInputPort;
 import br.com.contadin.application.port.out.TransacaoRepository;
+import br.com.contadin.application.service.SaldoDiarioCalculadorService;
 import br.com.contadin.domain.exception.transacao.TransacaoInvalidaException;
 import br.com.contadin.domain.exception.transacao.TransacaoNaoEncontradaException;
 import br.com.contadin.domain.model.Transacao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,8 +18,10 @@ import java.util.UUID;
 public class DesativarTransacaoUseCase implements DesativarTransacaoInputPort {
 
     private final TransacaoRepository transacaoRepository;
+    private final SaldoDiarioCalculadorService calculadorService;
 
     @Override
+    @Transactional
     public void execute(UUID id) {
         if (id == null) {
             throw new TransacaoInvalidaException("ID da transação é obrigatório para desativação.");
@@ -46,5 +50,6 @@ public class DesativarTransacaoUseCase implements DesativarTransacaoInputPort {
                 .build();
 
         transacaoRepository.save(toSave);
+        calculadorService.recalcular(existente.getFkInstituicao(), existente.getDataTransacao().toLocalDate());
     }
 }
