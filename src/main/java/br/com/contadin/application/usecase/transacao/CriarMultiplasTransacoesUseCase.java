@@ -2,20 +2,26 @@ package br.com.contadin.application.usecase.transacao;
 
 import br.com.contadin.application.port.in.transacao.CriarMultiplasTransacoesInputPort;
 import br.com.contadin.application.port.out.TransacaoRepository;
+import br.com.contadin.application.service.SaldoDiarioCalculadorService;
 import br.com.contadin.domain.exception.transacao.TransacaoInvalidaException;
 import br.com.contadin.domain.model.Transacao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CriarMultiplasTransacoesUseCase implements CriarMultiplasTransacoesInputPort {
 
     private final TransacaoRepository transacaoRepository;
+    private final SaldoDiarioCalculadorService calculadorService;
 
     @Override
     @Transactional
@@ -49,7 +55,18 @@ public class CriarMultiplasTransacoesUseCase implements CriarMultiplasTransacoes
                     .build());
         }
 
-        return transacaoRepository.saveAll(paraSalvar);
+        List<Transacao> salvas = transacaoRepository.saveAll(paraSalvar);
+
+        salvas.stream()
+                .collect(Collectors.groupingBy(
+                        Transacao::getFkInstituicao,
+                        Collectors.minBy(Comparator.comparing(t -> t.getDataTransacao().toLocalDate()))
+                ))
+                .forEach((instId, optTransacao) ->
+                        optTransacao.ifPresent(t ->
+                                calculadorService.recalcular(instId, t.getDataTransacao().toLocalDate())));
+
+        return salvas;
     }
 
     private void validarTransacao(Transacao transacao, int posicao) {

@@ -4,6 +4,7 @@ import br.com.contadin.application.port.out.CategoriaRepository;
 import br.com.contadin.application.port.out.InstituicaoRepository;
 import br.com.contadin.application.port.out.ObjetivoRepository;
 import br.com.contadin.application.port.out.TransacaoRepository;
+import br.com.contadin.application.service.SaldoDiarioCalculadorService;
 import br.com.contadin.domain.enums.*;
 import br.com.contadin.domain.model.*;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class MockDb {
     private final CategoriaRepository categoriaRepository;
     private final ObjetivoRepository objetivoRepository;
     private final TransacaoRepository transacaoRepository;
+    private final SaldoDiarioCalculadorService saldoDiarioCalculadorService;
 
     @Value("${app.set.mockdata:false}")
     private Boolean setMockData;
@@ -53,6 +55,7 @@ public class MockDb {
                         .cor("#820AD1")
                         .tipo(TipoInstituicao.BANCO)
                         .fkUsuario(usuarioId)
+                        .saldoInicial(BigDecimal.ZERO)
                         .ativo(true)
                         .criadoEm(LocalDateTime.now())
                         .atualizadoEm(LocalDateTime.now())
@@ -63,6 +66,7 @@ public class MockDb {
                         .cor("#00A86B")
                         .tipo(TipoInstituicao.VALE)
                         .fkUsuario(usuarioId)
+                        .saldoInicial(BigDecimal.ZERO)
                         .ativo(true)
                         .criadoEm(LocalDateTime.now())
                         .atualizadoEm(LocalDateTime.now())
@@ -186,7 +190,7 @@ public class MockDb {
         }
         log.info("Objetivos cadastrados com sucesso!");
 
-        // Transacoes (valores alinhados aos objetivos acima)
+        // Transacoes (histórico para dashboard/saldo + mês atual para KPIs de objetivos)
 
         Date fimRecorrencia = new Date();
         Calendar cal = Calendar.getInstance();
@@ -196,8 +200,98 @@ public class MockDb {
 
         LocalDateTime dataNoMes = inicioMes.plusDays(10).atTime(12, 0);
         LocalDateTime agora = LocalDateTime.now();
+        LocalDateTime tresMesesAtras = LocalDateTime.now().minusMonths(3).withDayOfMonth(1);
 
-        List<Transacao> transacoes = List.of(
+        List<Transacao> transacoes = new ArrayList<>(List.of(
+                // Nubank - Salário mensal recorrente (3 meses atrás até 1 ano à frente)
+                Transacao.builder()
+                        .valor(3500.00)
+                        .tipo(TipoTransacao.RECEITA)
+                        .descricao("Salário")
+                        .dataTransacao(tresMesesAtras.withDayOfMonth(5))
+                        .parcelado(false)
+                        .recorrencia(Recorrencia.MENSAL)
+                        .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(0))
+                        .fkCategoria(categoriaIds.get(3))
+                        .criadoEm(agora)
+                        .atualizadoEm(agora)
+                        .build(),
+                // Nubank - Aluguel mensal recorrente
+                Transacao.builder()
+                        .valor(1200.00)
+                        .tipo(TipoTransacao.GASTO)
+                        .descricao("Aluguel")
+                        .dataTransacao(tresMesesAtras.withDayOfMonth(10))
+                        .parcelado(false)
+                        .recorrencia(Recorrencia.MENSAL)
+                        .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(0))
+                        .fkCategoria(categoriaIds.get(4))
+                        .criadoEm(agora)
+                        .atualizadoEm(agora)
+                        .build(),
+                // Nubank - Supermercado pontual (mês passado)
+                Transacao.builder()
+                        .valor(320.75)
+                        .tipo(TipoTransacao.GASTO)
+                        .descricao("Supermercado")
+                        .dataTransacao(LocalDateTime.now().minusMonths(1).withDayOfMonth(15))
+                        .parcelado(false)
+                        .recorrencia(null)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(0))
+                        .fkCategoria(categoriaIds.get(0))
+                        .criadoEm(agora)
+                        .atualizadoEm(agora)
+                        .build(),
+                // Nubank - Transporte pontual (hoje)
+                Transacao.builder()
+                        .valor(89.90)
+                        .tipo(TipoTransacao.GASTO)
+                        .descricao("Transporte")
+                        .dataTransacao(agora)
+                        .parcelado(false)
+                        .recorrencia(null)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(0))
+                        .fkCategoria(categoriaIds.get(1))
+                        .criadoEm(agora)
+                        .atualizadoEm(agora)
+                        .build(),
+                // Vale - Alimentação semanal recorrente
+                Transacao.builder()
+                        .valor(150.00)
+                        .tipo(TipoTransacao.GASTO)
+                        .descricao("Refeições")
+                        .dataTransacao(tresMesesAtras.withDayOfMonth(1))
+                        .parcelado(false)
+                        .recorrencia(Recorrencia.SEMANAL)
+                        .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(1))
+                        .fkCategoria(categoriaIds.get(0))
+                        .criadoEm(agora)
+                        .atualizadoEm(agora)
+                        .build(),
+                // Vale - Recarga mensal
+                Transacao.builder()
+                        .valor(800.00)
+                        .tipo(TipoTransacao.RECEITA)
+                        .descricao("Recarga Vale")
+                        .dataTransacao(tresMesesAtras.withDayOfMonth(1))
+                        .parcelado(false)
+                        .recorrencia(Recorrencia.MENSAL)
+                        .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
+                        .fkInstituicao(instituicaoIds.get(1))
+                        .fkCategoria(categoriaIds.get(3))
+                        .criadoEm(agora)
+                        .atualizadoEm(agora)
+                        .build(),
+                // KPI objetivos — mês atual
                 Transacao.builder()
                         .valor(100.00)
                         .tipo(TipoTransacao.GASTO)
@@ -206,6 +300,7 @@ public class MockDb {
                         .parcelado(false)
                         .recorrencia(Recorrencia.MENSAL)
                         .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
                         .fkInstituicao(instituicaoIds.get(0))
                         .fkCategoria(categoriaIds.get(0))
                         .criadoEm(agora)
@@ -219,6 +314,7 @@ public class MockDb {
                         .parcelado(false)
                         .recorrencia(Recorrencia.MENSAL)
                         .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
                         .fkInstituicao(instituicaoIds.get(0))
                         .fkCategoria(categoriaIds.get(1))
                         .criadoEm(agora)
@@ -232,6 +328,7 @@ public class MockDb {
                         .parcelado(false)
                         .recorrencia(Recorrencia.MENSAL)
                         .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
                         .fkInstituicao(instituicaoIds.get(0))
                         .fkCategoria(categoriaIds.get(2))
                         .criadoEm(agora)
@@ -245,6 +342,7 @@ public class MockDb {
                         .parcelado(false)
                         .recorrencia(Recorrencia.MENSAL)
                         .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
                         .fkInstituicao(instituicaoIds.get(1))
                         .fkCategoria(categoriaIds.get(3))
                         .criadoEm(agora)
@@ -258,17 +356,28 @@ public class MockDb {
                         .parcelado(false)
                         .recorrencia(Recorrencia.MENSAL)
                         .fimRecorrencia(fimRecorrencia)
+                        .ativo(true)
                         .fkInstituicao(instituicaoIds.get(1))
                         .fkCategoria(categoriaIds.get(4))
                         .criadoEm(agora)
                         .atualizadoEm(agora)
                         .build()
-        );
+        ));
 
         for (Transacao transacao : transacoes) {
             transacaoRepository.save(transacao);
         }
         log.info("Transacoes cadastradas com sucesso!");
+
+        LocalDateTime dataInicioRecalculo = tresMesesAtras;
+        for (UUID instId : instituicaoIds) {
+            try {
+                saldoDiarioCalculadorService.recalcular(instId, dataInicioRecalculo.toLocalDate());
+                log.info("Saldo diário recalculado para instituição: {}", instId);
+            } catch (Exception e) {
+                log.warn("Falha ao recalcular saldo diário para instituição {}: {}", instId, e.getMessage());
+            }
+        }
 
         log.info("""
                 Mock KPI objetivos — valores esperados (mes atual):

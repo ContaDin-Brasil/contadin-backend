@@ -1,11 +1,11 @@
 package br.com.contadin.application.port.out;
 
+import br.com.contadin.application.dto.transacao.GastoCategoriaAgregado;
 import br.com.contadin.application.dto.transacao.TransacaoFiltro;
+import br.com.contadin.domain.enums.TipoTransacao;
 import br.com.contadin.domain.model.Transacao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import br.com.contadin.domain.enums.TipoTransacao;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -27,4 +27,8 @@ public interface TransacaoRepository {
     void deleteById(UUID id);
 
     BigDecimal sumValorByCategoriaTipoEPeriodo(UUID fkCategoria, TipoTransacao tipo, LocalDateTime inicio, LocalDateTime fim);
+
+    List<Transacao> findAllAtivasByInstituicao(UUID fkInstituicao);
+
+    List<GastoCategoriaAgregado> buscarGastoPorCategoria(List<UUID> instituicaoIds, LocalDateTime dataInicio, LocalDateTime dataFim);
 }

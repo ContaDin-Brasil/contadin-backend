@@ -1,5 +1,6 @@
 package br.com.contadin.infrastructure.persistence.repository.transacao;
 
+import br.com.contadin.application.dto.transacao.GastoCategoriaAgregado;
 import br.com.contadin.application.dto.transacao.TransacaoFiltro;
 import br.com.contadin.application.port.out.TransacaoRepository;
 import br.com.contadin.domain.enums.TipoTransacao;
@@ -65,5 +66,21 @@ public class TransacaoRepositoryImplementations implements TransacaoRepository {
           Double result = jpaRepository.sumValorByCategoriaTipoEPeriodo(fkCategoria, tipo, inicio, fim);
           return BigDecimal.valueOf(result != null ? result : 0);
      }
-}
 
+     @Override
+     public List<Transacao> findAllAtivasByInstituicao(UUID fkInstituicao) {
+          return jpaRepository.findByFkInstituicaoAndAtivoTrue(fkInstituicao)
+                    .stream().map(persistenceMapper::toDomain).toList();
+     }
+
+     @Override
+     public List<GastoCategoriaAgregado> buscarGastoPorCategoria(List<UUID> instituicaoIds, LocalDateTime dataInicio, LocalDateTime dataFim) {
+          return jpaRepository.buscarGastoPorCategoriaRaw(instituicaoIds, TipoTransacao.GASTO, dataInicio, dataFim)
+                    .stream()
+                    .map(row -> new GastoCategoriaAgregado(
+                            (UUID) row[0],
+                            row[1] != null ? BigDecimal.valueOf((Double) row[1]) : BigDecimal.ZERO
+                    ))
+                    .toList();
+     }
+}
