@@ -34,6 +34,8 @@ public interface TransacaoJpaRepository extends JpaRepository<TransacaoEntity, U
             LocalDateTime fim,
             TipoTransacao tipo,
             UUID usuarioId
+    );
+
     List<TransacaoEntity> findByFkInstituicaoAndAtivoTrue(UUID fkInstituicao);
 
     @Query("SELECT t.fkCategoria, SUM(t.valor) " +
