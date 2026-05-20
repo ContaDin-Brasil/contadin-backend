@@ -14,6 +14,17 @@ import java.util.UUID;
 
 public interface TransacaoJpaRepository extends JpaRepository<TransacaoEntity, UUID>, JpaSpecificationExecutor<TransacaoEntity> {
 
+    @Query("SELECT COALESCE(SUM(t.valor), 0) FROM TransacaoEntity t " +
+            "WHERE t.fkCategoria = :fkCategoria " +
+            "AND t.tipo = :tipo " +
+            "AND t.dataTransacao >= :inicio " +
+            "AND t.dataTransacao <= :fim")
+    Double sumValorByCategoriaTipoEPeriodo(
+            @Param("fkCategoria") UUID fkCategoria,
+            @Param("tipo") TipoTransacao tipo,
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fim") LocalDateTime fim);
+
     @Query("""
     SELECT new br.com.contadin.application.projection.ReceitaGastoMetricsProjection(
         COALESCE(SUM(t.valor), 0.0),

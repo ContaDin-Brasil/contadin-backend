@@ -62,6 +62,12 @@ public class TransacaoRepositoryImplementations implements TransacaoRepository {
      }
 
      @Override
+     public BigDecimal sumValorByCategoriaTipoEPeriodo(UUID fkCategoria, TipoTransacao tipo, LocalDateTime inicio, LocalDateTime fim) {
+          Double result = jpaRepository.sumValorByCategoriaTipoEPeriodo(fkCategoria, tipo, inicio, fim);
+          return BigDecimal.valueOf(result != null ? result : 0);
+     }
+
+     @Override
      public List<Transacao> findAllAtivasByInstituicao(UUID fkInstituicao) {
           return jpaRepository.findByFkInstituicaoAndAtivoTrue(fkInstituicao)
                     .stream().map(persistenceMapper::toDomain).toList();
@@ -78,4 +84,3 @@ public class TransacaoRepositoryImplementations implements TransacaoRepository {
                     .toList();
      }
 }
-
