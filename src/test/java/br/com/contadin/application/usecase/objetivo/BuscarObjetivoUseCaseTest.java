@@ -169,6 +169,57 @@ class BuscarObjetivoUseCaseTest {
     }
 
     @Test
+    void deveFiltrarObjetivosNaoConcluidosNaBuscaPorUsuario() {
+        UUID usuarioId = UUID.randomUUID();
+        Objetivo concluido = objetivoBase().toBuilder()
+                .dataFim(LocalDate.now().minusDays(1))
+                .build();
+        Objetivo naoConcluido = objetivoBase().toBuilder()
+                .dataFim(LocalDate.now().plusDays(1))
+                .build();
+
+        when(objetivoRepository.findByUsuario(usuarioId)).thenReturn(List.of(concluido, naoConcluido));
+        when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
+                .thenReturn(BigDecimal.ZERO);
+
+        List<Objetivo> resultado = useCase.execute(usuarioId, false);
+
+        assertEquals(1, resultado.size());
+        assertEquals(naoConcluido.getId(), resultado.get(0).getId());
+    }
+
+    @Test
+    void deveLancarErroQuandoNomeNuloNaBuscaPorNome() {
+        assertThrows(ObjetivoInvalidoException.class,
+                () -> useCase.executeBuscarPorNome(null, UUID.randomUUID(), null));
+    }
+
+    @Test
+    void deveFiltrarObjetivosNaoConcluidosNaBuscaPorNome() {
+        UUID usuarioId = UUID.randomUUID();
+        Objetivo concluido = objetivoBase().toBuilder()
+                .dataFim(LocalDate.now().minusDays(1))
+                .build();
+        Objetivo naoConcluido = objetivoBase().toBuilder()
+                .dataFim(LocalDate.now().plusDays(1))
+                .build();
+
+        when(objetivoRepository.findByNomeAndUsuario("delivery", usuarioId)).thenReturn(List.of(concluido, naoConcluido));
+        when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
+                .thenReturn(BigDecimal.ZERO);
+
+        List<Objetivo> resultado = useCase.executeBuscarPorNome("delivery", usuarioId, false);
+
+        assertEquals(1, resultado.size());
+        assertEquals(naoConcluido.getId(), resultado.get(0).getId());
+    }
+
+    @Test
+    void deveLancarErroQuandoFkUsuarioNuloNaBuscaComConcluido() {
+        assertThrows(ObjetivoInvalidoException.class, () -> useCase.execute(null, false));
+    }
+
+    @Test
     void deveOrdenarObjetivosPorPrioridadeNaListagem() {
         UUID usuarioId = UUID.randomUUID();
         Objetivo semPrioridade = objetivoBase().toBuilder()

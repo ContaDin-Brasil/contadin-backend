@@ -25,6 +25,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.any;
@@ -161,5 +162,113 @@ class BuscarTransacaoUseCaseTest {
 
         assertThrows(TransacaoNaoEncontradaException.class, () -> useCase.executeBuscarPorId(id));
         verify(transacaoRepository).findById(id);
+    }
+
+    @Test
+    void deveListarTodasAsTransacoesSemFiltro() {
+        Transacao t = Transacao.builder().id(UUID.randomUUID()).build();
+        when(transacaoRepository.findAll()).thenReturn(List.of(t));
+
+        List<Transacao> result = useCase.execute();
+
+        assertEquals(1, result.size());
+        verify(transacaoRepository).findAll();
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoPaginaMenorQueUm() {
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                0, 10, null, null, null, null, null, null, null, null, null, null, null, null);
+        assertThrows(TransacaoInvalidaException.class, () -> useCase.execute(params));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoLimiteMenorQueUm() {
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                1, 0, null, null, null, null, null, null, null, null, null, null, null, null);
+        assertThrows(TransacaoInvalidaException.class, () -> useCase.execute(params));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoOrdemForInvalida() {
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                1, 10, "valor", "crescente", null, null, null, null, null, null, null, null, null, null);
+        assertThrows(TransacaoInvalidaException.class, () -> useCase.execute(params));
+    }
+
+    @Test
+    void deveAceitarDataInicioNoFormatoLocalDateTime() {
+        when(transacaoRepository.findAll(any(TransacaoFiltro.class), any(Pageable.class))).thenReturn(Page.empty());
+
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                1, 10, null, null, null, null, null, null, null, null, null,
+                "2026-03-01T10:00:00", null, null);
+
+        ArgumentCaptor<TransacaoFiltro> captor = ArgumentCaptor.forClass(TransacaoFiltro.class);
+        useCase.execute(params);
+        verify(transacaoRepository).findAll(captor.capture(), any(Pageable.class));
+
+        assertEquals(LocalDateTime.of(2026, 3, 1, 10, 0, 0), captor.getValue().dataTransacaoGte());
+    }
+
+    @Test
+    void deveLancarExcecaoParaDataInicioInvalida() {
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                1, 10, null, null, null, null, null, null, null, null, null,
+                "nao-e-uma-data", null, null);
+        assertThrows(TransacaoInvalidaException.class, () -> useCase.execute(params));
+    }
+
+    @Test
+    void deveAceitarDataFimNoFormatoLocalDateTime() {
+        when(transacaoRepository.findAll(any(TransacaoFiltro.class), any(Pageable.class))).thenReturn(Page.empty());
+
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                1, 10, null, null, null, null, null, null, null, null, null,
+                null, "2026-03-31T23:59:59", null);
+
+        ArgumentCaptor<TransacaoFiltro> captor = ArgumentCaptor.forClass(TransacaoFiltro.class);
+        useCase.execute(params);
+        verify(transacaoRepository).findAll(captor.capture(), any(Pageable.class));
+
+        assertEquals(LocalDateTime.of(2026, 3, 31, 23, 59, 59), captor.getValue().dataTransacaoLte());
+    }
+
+    @Test
+    void deveLancarExcecaoParaDataFimInvalida() {
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                1, 10, null, null, null, null, null, null, null, null, null,
+                null, "nao-e-uma-data", null);
+        assertThrows(TransacaoInvalidaException.class, () -> useCase.execute(params));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoValorGteMaiorQueValorLte() {
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                1, 10, null, null, null, null, null, 500.0, 100.0, null, null, null, null, null);
+        assertThrows(TransacaoInvalidaException.class, () -> useCase.execute(params));
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoDataGteDepoisDeDataLte() {
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                1, 10, null, null, null, null, null, null, null, null, null,
+                "2026-05-31", "2026-05-01", null);
+        assertThrows(TransacaoInvalidaException.class, () -> useCase.execute(params));
+    }
+
+    @Test
+    void deveNormalizarSearchBrancoParaNulo() {
+        when(transacaoRepository.findAll(any(TransacaoFiltro.class), any(Pageable.class))).thenReturn(Page.empty());
+
+        TransacaoConsultaParams params = new TransacaoConsultaParams(
+                1, 10, null, null, null, null, null, null, null, null, null,
+                null, null, "   ");
+
+        ArgumentCaptor<TransacaoFiltro> captor = ArgumentCaptor.forClass(TransacaoFiltro.class);
+        useCase.execute(params);
+        verify(transacaoRepository).findAll(captor.capture(), any(Pageable.class));
+
+        assertNull(captor.getValue().search());
     }
 }

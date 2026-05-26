@@ -188,4 +188,77 @@ class CriarObjetivoUseCaseTest {
 
         assertThrows(ObjetivoInvalidoException.class, () -> useCase.execute(input));
     }
+
+    @Test
+    void deveAceitarCategoriaGlobalComObjetivoLimiteGasto() {
+        UUID categoriaId = UUID.randomUUID();
+        Categoria categoriaGlobal = Categoria.builder()
+                .id(categoriaId)
+                .tipo(TipoCategoria.GLOBAL)
+                .build();
+
+        Objetivo input = Objetivo.builder()
+                .nome("Limite geral")
+                .valor(BigDecimal.valueOf(500))
+                .tipoObjetivo(TipoObjetivo.LIMITE_GASTO)
+                .dataFim(LocalDate.of(2026, 12, 31))
+                .fkUsuario(UUID.randomUUID())
+                .fkCategoria(categoriaId)
+                .build();
+
+        when(categoriaRepository.findById(categoriaId)).thenReturn(Optional.of(categoriaGlobal));
+        when(objetivoRepository.save(any(Objetivo.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
+                .thenReturn(BigDecimal.ZERO);
+
+        assertDoesNotThrow(() -> useCase.execute(input));
+    }
+
+    @Test
+    void deveCriarObjetivoDeAumentoReceitaComCategoriaReceita() {
+        UUID categoriaId = UUID.randomUUID();
+        Categoria categoriaReceita = Categoria.builder()
+                .id(categoriaId)
+                .tipo(TipoCategoria.RECEITA)
+                .build();
+
+        Objetivo input = Objetivo.builder()
+                .nome("Meta de receita")
+                .valor(BigDecimal.valueOf(3000))
+                .tipoObjetivo(TipoObjetivo.AUMENTO_RECEITA)
+                .dataFim(LocalDate.of(2026, 12, 31))
+                .fkUsuario(UUID.randomUUID())
+                .fkCategoria(categoriaId)
+                .build();
+
+        when(categoriaRepository.findById(categoriaId)).thenReturn(Optional.of(categoriaReceita));
+        when(objetivoRepository.save(any(Objetivo.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(transacaoRepository.sumValorByCategoriaTipoEPeriodo(any(), any(), any(), any()))
+                .thenReturn(BigDecimal.ZERO);
+
+        Objetivo resultado = useCase.execute(input);
+        assertNotNull(resultado);
+    }
+
+    @Test
+    void deveLancarErroQuandoCategoriaGastoComAumentoReceita() {
+        UUID categoriaId = UUID.randomUUID();
+        Categoria categoriaGasto = Categoria.builder()
+                .id(categoriaId)
+                .tipo(TipoCategoria.GASTO)
+                .build();
+
+        Objetivo input = Objetivo.builder()
+                .nome("Meta inválida")
+                .valor(BigDecimal.valueOf(1000))
+                .tipoObjetivo(TipoObjetivo.AUMENTO_RECEITA)
+                .dataFim(LocalDate.of(2026, 12, 31))
+                .fkUsuario(UUID.randomUUID())
+                .fkCategoria(categoriaId)
+                .build();
+
+        when(categoriaRepository.findById(categoriaId)).thenReturn(Optional.of(categoriaGasto));
+
+        assertThrows(ObjetivoInvalidoException.class, () -> useCase.execute(input));
+    }
 }
