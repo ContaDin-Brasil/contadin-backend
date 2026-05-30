@@ -87,32 +87,42 @@ public class MockDb {
                         .nome("Alimentação")
                         .icone("restaurant")
                         .cor("#FF6B6B")
-                        .tipo(TipoCategoria.GASTO)
-                        .fkUsuario(usuarioId).build(),
+                        .tipo(TipoCategoria.GASTO).build(),
                 Categoria.builder()
                         .nome("Transporte")
                         .icone("directions-car")
                         .cor("#4ECDC4")
-                        .tipo(TipoCategoria.GASTO)
-                        .fkUsuario(usuarioId).build(),
+                        .tipo(TipoCategoria.GASTO).build(),
                 Categoria.builder()
                         .nome("Lazer")
                         .icone("sports-esports")
                         .cor("#FDCB6E")
-                        .tipo(TipoCategoria.GASTO)
-                        .fkUsuario(usuarioId).build(),
+                        .tipo(TipoCategoria.GASTO).build(),
                 Categoria.builder()
-                        .nome("Outros")
-                        .icone("category")
-                        .cor("#A29BFE")
-                        .tipo(TipoCategoria.RECEITA)
-                        .fkUsuario(usuarioId).build(),
+                        .nome("Educação")
+                        .icone("school")
+                        .cor("#95E1D3")
+                        .tipo(TipoCategoria.GASTO).build(),
                 Categoria.builder()
                         .nome("Aluguel")
-                        .icone("home")
+                        .icone("apartment")
                         .cor("#FD79A8")
-                        .tipo(TipoCategoria.RECEITA)
-                        .fkUsuario(usuarioId).build()
+                        .tipo(TipoCategoria.GASTO).build(),
+                Categoria.builder()
+                        .nome("Salário")
+                        .icone("attach-money")
+                        .cor("#FFD700")
+                        .tipo(TipoCategoria.RECEITA).build(),
+                Categoria.builder()
+                        .nome("Investimento")
+                        .icone("trending-up")
+                        .cor("#00FF00")
+                        .tipo(TipoCategoria.RECEITA).build(),
+                Categoria.builder()
+                        .nome("Mercado")
+                        .icone("local-grocery-store")
+                        .cor("#FF8C00")
+                        .tipo(TipoCategoria.GASTO).build()
         );
 
         List<UUID> categoriaIds = new ArrayList<>();
@@ -123,7 +133,7 @@ public class MockDb {
         log.info("Categorias cadastradas com sucesso!");
 
         // Objetivos (5 cenários para validar KPIs — ver comentário no fim do método)
-        // índices: 0=Alimentação, 1=Transporte, 2=Lazer, 3=Outros(receita), 4=Aluguel(receita)
+        // índices: 0=Alimentação, 1=Transporte, 2=Lazer, 3=Educação, 4=Aluguel, 5=Salário, 6=Investimento, 7=Mercado
 
         LocalDate inicioMes = LocalDate.now().withDayOfMonth(1);
         LocalDate fimMes = inicioMes.plusMonths(1).minusDays(1);
@@ -171,7 +181,7 @@ public class MockDb {
                         .dataInicio(inicioMes)
                         .dataFim(fimMes)
                         .fkUsuario(usuarioId)
-                        .fkCategoria(categoriaIds.get(3))
+                        .fkCategoria(categoriaIds.get(5))
                         .build(),
                 Objetivo.builder()
                         .nome("Receita com investimentos")
@@ -181,7 +191,7 @@ public class MockDb {
                         .dataInicio(inicioMes)
                         .dataFim(fimMes)
                         .fkUsuario(usuarioId)
-                        .fkCategoria(categoriaIds.get(4))
+                        .fkCategoria(categoriaIds.get(6))
                         .build()
         );
 
@@ -344,7 +354,7 @@ public class MockDb {
                         .fimRecorrencia(fimRecorrencia)
                         .ativo(true)
                         .fkInstituicao(instituicaoIds.get(1))
-                        .fkCategoria(categoriaIds.get(3))
+                        .fkCategoria(categoriaIds.get(5))
                         .criadoEm(agora)
                         .atualizadoEm(agora)
                         .build(),
@@ -358,7 +368,7 @@ public class MockDb {
                         .fimRecorrencia(fimRecorrencia)
                         .ativo(true)
                         .fkInstituicao(instituicaoIds.get(1))
-                        .fkCategoria(categoriaIds.get(4))
+                        .fkCategoria(categoriaIds.get(6))
                         .criadoEm(agora)
                         .atualizadoEm(agora)
                         .build()
