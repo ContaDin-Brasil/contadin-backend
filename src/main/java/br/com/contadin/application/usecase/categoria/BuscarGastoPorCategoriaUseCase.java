@@ -35,7 +35,7 @@ public class BuscarGastoPorCategoriaUseCase implements BuscarGastoPorCategoriaIn
 
         LocalDate primeiroDia = LocalDate.of(ano, mes, 1);
         LocalDateTime inicio = primeiroDia.atStartOfDay();
-        LocalDateTime fim = primeiroDia.withDayOfMonth(primeiroDia.lengthOfMonth()).atTime(23, 59, 59);
+        LocalDateTime fim = primeiroDia.plusMonths(1).atStartOfDay();
 
         List<GastoCategoriaAgregado> agregados = transacaoRepository.buscarGastoPorCategoria(instituicaoIds, inicio, fim);
         if (agregados.isEmpty()) {

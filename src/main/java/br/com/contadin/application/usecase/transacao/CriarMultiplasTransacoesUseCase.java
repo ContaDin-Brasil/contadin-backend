@@ -6,8 +6,8 @@ import br.com.contadin.application.service.SaldoDiarioCalculadorService;
 import br.com.contadin.domain.exception.transacao.TransacaoInvalidaException;
 import br.com.contadin.domain.model.Transacao;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CriarMultiplasTransacoesUseCase implements CriarMultiplasTransacoesInputPort {
@@ -24,7 +25,6 @@ public class CriarMultiplasTransacoesUseCase implements CriarMultiplasTransacoes
     private final SaldoDiarioCalculadorService calculadorService;
 
     @Override
-    @Transactional
     public List<Transacao> execute(List<Transacao> transacoes) {
         if (transacoes == null || transacoes.isEmpty()) {
             throw new TransacaoInvalidaException("A lista de transações não pode ser vazia.");
@@ -63,8 +63,13 @@ public class CriarMultiplasTransacoesUseCase implements CriarMultiplasTransacoes
                         Collectors.minBy(Comparator.comparing(t -> t.getDataTransacao().toLocalDate()))
                 ))
                 .forEach((instId, optTransacao) ->
-                        optTransacao.ifPresent(t ->
-                                calculadorService.recalcular(instId, t.getDataTransacao().toLocalDate())));
+                        optTransacao.ifPresent(t -> {
+                            try {
+                                calculadorService.recalcular(instId, t.getDataTransacao().toLocalDate());
+                            } catch (Exception e) {
+                                log.warn("Falha ao recalcular saldo diário para instituição {}: {}", instId, e.getMessage());
+                            }
+                        }));
 
         return salvas;
     }

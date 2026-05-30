@@ -21,7 +21,7 @@ public interface TransacaoJpaRepository extends JpaRepository<TransacaoEntity, U
            "AND t.tipo = :tipo " +
            "AND t.ativo = true " +
            "AND t.dataTransacao >= :dataInicio " +
-           "AND t.dataTransacao <= :dataFim " +
+           "AND t.dataTransacao < :dataFim " +
            "GROUP BY t.fkCategoria " +
            "ORDER BY SUM(t.valor) DESC")
     List<Object[]> buscarGastoPorCategoriaRaw(

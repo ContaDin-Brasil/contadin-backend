@@ -21,14 +21,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/categorias")
@@ -194,9 +198,9 @@ public class CategoriaController {
             @Parameter(description = "UUID do usuário", required = true)
             @RequestParam UUID fkUsuario,
             @Parameter(description = "Mês (1-12)", required = true, example = "5")
-            @RequestParam int mes,
+            @Min(1) @Max(12) @RequestParam int mes,
             @Parameter(description = "Ano", required = true, example = "2025")
-            @RequestParam int ano,
+            @Min(1900) @Max(9999) @RequestParam int ano,
             @Parameter(description = "UUID da instituição (opcional). Se omitido, consolida todas as instituições.")
             @RequestParam(required = false) UUID fkInstituicao
     ) {
