@@ -1,7 +1,7 @@
 package br.com.contadin.infrastructure.security;
 
-import br.com.contadin.application.port.out.TokenProviderPort;
-import br.com.contadin.application.port.out.TokenBlacklistPort;
+import br.com.contadin.application.port.out.security.TokenProviderPort;
+import br.com.contadin.application.port.out.security.TokenBlacklistPort;
 import br.com.contadin.infrastructure.web.exception.ApiError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;

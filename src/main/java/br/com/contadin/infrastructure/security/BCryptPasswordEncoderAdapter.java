@@ -1,6 +1,6 @@
 package br.com.contadin.infrastructure.security;
 
-import br.com.contadin.application.port.out.PasswordEncoderPort;
+import br.com.contadin.application.port.out.security.PasswordEncoderPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;

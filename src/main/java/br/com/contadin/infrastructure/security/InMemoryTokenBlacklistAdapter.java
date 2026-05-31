@@ -1,6 +1,6 @@
 package br.com.contadin.infrastructure.security;
 
-import br.com.contadin.application.port.out.TokenBlacklistPort;
+import br.com.contadin.application.port.out.security.TokenBlacklistPort;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;

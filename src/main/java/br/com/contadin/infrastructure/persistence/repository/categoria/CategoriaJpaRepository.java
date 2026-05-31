@@ -15,24 +15,36 @@ import java.util.UUID;
 public interface CategoriaJpaRepository extends JpaRepository<CategoriaEntity, UUID> {
 	Optional<CategoriaEntity> findByIdAndAtivoTrue(UUID id);
 
+	@Query("""
+		SELECT c
+		FROM CategoriaEntity c
+		WHERE (c.fkUsuario = :fkUsuario OR c.fkUsuario IS NULL)
+		  AND c.ativo = true
+		""")
 	List<CategoriaEntity> findByFkUsuarioAndAtivoTrue(UUID fkUsuario);
 
 	@Query("""
 		SELECT c
 		FROM CategoriaEntity c
-		WHERE c.fkUsuario = :fkUsuario
+		WHERE (c.fkUsuario = :fkUsuario OR c.fkUsuario IS NULL)
 		  AND c.ativo = true
 		  AND (c.tipo = :tipoCategoria OR c.tipo = br.com.contadin.domain.enums.TipoCategoria.GLOBAL)
 		""")
 	List<CategoriaEntity> findByFkUsuarioAndTipoIncludingGlobalAndAtivoTrue(@Param("fkUsuario") UUID fkUsuario,
 			@Param("tipoCategoria") TipoCategoria tipoCategoria);
 
+	@Query("""
+		SELECT c
+		FROM CategoriaEntity c
+		WHERE (c.fkUsuario = :fkUsuario OR c.fkUsuario IS NULL)
+		  AND c.ativo = false
+		""")
 	List<CategoriaEntity> findByFkUsuarioAndAtivoFalse(UUID fkUsuario);
 
 	@Query("""
 		SELECT c
 		FROM CategoriaEntity c
-		WHERE c.fkUsuario = :fkUsuario
+		WHERE (c.fkUsuario = :fkUsuario OR c.fkUsuario IS NULL)
 		  AND c.ativo = true
 		  AND LOWER(c.nome) LIKE LOWER(CONCAT('%', :nome, '%'))
 		  AND (c.tipo = :tipoCategoria OR c.tipo = br.com.contadin.domain.enums.TipoCategoria.GLOBAL)

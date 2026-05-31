@@ -1,6 +1,6 @@
 package br.com.contadin.infrastructure.mail;
 
-import br.com.contadin.application.port.out.EmailPort;
+import br.com.contadin.application.port.out.email.EmailPort;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

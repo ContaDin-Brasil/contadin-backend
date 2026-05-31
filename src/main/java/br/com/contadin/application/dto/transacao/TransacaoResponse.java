@@ -16,6 +16,7 @@ public record TransacaoResponse(
         @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
         LocalDateTime dataTransacao,
         Boolean parcelado,
+        Integer qtdParcelas,
         Recorrencia recorrencia,
         @JsonFormat(pattern = "dd/MM/yyyy")
         Date fimRecorrencia,

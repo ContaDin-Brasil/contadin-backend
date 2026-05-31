@@ -5,8 +5,8 @@ import br.com.contadin.application.dto.tokenRecuperarSenha.recuperarSenha.Valida
 import br.com.contadin.application.exception.auth.PinExpiradoException;
 import br.com.contadin.application.exception.auth.PinInvalidoException;
 import br.com.contadin.application.port.in.auth.ValidarPinInputPort;
-import br.com.contadin.application.port.out.PasswordEncoderPort;
-import br.com.contadin.application.port.out.TokenRecuperarSenhaRepository;
+import br.com.contadin.application.port.out.security.PasswordEncoderPort;
+import br.com.contadin.application.port.out.security.TokenRecuperarSenhaRepository;
 import br.com.contadin.application.port.out.UsuarioRepository;
 import br.com.contadin.domain.model.TokenRecuperarSenha;
 import br.com.contadin.domain.model.Usuario;

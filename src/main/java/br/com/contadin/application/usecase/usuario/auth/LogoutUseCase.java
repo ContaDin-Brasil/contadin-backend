@@ -2,8 +2,8 @@ package br.com.contadin.application.usecase.usuario.auth;
 
 import br.com.contadin.application.exception.auth.TokenInvalidoException;
 import br.com.contadin.application.port.in.auth.LogoutInputPort;
-import br.com.contadin.application.port.out.TokenBlacklistPort;
-import br.com.contadin.application.port.out.TokenProviderPort;
+import br.com.contadin.application.port.out.security.TokenBlacklistPort;
+import br.com.contadin.application.port.out.security.TokenProviderPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -23,6 +23,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
+		<jacoco.version>0.8.14</jacoco.version>
 	</properties>
 
 	<dependencies>
@@ -143,13 +144,91 @@
 				</configuration>
 			</plugin>
 
-			<!-- Spring Boot -->
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+		<!-- Spring Boot -->
+		<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+		</plugin>
 
-		</plugins>
+		<!-- JaCoCo - Code Coverage -->
+		<plugin>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>${jacoco.version}</version>
+			<configuration>
+				<excludes>
+					<!-- Entrypoint da aplicação -->
+					<exclude>br/com/contadin/ContadinApplication*</exclude>
+					<!-- DTOs: apenas transportadores de dados, sem lógica -->
+					<exclude>br/com/contadin/application/dto/**</exclude>
+					<!-- Ports/interfaces: contratos sem implementação a medir -->
+					<exclude>br/com/contadin/application/port/**</exclude>
+					<!-- Classes de exceção: sem lógica de negócio -->
+					<exclude>br/com/contadin/application/exception/**</exclude>
+					<exclude>br/com/contadin/domain/exception/**</exclude>
+					<!-- Enums de domínio -->
+					<exclude>br/com/contadin/domain/enums/**</exclude>
+					<!-- JPA Entities: geradas majoritariamente pelo Lombok -->
+					<exclude>br/com/contadin/infrastructure/persistence/entity/**</exclude>
+					<!-- Mappers MapStruct: código gerado automaticamente -->
+					<exclude>br/com/contadin/infrastructure/persistence/mapper/**</exclude>
+					<exclude>br/com/contadin/infrastructure/web/mapper/**</exclude>
+					<!-- Classes de configuração -->
+					<exclude>br/com/contadin/infrastructure/security/SecurityConfig*</exclude>
+					<exclude>br/com/contadin/infrastructure/security/WebConfig*</exclude>
+					<exclude>br/com/contadin/infrastructure/dashboard/DashConfig*</exclude>
+					<exclude>br/com/contadin/config/swagger/**</exclude>
+					<!-- Inicializadores de dados -->
+					<exclude>br/com/contadin/infrastructure/initializer/**</exclude>
+				</excludes>
+			</configuration>
+			<executions>
+				<!-- 1. Instrumenta os testes para coleta de cobertura -->
+				<execution>
+					<id>jacoco-prepare-agent</id>
+					<goals>
+						<goal>prepare-agent</goal>
+					</goals>
+				</execution>
+				<!-- 2. Gera o relatório HTML/XML/CSV em target/site/jacoco -->
+				<execution>
+					<id>jacoco-report</id>
+					<phase>verify</phase>
+					<goals>
+						<goal>report</goal>
+					</goals>
+				</execution>
+				<!-- 3. Falha o build se a cobertura mínima não for atingida -->
+				<execution>
+					<id>jacoco-check</id>
+					<phase>verify</phase>
+					<goals>
+						<goal>check</goal>
+					</goals>
+					<configuration>
+						<rules>
+							<rule>
+								<element>BUNDLE</element>
+								<limits>
+									<limit>
+										<counter>INSTRUCTION</counter>
+										<value>COVEREDRATIO</value>
+										<minimum>0.90</minimum>
+									</limit>
+									<limit>
+										<counter>BRANCH</counter>
+										<value>COVEREDRATIO</value>
+										<minimum>0.85</minimum>
+									</limit>
+								</limits>
+							</rule>
+						</rules>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+
+	</plugins>
 	</build>
 
 </project>
