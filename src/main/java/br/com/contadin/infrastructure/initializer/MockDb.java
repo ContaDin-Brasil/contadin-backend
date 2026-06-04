@@ -6,7 +6,10 @@ import br.com.contadin.application.port.out.ObjetivoRepository;
 import br.com.contadin.application.port.out.TransacaoRepository;
 import br.com.contadin.application.service.SaldoDiarioCalculadorService;
 import br.com.contadin.domain.enums.*;
-import br.com.contadin.domain.model.*;
+import br.com.contadin.domain.model.Categoria;
+import br.com.contadin.domain.model.Instituicao;
+import br.com.contadin.domain.model.Objetivo;
+import br.com.contadin.domain.model.Transacao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -173,7 +176,7 @@ public class MockDb {
         // ─────────────────────────────────────────────────────────────────────
 
         LocalDate inicioMes = LocalDate.now().withDayOfMonth(1);
-        LocalDate fimMes    = inicioMes.plusMonths(1).minusDays(1);
+        LocalDate fimMes = inicioMes.plusMonths(1).minusDays(1);
 
         List<Objetivo> objetivos = List.of(
                 // KPI 0 — limite de gasto em alimentação
@@ -626,18 +629,18 @@ public class MockDb {
         }
 
         log.info("""
-                Mock — saldos esperados (mês atual):
-                  Nubank:            R$ 4.430 receitas − R$ 3.250 gastos = R$ 1.180,00
-                  Vale Refeição:     R$ 1.200 recarga  − R$   250 gastos = R$   950,00
-                  Vale Alimentação:  R$   800 recarga  − R$   250 gastos = R$   550,00
-                  Total consolidado:                                         R$ 2.680,00
-                  
-                Mock KPI objetivos — valores esperados (mês atual):
-                  Alimentação:   R$ 300/600  = 50%%  → CUIDADO
-                  Transporte:    R$ 240/300  = 80%%  → CUIDADO
-                  Lazer:         R$ 690/500  = 138%% → ACIMA_DO_COMBINADO (maior alerta)
-                  Renda Extra:   R$ 380/400  = 95%%  → FALTA_POUCO
-                  Investimento:  R$  50/200  = 25%%  → NO_CAMINHO
-                """);
+                 Mock — saldos esperados (mês atual):
+                   Nubank:            R$ 4.430 receitas − R$ 3.250 gastos = R$ 1.180,00
+                   Vale Refeição:     R$ 1.200 recarga  − R$   250 gastos = R$   950,00
+                   Vale Alimentação:  R$   800 recarga  − R$   250 gastos = R$   550,00
+                   Total consolidado:                                         R$ 2.680,00
+                  \s
+                 Mock KPI objetivos — valores esperados (mês atual):
+                   Alimentação:   R$ 300/600  = 50%%  → CUIDADO
+                   Transporte:    R$ 240/300  = 80%%  → CUIDADO
+                   Lazer:         R$ 690/500  = 138%% → ACIMA_DO_COMBINADO (maior alerta)
+                   Renda Extra:   R$ 380/400  = 95%%  → FALTA_POUCO
+                   Investimento:  R$  50/200  = 25%%  → NO_CAMINHO
+                \s""");
     }
 }
