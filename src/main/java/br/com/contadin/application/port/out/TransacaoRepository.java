@@ -26,6 +26,10 @@ public interface TransacaoRepository {
 
     void deleteById(UUID id);
 
+    List<Transacao> findAllByIds(List<UUID> ids);
+
+    void deleteAllByIds(List<UUID> ids);
+
     BigDecimal sumValorByCategoriaTipoEPeriodo(UUID fkCategoria, TipoTransacao tipo, LocalDateTime inicio, LocalDateTime fim);
 
     List<Transacao> findAllAtivasByInstituicao(UUID fkInstituicao);
