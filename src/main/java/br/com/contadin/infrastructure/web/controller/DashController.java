@@ -25,10 +25,9 @@ public class DashController {
 
         @GetMapping("/indicadores-transacoes")
         public DashReceitaGastoResponse buscarReceita(
-                @RequestParam(required = false)
-                YearMonth periodo,
-                TipoTransacao tipo,
-                UUID usuarioId
+                @RequestParam(required = false) YearMonth periodo,
+                @RequestParam TipoTransacao tipo,
+                @RequestParam UUID usuarioId
         ) {
 
             YearMonth periodoConsulta =

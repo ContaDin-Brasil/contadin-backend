@@ -10,7 +10,9 @@ import br.com.contadin.application.port.in.transacao.AtualizarTransacaoInputPort
 import br.com.contadin.application.port.in.transacao.BuscarTransacaoInputPort;
 import br.com.contadin.application.port.in.transacao.CriarTransacaoInputPort;
 import br.com.contadin.application.port.in.transacao.DeletarTransacaoInputPort;
+import br.com.contadin.application.port.in.transacao.DeletarMultiplasTransacoesInputPort;
 import br.com.contadin.application.port.in.transacao.DesativarTransacaoInputPort;
+import br.com.contadin.application.port.in.transacao.DesativarMultiplasTransacoesInputPort;
 import br.com.contadin.infrastructure.web.mapper.TransacaoWebMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,7 +42,9 @@ public class TransacaoController {
     private final BuscarTransacaoInputPort buscarTransacaoInputPort;
     private final AtualizarTransacaoInputPort atualizarTransacaoInputPort;
     private final DeletarTransacaoInputPort deletarTransacaoInputPort;
+    private final DeletarMultiplasTransacoesInputPort deletarMultiplasTransacoesInputPort;
     private final DesativarTransacaoInputPort desativarTransacaoInputPort;
+    private final DesativarMultiplasTransacoesInputPort desativarMultiplasTransacoesInputPort;
     private final TransacaoWebMapper transacaoWebMapper;
 
     @PostMapping("/lote")
@@ -229,10 +233,34 @@ public class TransacaoController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/lote")
+    @Operation(summary = "Deletar transações em lote", description = "Remove fisicamente uma lista de transações. Se qualquer ID não existir, nenhuma é deletada.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Transações deletadas com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Lista de IDs vazia", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Uma ou mais transações não encontradas", content = @Content)
+    })
+    public ResponseEntity<Void> deletarMultiplasTransacoes(@RequestBody List<UUID> ids) {
+        deletarMultiplasTransacoesInputPort.execute(ids);
+        return ResponseEntity.noContent().build();
+    }
+
     @PatchMapping("/{id}/desativar")
     @Operation(summary = "Desativar transação", description = "Realiza exclusão lógica da transação, marcando-a como inativa.")
     public ResponseEntity<Void> desativarTransacao(@PathVariable UUID id) {
         desativarTransacaoInputPort.execute(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/lote/desativar")
+    @Operation(summary = "Desativar transações em lote", description = "Desativa logicamente uma lista de transações (ativo=false). Se qualquer ID não existir, nenhuma é alterada.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Transações desativadas com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Lista de IDs vazia", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Uma ou mais transações não encontradas", content = @Content)
+    })
+    public ResponseEntity<Void> desativarMultiplasTransacoes(@RequestBody List<UUID> ids) {
+        desativarMultiplasTransacoesInputPort.execute(ids);
         return ResponseEntity.noContent().build();
     }
 }

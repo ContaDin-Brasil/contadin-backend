@@ -24,6 +24,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -452,6 +453,180 @@ class AtualizarTransacaoUseCaseTest {
             doThrow(new RuntimeException("Erro no recálculo")).when(calculadorService).recalcular(any(), any());
 
             assertDoesNotThrow(() -> useCase.execute(transacaoId, patch));
+        }
+    }
+
+    @Nested
+    @DisplayName("Cenários de atualização de transações parceladas")
+    class CenariosDeParcelado {
+
+        private Transacao existenteParcelado;
+
+        @BeforeEach
+        void setupParcelado() {
+            existenteParcelado = Transacao.builder()
+                    .id(transacaoId)
+                    .valor(1200.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .descricao("Celular parcelado")
+                    .dataTransacao(LocalDateTime.of(2026, 5, 10, 10, 0))
+                    .parcelado(true)
+                    .qtdParcelas(12)
+                    .ativo(true)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+        }
+
+        @Test
+        @DisplayName("Deve alterar qtdParcelas e recalcular a partir da data da primeira parcela")
+        void deveAlterarQtdParcelas_eRecalcular() {
+            Transacao patch = Transacao.builder()
+                    .valor(1200.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.of(2026, 5, 10, 10, 0))
+                    .parcelado(true)
+                    .qtdParcelas(6)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            when(transacaoRepository.findById(transacaoId)).thenReturn(Optional.of(existenteParcelado));
+            when(transacaoRepository.save(any(Transacao.class))).thenAnswer(inv -> inv.getArgument(0));
+
+            ArgumentCaptor<Transacao> captor = ArgumentCaptor.forClass(Transacao.class);
+            useCase.execute(transacaoId, patch);
+            verify(transacaoRepository).save(captor.capture());
+
+            assertEquals(6, captor.getValue().getQtdParcelas());
+            verify(calculadorService).recalcular(fkInstituicao, LocalDate.of(2026, 5, 10));
+        }
+
+        @Test
+        @DisplayName("Deve alterar valor total da parcelada e recalcular")
+        void deveAlterarValorTotal_eRecalcular() {
+            Transacao patch = Transacao.builder()
+                    .valor(600.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.of(2026, 5, 10, 10, 0))
+                    .parcelado(true)
+                    .qtdParcelas(12)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            when(transacaoRepository.findById(transacaoId)).thenReturn(Optional.of(existenteParcelado));
+            when(transacaoRepository.save(any(Transacao.class))).thenAnswer(inv -> inv.getArgument(0));
+
+            ArgumentCaptor<Transacao> captor = ArgumentCaptor.forClass(Transacao.class);
+            useCase.execute(transacaoId, patch);
+            verify(transacaoRepository).save(captor.capture());
+
+            assertEquals(600.0, captor.getValue().getValor());
+            assertEquals(12, captor.getValue().getQtdParcelas());
+            verify(calculadorService).recalcular(fkInstituicao, LocalDate.of(2026, 5, 10));
+        }
+
+        @Test
+        @DisplayName("Deve recalcular a partir da data mais antiga ao mover data da primeira parcela")
+        void deveRecalcularDataMaisAntiga_aoAlterarDataPrimeiraParcela() {
+            Transacao patch = Transacao.builder()
+                    .valor(1200.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.of(2026, 5, 1, 10, 0))
+                    .parcelado(true)
+                    .qtdParcelas(12)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            when(transacaoRepository.findById(transacaoId)).thenReturn(Optional.of(existenteParcelado));
+            when(transacaoRepository.save(any(Transacao.class))).thenAnswer(inv -> inv.getArgument(0));
+
+            useCase.execute(transacaoId, patch);
+
+            // Data anterior era 10/05; nova é 01/05 → recalcula da mais antiga (01/05)
+            verify(calculadorService).recalcular(fkInstituicao, LocalDate.of(2026, 5, 1));
+        }
+
+        @Test
+        @DisplayName("Deve rejeitar qtdParcelas=1 ao atualizar transação parcelada")
+        void deveRejeitar_qtdParcelas1_aoAtualizar() {
+            Transacao patch = Transacao.builder()
+                    .valor(1200.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.of(2026, 5, 10, 10, 0))
+                    .parcelado(true)
+                    .qtdParcelas(1)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            when(transacaoRepository.findById(transacaoId)).thenReturn(Optional.of(existenteParcelado));
+
+            TransacaoInvalidaException ex = assertThrows(TransacaoInvalidaException.class,
+                    () -> useCase.execute(transacaoId, patch));
+
+            assertEquals("A quantidade de parcelas deve estar entre 2 e 720.", ex.getMessage());
+            verify(transacaoRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("Deve rejeitar qtdParcelas=0 ao atualizar transação parcelada")
+        void deveRejeitar_qtdParcelas0_aoAtualizar() {
+            Transacao patch = Transacao.builder()
+                    .valor(1200.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.of(2026, 5, 10, 10, 0))
+                    .parcelado(true)
+                    .qtdParcelas(0)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            when(transacaoRepository.findById(transacaoId)).thenReturn(Optional.of(existenteParcelado));
+
+            assertThrows(TransacaoInvalidaException.class,
+                    () -> useCase.execute(transacaoId, patch));
+            verify(transacaoRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("Deve converter parcelada para pontual, zerando qtdParcelas")
+        void deveConverterParceladaParaPontual_zerandoQtdParcelas() {
+            Transacao patch = Transacao.builder()
+                    .valor(1200.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.of(2026, 5, 10, 10, 0))
+                    .parcelado(false)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            when(transacaoRepository.findById(transacaoId)).thenReturn(Optional.of(existenteParcelado));
+            when(transacaoRepository.save(any(Transacao.class))).thenAnswer(inv -> inv.getArgument(0));
+
+            ArgumentCaptor<Transacao> captor = ArgumentCaptor.forClass(Transacao.class);
+            useCase.execute(transacaoId, patch);
+            verify(transacaoRepository).save(captor.capture());
+
+            assertFalse(captor.getValue().getParcelado());
+            assertNull(captor.getValue().getQtdParcelas());
+            verify(calculadorService).recalcular(fkInstituicao, LocalDate.of(2026, 5, 10));
+        }
+
+        @Test
+        @DisplayName("Deve rejeitar conversão de pontual para parcelada sem informar qtdParcelas")
+        void deveRejeitar_converterParaParcela_semQtdParcelas() {
+            when(transacaoRepository.findById(transacaoId)).thenReturn(Optional.of(existente));
+
+            Transacao patch = Transacao.builder()
+                    .valor(100.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.of(2026, 5, 10, 10, 0))
+                    .parcelado(true)
+                    .qtdParcelas(null)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            TransacaoInvalidaException ex = assertThrows(TransacaoInvalidaException.class,
+                    () -> useCase.execute(transacaoId, patch));
+
+            assertEquals("A quantidade de parcelas é obrigatória para transações parceladas.", ex.getMessage());
+            verify(transacaoRepository, never()).save(any());
         }
     }
 }

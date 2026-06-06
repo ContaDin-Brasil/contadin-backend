@@ -367,6 +367,41 @@ class CriarTransacaoUseCaseTest {
         }
 
         @Test
+        @DisplayName("Deve lançar exceção quando qtdParcelas for zero")
+        void deveLancarExcecaoParaQtdParcelasZero() {
+            Transacao invalida = Transacao.builder()
+                    .valor(1200.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.now())
+                    .parcelado(true)
+                    .qtdParcelas(0)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            TransacaoInvalidaException ex = assertThrows(TransacaoInvalidaException.class,
+                    () -> useCase.execute(invalida));
+
+            assertEquals("A quantidade de parcelas deve estar entre 2 e 720.", ex.getMessage());
+            verify(transacaoRepository, never()).save(any());
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção quando qtdParcelas for negativa")
+        void deveLancarExcecaoParaQtdParcelasNegativa() {
+            Transacao invalida = Transacao.builder()
+                    .valor(500.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.now())
+                    .parcelado(true)
+                    .qtdParcelas(-5)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            assertThrows(TransacaoInvalidaException.class, () -> useCase.execute(invalida));
+            verify(transacaoRepository, never()).save(any());
+        }
+
+        @Test
         @DisplayName("Deve aceitar qtdParcelas nos limites exatos: 2 e 720")
         void deveAceitarQtdParcelasNosLimites() {
             Transacao parcelada2 = Transacao.builder()
@@ -391,6 +426,81 @@ class CriarTransacaoUseCaseTest {
 
             assertDoesNotThrow(() -> useCase.execute(parcelada2));
             assertDoesNotThrow(() -> useCase.execute(parcelada720));
+        }
+    }
+
+    @Nested
+    @DisplayName("Inserção de transações parceladas — cenários adversos")
+    class InsercaoDeParcelados {
+
+        @Test
+        @DisplayName("Deve disparar recálculo a partir da data da primeira parcela")
+        void deveDispararRecalculo_naDataDaPrimeiraParcela() {
+            LocalDateTime dataPrimeiraParcela = LocalDateTime.of(2026, 8, 10, 0, 0);
+            Transacao parcelada = Transacao.builder()
+                    .valor(1200.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(dataPrimeiraParcela)
+                    .parcelado(true)
+                    .qtdParcelas(12)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            Transacao salva = Transacao.builder()
+                    .id(UUID.randomUUID())
+                    .valor(1200.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(dataPrimeiraParcela)
+                    .parcelado(true)
+                    .qtdParcelas(12)
+                    .ativo(true)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            when(transacaoRepository.save(any(Transacao.class))).thenReturn(salva);
+
+            useCase.execute(parcelada);
+
+            verify(calculadorService).recalcular(fkInstituicao, LocalDate.of(2026, 8, 10));
+        }
+
+        @Test
+        @DisplayName("Deve salvar qtdParcelas e parcelado=true intactos")
+        void deveSalvarCamposParceladoIntactos() {
+            Transacao parcelada = Transacao.builder()
+                    .valor(500.0)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.of(2026, 7, 1, 0, 0))
+                    .parcelado(true)
+                    .qtdParcelas(5)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            when(transacaoRepository.save(any(Transacao.class))).thenAnswer(inv -> inv.getArgument(0));
+
+            ArgumentCaptor<Transacao> captor = ArgumentCaptor.forClass(Transacao.class);
+            useCase.execute(parcelada);
+            verify(transacaoRepository).save(captor.capture());
+
+            assertEquals(5, captor.getValue().getQtdParcelas());
+            assertTrue(captor.getValue().getParcelado());
+        }
+
+        @Test
+        @DisplayName("Deve aceitar valor fracionário pequeno em parcelado")
+        void deveAceitarValorFracionarioPequeno() {
+            Transacao parcelada = Transacao.builder()
+                    .valor(0.02)
+                    .tipo(TipoTransacao.GASTO)
+                    .dataTransacao(LocalDateTime.of(2026, 7, 1, 0, 0))
+                    .parcelado(true)
+                    .qtdParcelas(2)
+                    .fkInstituicao(fkInstituicao)
+                    .build();
+
+            when(transacaoRepository.save(any(Transacao.class))).thenAnswer(inv -> inv.getArgument(0));
+
+            assertDoesNotThrow(() -> useCase.execute(parcelada));
         }
     }
 }
