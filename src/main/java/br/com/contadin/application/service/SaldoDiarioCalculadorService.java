@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -54,7 +55,9 @@ public class SaldoDiarioCalculadorService {
 
             for (Transacao t : transacoes) {
                 if (!ocorreNaData(t, dataAtual)) continue;
-                BigDecimal valor = BigDecimal.valueOf(t.getValor());
+                BigDecimal valor = Boolean.TRUE.equals(t.getParcelado()) && t.getQtdParcelas() != null && t.getQtdParcelas() > 0
+                        ? BigDecimal.valueOf(t.getValor()).divide(BigDecimal.valueOf(t.getQtdParcelas()), 2, RoundingMode.HALF_UP)
+                        : BigDecimal.valueOf(t.getValor());
                 if (t.getTipo() == TipoTransacao.RECEITA) {
                     totalReceitas = totalReceitas.add(valor);
                 } else {
@@ -91,8 +94,15 @@ public class SaldoDiarioCalculadorService {
             if (data.isAfter(fimRecorrencia)) return false;
         }
 
-        // Parcelado: cada parcela já é uma transação individual com sua própria data
-        if (transacao.getRecorrencia() == null || Boolean.TRUE.equals(transacao.getParcelado())) {
+        if (Boolean.TRUE.equals(transacao.getParcelado())) {
+            int n = transacao.getQtdParcelas() != null ? transacao.getQtdParcelas() : 1;
+            for (int i = 0; i < n; i++) {
+                if (data.isEqual(dataTransacao.plusMonths(i))) return true;
+            }
+            return false;
+        }
+
+        if (transacao.getRecorrencia() == null) {
             return data.isEqual(dataTransacao);
         }
 

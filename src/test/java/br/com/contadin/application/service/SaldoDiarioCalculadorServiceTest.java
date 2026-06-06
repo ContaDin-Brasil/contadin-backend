@@ -94,6 +94,18 @@ class SaldoDiarioCalculadorServiceTest {
                 .build();
     }
 
+    private Transacao transacaoParcelada(TipoTransacao tipo, double valor, LocalDate primeiraParcela, int qtdParcelas) {
+        return Transacao.builder()
+                .tipo(tipo)
+                .valor(valor)
+                .dataTransacao(primeiraParcela.atStartOfDay())
+                .parcelado(true)
+                .qtdParcelas(qtdParcelas)
+                .fkInstituicao(instId)
+                .ativo(true)
+                .build();
+    }
+
     private Transacao transacaoRecorrente(TipoTransacao tipo, double valor, LocalDate inicio,
                                           Recorrencia recorrencia, LocalDate fim) {
         Date fimDate = fim != null
@@ -274,25 +286,108 @@ class SaldoDiarioCalculadorServiceTest {
     }
 
     @Test
-    void transacaoParcelada_ocorreSomenteNaDataExata() {
-        LocalDate dataParc = LocalDate.now();
+    void transacaoParcelada_distribuiValorEmNMeses() {
+        LocalDate primeiraParcela = LocalDate.now();
+        List<SaldoDiario> snapshots = recalcular(primeiraParcela,
+                List.of(transacaoParcelada(TipoTransacao.GASTO, 600.0, primeiraParcela, 3)));
 
-        Transacao parcelada = Transacao.builder()
-                .tipo(TipoTransacao.GASTO)
-                .valor(600.0)
-                .dataTransacao(dataParc.atStartOfDay())
-                .parcelado(true)
-                .qtdParcelas(3)
-                .recorrencia(null)
-                .fkInstituicao(instId)
-                .ativo(true)
-                .build();
+        // Cada parcela = 600 / 3 = 200
+        assertThat(saldoEm(snapshots, primeiraParcela).getTotalGastos()).isEqualByComparingTo("200.00");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(1)).getTotalGastos()).isEqualByComparingTo("200.00");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(2)).getTotalGastos()).isEqualByComparingTo("200.00");
+    }
 
-        List<SaldoDiario> snapshots = recalcular(dataParc, List.of(parcelada));
+    @Test
+    void transacaoParcelada_diasIntermediarios_semImpacto() {
+        LocalDate primeiraParcela = LocalDate.now();
+        List<SaldoDiario> snapshots = recalcular(primeiraParcela,
+                List.of(transacaoParcelada(TipoTransacao.GASTO, 300.0, primeiraParcela, 3)));
 
-        assertThat(saldoEm(snapshots, dataParc).getTotalGastos()).isEqualByComparingTo("600.00");
-        assertThat(saldoEm(snapshots, dataParc.plusDays(1)).getTotalGastos()).isEqualByComparingTo("0.00");
-        assertThat(saldoEm(snapshots, dataParc.plusMonths(1)).getTotalGastos()).isEqualByComparingTo("0.00");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusDays(1)).getTotalGastos()).isEqualByComparingTo("0.00");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusDays(15)).getTotalGastos()).isEqualByComparingTo("0.00");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(1).plusDays(1)).getTotalGastos()).isEqualByComparingTo("0.00");
+    }
+
+    @Test
+    void transacaoParcelada_parcelasAlem6Meses_naoAparecem() {
+        LocalDate hoje = LocalDate.now();
+        // 10 parcelas: meses 0-6 ficam dentro da janela, meses 7-9 ficam fora
+        List<SaldoDiario> snapshots = recalcular(hoje,
+                List.of(transacaoParcelada(TipoTransacao.GASTO, 1000.0, hoje, 10)));
+
+        // Parcela do mês 6 (último dentro da janela): deve aparecer
+        assertThat(saldoEm(snapshots, hoje.plusMonths(6)).getTotalGastos()).isEqualByComparingTo("100.00");
+
+        // Mês 7 está além da janela: não há snapshot para essa data
+        LocalDate alem = hoje.plusMonths(7);
+        assertThat(snapshots.stream().anyMatch(s -> s.getData().isEqual(alem))).isFalse();
+    }
+
+    @Test
+    void transacaoParcelada_valorNaoDivisivel_arredondaHalfUp() {
+        LocalDate primeiraParcela = LocalDate.now();
+        // 100 / 3 = 33.3333... → arredonda para 33.33 (HALF_UP)
+        List<SaldoDiario> snapshots = recalcular(primeiraParcela,
+                List.of(transacaoParcelada(TipoTransacao.GASTO, 100.0, primeiraParcela, 3)));
+
+        assertThat(saldoEm(snapshots, primeiraParcela).getTotalGastos()).isEqualByComparingTo("33.33");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(1)).getTotalGastos()).isEqualByComparingTo("33.33");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(2)).getTotalGastos()).isEqualByComparingTo("33.33");
+    }
+
+    @Test
+    void transacaoParcelada_diaInexistenteNoMesSeguinte_ajustaUltimoDia() {
+        // Jan 31 + 1 mês → Java ajusta para Fev 28 (2026 não é bissexto)
+        LocalDate jan31 = LocalDate.of(2026, 1, 31);
+        List<SaldoDiario> snapshots = recalcular(jan31,
+                List.of(transacaoParcelada(TipoTransacao.GASTO, 300.0, jan31, 3)));
+
+        assertThat(saldoEm(snapshots, LocalDate.of(2026, 1, 31)).getTotalGastos()).isEqualByComparingTo("100.00");
+        assertThat(saldoEm(snapshots, LocalDate.of(2026, 2, 28)).getTotalGastos()).isEqualByComparingTo("100.00");
+        assertThat(saldoEm(snapshots, LocalDate.of(2026, 3, 31)).getTotalGastos()).isEqualByComparingTo("100.00");
+    }
+
+    @Test
+    void transacaoParcelada_comSaldoSemente_propagaCorretamente() {
+        LocalDate primeiraParcela = LocalDate.now();
+        when(saldoDiarioRepository.buscarUltimoAntesDeData(instId, primeiraParcela))
+                .thenReturn(Optional.of(SaldoDiario.builder().saldoFinal(new BigDecimal("2000.00")).build()));
+
+        // R$1500 em 3x → R$500/mês
+        List<SaldoDiario> snapshots = recalcular(primeiraParcela,
+                List.of(transacaoParcelada(TipoTransacao.GASTO, 1500.0, primeiraParcela, 3)));
+
+        assertThat(saldoEm(snapshots, primeiraParcela).getSaldoFinal()).isEqualByComparingTo("1500.00");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(1)).getSaldoFinal()).isEqualByComparingTo("1000.00");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(2)).getSaldoFinal()).isEqualByComparingTo("500.00");
+    }
+
+    @Test
+    void doisParcelados_mesmaDataInicio_somamGastosCorretamente() {
+        LocalDate primeiraParcela = LocalDate.now();
+        List<SaldoDiario> snapshots = recalcular(primeiraParcela, List.of(
+                transacaoParcelada(TipoTransacao.GASTO, 300.0, primeiraParcela, 3),  // 100/mês
+                transacaoParcelada(TipoTransacao.GASTO, 600.0, primeiraParcela, 3)   // 200/mês
+        ));
+
+        // Ambos ocorrem no mesmo dia → R$300 total por mês
+        assertThat(saldoEm(snapshots, primeiraParcela).getTotalGastos()).isEqualByComparingTo("300.00");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(1)).getTotalGastos()).isEqualByComparingTo("300.00");
+        assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(2)).getTotalGastos()).isEqualByComparingTo("300.00");
+    }
+
+    @Test
+    void transacaoParcelada_receita_distribuiMensalmente() {
+        LocalDate primeiraParcela = LocalDate.now();
+        // Recebimento de freelance em 6x R$1000
+        List<SaldoDiario> snapshots = recalcular(primeiraParcela,
+                List.of(transacaoParcelada(TipoTransacao.RECEITA, 6000.0, primeiraParcela, 6)));
+
+        for (int i = 0; i < 6; i++) {
+            assertThat(saldoEm(snapshots, primeiraParcela.plusMonths(i)).getTotalReceitas())
+                    .as("Mês +" + i)
+                    .isEqualByComparingTo("1000.00");
+        }
     }
 
     @Test
